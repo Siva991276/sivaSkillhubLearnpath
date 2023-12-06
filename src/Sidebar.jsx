@@ -222,20 +222,81 @@ function Sidebar() {
                           </span>
                         </a>
                       </li>
-                      {isQuestionbankOpen && (
-                        <div>
-                          <li>
-                            <a href="/QbSubject">
+                        {isQuestionbankOpen && (
+                          <div>
+                            <li>
+                              <a href="#">
+                                <i class="fa-solid fa-chalkboard"></i>
+                                <Link to="#">
+                                  <span className="link_name">
+                                  Self Created QB
+                                  </span>
+                                </Link>
+                              </a>
+                            </li>
+                            <li>
+                                <a href="/QbSubject">
+                                  <i class="fa-solid fa-video"></i>
+                                  <Link to="/QbSubject">
+                                    <span className="link_name">
+                                      subjects
+                                    </span>
+                                  </Link>
+                                </a>
+                                <span className="tooltip">subjects</span>
+                              </li>
+                              <li>
+                                <a href="/Chapter">
+                                  <i class="fa-solid fa-video"></i>
+                                  <Link to="/Chapter">
+                                    <span className="link_name">
+                                      chapters
+                                    </span>
+                                  </Link>
+                                </a>
+                                <span className="tooltip">chapters</span>
+                              </li>
+                            <li>
+                           <a href="#">
                             <i class="fa-solid fa-chalkboard"></i>
-                              <span className="link_name">Self Created QB</span>                            
+                            <span className="link_name">MCQ Questions</span>                            
                             </a>
-                            <a href="#">
-                            <i class="fa-solid fa-chalkboard"></i>
-                            <span className="link_name">Assigned QB</span>                            
-                            </a>
-                          </li>
-                        </div>
-                      )}
+                            <li>
+                                <a href="/CreateQuestion">
+                                  <i class="fa-solid fa-video"></i>
+                                  <Link to="/CreateQuestion">
+                                    <span className="link_name">
+                                      create
+                                    </span>
+                                  </Link>
+                                </a>
+                                <span className="tooltip">create</span>
+                              </li>
+                              <li>
+                                <a href="/McqView">
+                                  <i class="fa-solid fa-video"></i>
+                                  <Link to="/McqView">
+                                    <span className="link_name">
+                                      View
+                                    </span>
+                                  </Link>
+                                </a>
+                                <span className="tooltip">View</span>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  <i class="fa-solid fa-video"></i>
+                                  <Link to="#">
+                                    <span className="link_name">
+                                      Upload
+                                    </span>
+                                  </Link>
+                                </a>
+                                <span className="tooltip">Upload</span>
+                              </li>
+                            </li>
+                            </div>
+                        )}                           
                       <li onClick={toggleInstitutions1}>
                         <a href="#">
                           <i class="fa-solid fa-ellipsis-vertical"></i>
