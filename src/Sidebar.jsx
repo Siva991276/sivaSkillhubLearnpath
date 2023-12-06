@@ -103,6 +103,26 @@ function Sidebar() {
   const toggleQuestionBank = () => {
     setIsQuestionbankOpen(!isQuestionbankOpen);
   };
+  const [isSelfcreatedQBOpen, setIsSelfcreatedQBOpen] = useState(false);
+
+  const toggleSelfCreatedQB = () => {
+    setIsSelfcreatedQBOpen(!isSelfcreatedQBOpen);
+  };
+  const [isMcqOpen, setIsMcqOpen] = useState(false);
+
+  const toggleMCQ = () => {
+    setIsMcqOpen(!isMcqOpen);
+  };
+  const [isParagQuestionOpen, setIsParagQuestionOpen] = useState(false);
+
+  const toggleParagQuestions = () => {
+    setIsParagQuestionOpen(!isParagQuestionOpen);
+  };
+  const [isCodingQuestionOpen, setIsCodingQuestionOpen] = useState(false);
+
+  const toggleCodingQuestions = () => {
+    setIsCodingQuestionOpen(!isCodingQuestionOpen);
+  };
   
   const [isInstitutionsOpen1, setIsInstitutionsOpen1] = useState(true);
 
@@ -132,251 +152,334 @@ function Sidebar() {
 		<div>
       <div className="side_item d-none d-lg-block">
         <div className={`sidebar ${isOpen ? "open" : ""}`}>
-                    <div class="logo_details">
-                      <div class="logo_name">
-                        {" "}
-                        <img src={sideimage} alt="logo" width="125px" />
-                      </div>
-                      <i
-                        id="btn"
-                        onClick={toggleSidebar}
-                        className={`bx bx-menu ${
-                          isOpen ? "bx-menu-alt-right" : "bx-menu"
-                        }`}
-                      ></i>
+          <div class="logo_details">
+            <div class="logo_name">
+              {" "}
+              <img src={sideimage} alt="logo" width="125px" />
+            </div>
+            <i
+              id="btn"
+              onClick={toggleSidebar}
+              className={`bx bx-menu ${
+                isOpen ? "bx-menu-alt-right" : "bx-menu"
+              }`}
+            ></i>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+              <a href="#" className="bg-secondary">
+                <i class="bx bx-grid-alt"></i>
+                <span class="link_name">Dashboard</span>
+              </a>
+              <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-solid fa-house "></i>
+
+                <span class="link_name">HomePage</span>
+              </a>
+              <span class="tooltip">HomePage</span>
+            </li>
+            <li onClick={toggleInstitutions}>
+              <a href="#">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+                <span className="link_name ">
+                  INSTITUTIONS{" "}
+                  <i className="fa-solid fa-chevron-down"></i>
+                </span>
+              </a>
+              <span className="tooltip">Institutions</span>
+            </li>
+            {isInstitutionsOpen && (
+              <div>
+                <li>
+                  <a href="./AdminDashboard">
+                    <i className="fa-solid fa-building-columns"></i>
+                    <span className="link_name">institutions</span>
+                  </a>
+                  <span className="tooltip">institutions</span>
+                </li>
+                <li>
+                  <a href="/BatchYear">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span className="link_name">Batch Years</span>
+                  </a>
+                  <span className="tooltip">Batch Years</span>
+                </li>
+                <li>
+                  <a href="/Batches">
+                    <i className="fa-solid fa-building-columns"></i>
+                    <span className="link_name">Batches</span>
+                  </a>
+                  <span className="tooltip">Batches</span>
+                </li>
+                <li>
+                  <a href="/UsersDetails">
+                    <i className="fa-solid fa-user"></i>
+                    <span className="link_name">Users</span>
+                  </a>
+                  <span className="tooltip">Users</span>
+                </li>
+                <li>
+                  <a href="/SearchOption">
+                    <i className="fa-brands fa-searchengin"></i>
+                    <span className="link_name">Search Users</span>
+                  </a>
+                  <span className="tooltip">Search Users</span>
+                </li>
+              </div>
+            )}
+            <li onClick={toggleQuestionBank}>
+              <a href="#">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+                <span className="link_name ">
+                  QUESTION BANK{" "}
+                  <i className="fa-solid fa-chevron-down"></i>
+                </span>
+              </a>
+            </li>
+              {isQuestionbankOpen && (
+                <div>
+                  <li onClick={toggleSelfCreatedQB}>
+                    <a href="#">
+                    <i class="fa-solid fa-circle-dot"></i>
+                      <Link to="#">
+                        <span className="link_name">
+                        Self Created QB
+                        </span>
+                      </Link>
+                    </a>
+                  </li>
+              {isSelfcreatedQBOpen && (
+                  <div>
+                  <li>
+                      <a href="/QbSubject">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/QbSubject">
+                          <span className="link_name">
+                            subjects
+                          </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">subjects</span>
+                    </li>
+                    <li>
+                      <a href="/Chapter">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/Chapter">
+                          <span className="link_name">
+                            chapters
+                          </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">chapters</span>
+                    </li>
+                  </div>
+              )}
+                  <li onClick={toggleMCQ}>
+                  <a href="#">
+                  <i class="fa-solid fa-circle-dot"></i>
+                  <span className="link_name">MCQ Questions</span>                            
+                  </a>
+                  </li>
+              {isMcqOpen && (
+                  <div>
+                  <li>
+                      <a href="/CreateQuestion">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/CreateQuestion">
+                          <span className="link_name">
+                            create
+                          </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">create</span>
+                    </li>
+                    <li>
+                      <a href="/McqView">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/McqView">
+                          <span className="link_name">
+                            View
+                          </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">View</span>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="#">
+                          <span className="link_name">
+                            Upload
+                          </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Upload</span>
+                    </li>
                     </div>
-                    <ul class="nav-list">
-                      <li>
-                        <span class="tooltip">Dashboard</span>
-                      </li>
-                      <li>
-                        <a href="#" className="bg-secondary">
-                          <i class="bx bx-grid-alt"></i>
-                          <span class="link_name">Dashboard</span>
-                        </a>
-                        <span class="tooltip">Dashboard</span>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <i class="fa-solid fa-house "></i>
+              )}
+                    <li onClick={toggleParagQuestions}>
+                      <a href="#">
+                      <i class="fa-solid fa-circle-dot"></i>
+                        <Link to="#">
+                          <span className="link_name">
+                            Parag MCQ Questions
+                        </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Parag MCQ Questions</span>
+                    </li>
+              {isParagQuestionOpen && (
+                   <div>
+                   <li>
+                      <a href="/ParagHome">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/ParagHome">
+                          <span className="link_name">
+                            Create
+                        </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Create</span>
+                    </li>
+                    <li>
+                      <a href="/ParagView">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/ParagView">
+                          <span className="link_name">
+                            View
+                        </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">View</span>
+                    </li>
+                   </div>
+              )}
+                    <li onClick={toggleCodingQuestions}>
+                      <a href="#">
+                      <i class="fa-solid fa-circle-dot"></i>
+                        <Link to="#">
+                          <span className="link_name">
+                            Coding Questions
+                        </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Coding Questions</span>
+                    </li>
+              {isCodingQuestionOpen && (
+                    <div>
+                    <li>
+                      <a href="/Coding">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/Coding">
+                          <span className="link_name">
+                            Create
+                        </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Create</span>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="#">
+                          <span className="link_name">
+                            View
+                        </span>
+                        </Link>
+                      </a>
+                      <span className="tooltip">View</span>
+                    </li>
+                    </div>
+              )}
+                    </div>
+                  
+              )}                           
+            <li onClick={toggleInstitutions1}>
+              <a href="#">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+                <span className="link_name ">
+                  LEARNING PATH{" "}
+                  <i className="fa-solid fa-chevron-down"></i>
+                </span>
+              </a>
+              <span className="tooltip">Learning Path</span>
+            </li>
+            {isInstitutionsOpen1 && (
+              <div>
+                <li onClick={toggleInstitutions2}>
+                  <a href="#">
+                    <i class="fa-solid fa-school"></i>
 
-                          <span class="link_name">HomePage</span>
-                        </a>
-                        <span class="tooltip">HomePage</span>
-                      </li>
-                      <li onClick={toggleInstitutions}>
-                        <a href="#">
-                          <i class="fa-solid fa-ellipsis-vertical"></i>
-                          <span className="link_name ">
-                            INSTITUTIONS{" "}
-                            <i className="fa-solid fa-chevron-down"></i>
+                    <span className="link_name">Learning Path</span>
+                    <i className="fa-solid fa-chevron-down"></i>
+                  </a>
+                  <span className="tooltip">Learning Path</span>
+                </li>
+                {isInstitutionsOpen2 && (
+                  <div>
+                    <li>
+                      <a href="#">
+                        <i class="fa-solid fa-chalkboard"></i>
+                        <Link to="/Learn">
+                          <span className="link_name">
+                            Learning Path
                           </span>
-                        </a>
-                        <span className="tooltip">Institutions</span>
-                      </li>
-                      {isInstitutionsOpen && (
-                        <div>
-                          <li>
-                            <a href="./AdminDashboard">
-                              <i className="fa-solid fa-building-columns"></i>
-                              <span className="link_name">institutions</span>
-                            </a>
-                            <span className="tooltip">institutions</span>
-                          </li>
-                          <li>
-                            <a href="/BatchYear">
-                              <i class="fa-solid fa-calendar-days"></i>
-                              <span className="link_name">Batch Years</span>
-                            </a>
-                            <span className="tooltip">Batch Years</span>
-                          </li>
-                          <li>
-                            <a href="/Batches">
-                              <i className="fa-solid fa-building-columns"></i>
-                              <span className="link_name">Batches</span>
-                            </a>
-                            <span className="tooltip">Batches</span>
-                          </li>
-                          <li>
-                            <a href="/UsersDetails">
-                              <i className="fa-solid fa-user"></i>
-                              <span className="link_name">Users</span>
-                            </a>
-                            <span className="tooltip">Users</span>
-                          </li>
-                          <li>
-                            <a href="/SearchOption">
-                              <i className="fa-brands fa-searchengin"></i>
-                              <span className="link_name">Search Users</span>
-                            </a>
-                            <span className="tooltip">Search Users</span>
-                          </li>
-                        </div>
-                      )}
-                      <li onClick={toggleQuestionBank}>
-                        <a href="#">
-                          <i class="fa-solid fa-ellipsis-vertical"></i>
-                          <span className="link_name ">
-                            QUESTION BANK{" "}
-                            <i className="fa-solid fa-chevron-down"></i>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Learning Path</span>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa-solid fa-video"></i>
+                        <Link to="/LearnPath">
+                          <span className="link_name">
+                            Video Folders
                           </span>
-                        </a>
-                      </li>
-                        {isQuestionbankOpen && (
-                          <div>
-                            <li>
-                              <a href="#">
-                                <i class="fa-solid fa-chalkboard"></i>
-                                <Link to="#">
-                                  <span className="link_name">
-                                  Self Created QB
-                                  </span>
-                                </Link>
-                              </a>
-                            </li>
-                            <li>
-                                <a href="/QbSubject">
-                                  <i class="fa-solid fa-video"></i>
-                                  <Link to="/QbSubject">
-                                    <span className="link_name">
-                                      subjects
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">subjects</span>
-                              </li>
-                              <li>
-                                <a href="/Chapter">
-                                  <i class="fa-solid fa-video"></i>
-                                  <Link to="/Chapter">
-                                    <span className="link_name">
-                                      chapters
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">chapters</span>
-                              </li>
-                            <li>
-                           <a href="#">
-                            <i class="fa-solid fa-chalkboard"></i>
-                            <span className="link_name">MCQ Questions</span>                            
-                            </a>
-                            <li>
-                                <a href="/CreateQuestion">
-                                  <i class="fa-solid fa-video"></i>
-                                  <Link to="/CreateQuestion">
-                                    <span className="link_name">
-                                      create
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">create</span>
-                              </li>
-                              <li>
-                                <a href="/McqView">
-                                  <i class="fa-solid fa-video"></i>
-                                  <Link to="/McqView">
-                                    <span className="link_name">
-                                      View
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">View</span>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <i class="fa-solid fa-video"></i>
-                                  <Link to="#">
-                                    <span className="link_name">
-                                      Upload
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">Upload</span>
-                              </li>
-                            </li>
-                            </div>
-                        )}                           
-                      <li onClick={toggleInstitutions1}>
-                        <a href="#">
-                          <i class="fa-solid fa-ellipsis-vertical"></i>
-                          <span className="link_name ">
-                            LEARNING PATH{" "}
-                            <i className="fa-solid fa-chevron-down"></i>
-                          </span>
-                        </a>
-                        <span className="tooltip">Learning Path</span>
-                      </li>
-                      {isInstitutionsOpen1 && (
-                        <div>
-                          <li onClick={toggleInstitutions2}>
-                            <a href="#">
-                              <i class="fa-solid fa-school"></i>
+                        </Link>
+                      </a>
+                      <span className="tooltip">Video Folders</span>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa-solid fa-record-vinyl"></i>
+                        <span className="link_name">Reports</span>
+                      </a>
+                      <span className="tooltip">Reports</span>
+                    </li>
+                  </div>
+                )}
 
-                              <span className="link_name">Learning Path</span>
-                              <i className="fa-solid fa-chevron-down"></i>
-                            </a>
-                            <span className="tooltip">Learning Path</span>
-                          </li>
-                          {isInstitutionsOpen2 && (
-                            <div>
-                              <li>
-                                <a href="#">
-                                  <i class="fa-solid fa-chalkboard"></i>
-                                  <Link to="/Learn">
-                                    <span className="link_name">
-                                      Learning Path
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">Learning Path</span>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <i class="fa-solid fa-video"></i>
-                                  <Link to="/LearnPath">
-                                    <span className="link_name">
-                                      Video Folders
-                                    </span>
-                                  </Link>
-                                </a>
-                                <span className="tooltip">Video Folders</span>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <i class="fa-solid fa-record-vinyl"></i>
-                                  <span className="link_name">Reports</span>
-                                </a>
-                                <span className="tooltip">Reports</span>
-                              </li>
-                            </div>
-                          )}
+                <li>
+                  <a href="#">
+                    <i class="fa-brands fa-accessible-icon"></i>
+                    <span className="link_name">Access</span>
+                  </a>
+                  <span className="tooltip">Access</span>
+                </li>
+              </div>
+            )}
+            <li class="profile">
+              <div class="profile_details">
+                <img src='' alt="profile image" />
+                <div class="profile_content">
+                  <div class="name">Sai </div>
+                  <div class="designation">Admin</div>
+                </div>
+              </div>
 
-                          <li>
-                            <a href="#">
-                              <i class="fa-brands fa-accessible-icon"></i>
-                              <span className="link_name">Access</span>
-                            </a>
-                            <span className="tooltip">Access</span>
-                          </li>
-                        </div>
-                      )}
-                      <li class="profile">
-                        <div class="profile_details">
-                          <img src='' alt="profile image" />
-                          <div class="profile_content">
-                            <div class="name">Sai </div>
-                            <div class="designation">Admin</div>
-                          </div>
-                        </div>
-
-                        <i
-                          class="bx bx-log-out"
-                          id="log_out"
-                          onClick={handleLogout}
-                        ></i>
-                      </li>
-                    </ul>
+              <i
+                class="bx bx-log-out"
+                id="log_out"
+                onClick={handleLogout}
+              ></i>
+            </li>
+          </ul>
         </div>
       </div>
       <nav className="navbar navbar-expand-lg navbar-light bg-dark d-lg-none p-0"  >
@@ -588,13 +691,10 @@ function Sidebar() {
 								<div className='col-md-3 my-2 ml-3'>
 									<button className='logout_button' onClick={handleLogout}><i class="ri-logout-box-line"></i></button>
 								</div>
-					</div>
-
-					{/* Logout button */}
-					
+					</div>					
 				</div>
 			</nav>
-            </div>
+    </div>
 	);
 }
 
