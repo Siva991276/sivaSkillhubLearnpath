@@ -35,6 +35,7 @@ import Learning from "./LearnData/Learning";
 import Topic from "./LearnData/topic";
 import Content from "./LearnData/content";
 import TextContent from "./LearnData/textcontent";
+import QbSubject from '../src/Questionbank/subject';
 
 function App() {
   return (
@@ -72,6 +73,8 @@ function App() {
         <Route exact path="/topic" element={<Topic />} />
         <Route exact path="/content" element={<Content />} />
         <Route exact path="/textcontent" element={<TextContent />} />
+        <Route exact path="/QbSubject" element={<QbSubject />} />
+
         <Route
           exact
           path="/VideoPage/:VideofolderName"

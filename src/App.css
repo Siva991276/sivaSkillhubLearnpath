@@ -1674,9 +1674,12 @@ font-weight: bold;
 }
 
 .fa-bars {
-  font-size: 25px;
+  font-size: 20px;
+  margin-left:5%
 }
-
+.ol, ul {
+  padding-left: 0rem;
+}
 #markItem {
   display: none;
   font-size: 25px;
@@ -4219,4 +4222,22 @@ margin-top: 10px;
   color: #fff;
   padding: 7px;
   border-radius: 7px;
+}
+
+/* //nav item// */
+.nav_item {
+  background-color: #4d4855;
+  background-image: linear-gradient(147deg, #4d4855 0%, #000000 74%);
+
+}
+.navbar-light .navbar-toggler {
+  color: rgb(255, 253, 253);
+  border-color: rgb(255 255 255);
+}
+.navbar-light .navbar-nav .nav-link {
+  color: rgb(255, 255, 255) !important;
+}
+
+.skill_img {
+  height: 50px;
 }
