@@ -36,7 +36,9 @@ import Topic from "./LearnData/topic";
 import Content from "./LearnData/content";
 import TextContent from "./LearnData/textcontent";
 import QbSubject from '../src/Questionbank/subject';
-
+import Chapter from '../src/Questionbank/chapter';
+import CreateQuestion from '../src/Questionbank/CreateQuestion';
+import McqView from '../src/Questionbank/McqView';
 function App() {
   return (
     <div>
@@ -74,6 +76,11 @@ function App() {
         <Route exact path="/content" element={<Content />} />
         <Route exact path="/textcontent" element={<TextContent />} />
         <Route exact path="/QbSubject" element={<QbSubject />} />
+        <Route exact path="/Chapter" element={<Chapter />} />
+        <Route exact path="/CreateQuestion" element={<CreateQuestion />} />
+        <Route exact path="/McqView" element={<McqView />} />
+
+
 
         <Route
           exact
