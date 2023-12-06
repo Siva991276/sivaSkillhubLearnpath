@@ -39,6 +39,11 @@ import QbSubject from '../src/Questionbank/subject';
 import Chapter from '../src/Questionbank/chapter';
 import CreateQuestion from '../src/Questionbank/CreateQuestion';
 import McqView from '../src/Questionbank/McqView';
+import ParagHome from '../src/Questionbank/ParagHome';
+import ParagView from '../src/Questionbank/paragview';
+import Coding from '../src/Questionbank/coding';
+import Codingview from '../src/Questionbank/codingview';
+
 function App() {
   return (
     <div>
@@ -79,9 +84,10 @@ function App() {
         <Route exact path="/Chapter" element={<Chapter />} />
         <Route exact path="/CreateQuestion" element={<CreateQuestion />} />
         <Route exact path="/McqView" element={<McqView />} />
-
-
-
+        <Route exact path="/ParagHome" element={<ParagHome />} />
+        <Route exact path="/ParagView" element={<ParagView />} />
+        <Route exact path="/Coding" element={<Coding />} />
+        <Route exact path="/Codingview" element={<Codingview />} />
         <Route
           exact
           path="/VideoPage/:VideofolderName"

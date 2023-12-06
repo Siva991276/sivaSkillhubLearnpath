@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Sidebar from "../Sidebar";
 
 const Codingview = () => {
 
@@ -20,276 +21,38 @@ const Codingview = () => {
             console.error("Error fetching blogs:", error);
         }
     };
+    const [isOpen, setIsOpen] = useState(true);
+
+    const toggleSidebar = () => {
+      setIsOpen(!isOpen);
+      menuBtnChange();
+    };
+  
+    const menuBtnChange = () => {
+      const sidebar = document.querySelector(".sidebar");
+      const closeBtn = document.querySelector("#btn");
+      const searchBtn = document.querySelector(".bx-search");
+  
+      if (sidebar?.classList.contains("open")) {
+        closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
+      } else {
+        closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
+      }
+    };
     return (
         <div>
-
             <div className="container ">
                 <div className="row">
-                    <div className="col-md-2 card " style={{ backgroundColor: "black", color: "white" }}>
-                        <div className="d-flex flex-row justify-content-between ">
-                            <div>
-                                <h5>Instacks</h5>
-                            </div>
-                            <div>
-                                <i class="fa-solid fa-bars"></i>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-calendar-days"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Dashboard</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div className="mx-2">
-
-                                <p>HomePage</p>
-                            </div>
-                        </div>
-
-
-                        <h5>INSTITUTIONS</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Institutions</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-
-                            </div>
-                            <div className="mx-2">
-                                <p>Batch Years</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Batches</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-regular fa-user"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Users</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-brands fa-algolia"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Search user</p>
-                            </div>
-                        </div>
-
-                        <h5>QUESTION BANK</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-layer-group"></i>
-                            </div>
-                            <div className="mx-2 ">
-                                <p className="dropdown-toggle">Self Created QB</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="/assesment" style={{ color: "white" }}>Subject</a></li>
-                                    <li><a class="dropdown-item" href="/chapter" style={{ color: "white" }}>Chapters</a></li>
-                                </ul>
-
-                                <p className="dropdown-toggle">MCQ Question</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="" style={{ color: "white" }}>Create</a></li>
-                                    <li><a class="dropdown-item" href="/view" style={{ color: "white" }}>View</a></li>
-                                    <li><a class="dropdown-item" href="#" style={{ color: "white" }}>Upload</a></li>
-                                </ul>
-                                <p className="dropdown-toggle">Parag MCQ Question</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="/mcq" style={{ color: "white" }}>Create</a></li>
-                                    <li><a class="dropdown-item" href="/paragview" style={{ color: "white" }}>View</a></li>
-
-                                </ul>
-
-                                <p className="dropdown-toggle">Coding Question</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="/coding" style={{ color: "white" }}>Create</a></li>
-                                    <li><a class="dropdown-item" href="/codingview" style={{ color: "white" }}>View</a></li>
-
-                                </ul>
-
-                            </div>
-                        </div>
-                        <div>
-                            <div className="d-flex flex-row">
-
-                                <i class="fa-brands fa-algolia"></i>
-
-                                <div className="mx-2">
-                                    <p>Assigned QB</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h5>ASSESSMENTS</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Assessments</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Reports</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-regular fa-user"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Assigned Assessments</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-solid fa-down-left-and-up-right-to-center"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Compare</p>
-                            </div>
-                        </div>
-
-                        <h5>LEARNING PATH</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Learning Path</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Access</p>
-                            </div>
-                        </div>
-
-                        <h5>PRACTICE</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>pratice</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-solid fa-file-lines"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Participation Report</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-regular fa-user"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Assigned</p>
-                            </div>
-                        </div>
-
-
-                        <h5>Blogs</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Blogs</p>
-                            </div>
-                        </div>
-
-                        <h5>PROCTORING</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-circle-dot"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>proctoring</p>
-                            </div>
-                        </div>
-
-                        <h5>PROFILE</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-dollar-sign"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>billing</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Invoices</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-solid fa-key"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Change Password</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div className="mx-2">
-
-                                <p>Compiler Test</p>
-                            </div>
-                        </div>
-
-                        <hr style={{ backgroundColor: "white" }} />
-                        <div className="text-center" >
-                            <button style={{ backgroundColor: "blue", color: "white" }}>Logout</button>
-                        </div>
-                        <div className="text-center">
-                            <i class="fa-regular fa-message"></i>
-                        </div>
-                    </div>
-
-                    <div className="col-1"></div>
-                    <div className="col-md-8 my-4  ">
+                {isOpen && (
+              <div className=" col-12 col-md-2 sectioncard121">
+              <Sidebar/>
+              </div>
+					  )}						
+            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
+                <div className="ml-5 d-lg-block d-none">
+                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
+                <div class="mx-5">
+                    <div>
                         <p><b>Fillter Coding Question</b> :</p>
                         <div className="row shadow py-4 ">
                             <div className="col-2 mx-4" >
@@ -393,6 +156,9 @@ const Codingview = () => {
 
 
 
+        </div>
+        </div>
+        </div>
         </div>
     )
 }
