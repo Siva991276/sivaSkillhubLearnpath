@@ -150,20 +150,20 @@ function Sidebar() {
 	const togglelearnopen = () => setIslearnOpen(!islearnOpen);
 	return (
 		<div>
-      <div className="side_item d-none d-lg-block">
-        <div className={`sidebar ${isOpen ? "open" : ""}`}>
-          <div class="logo_details">
-            <div class="logo_name">
+      <div className="side_item d-none d-lg-block" >
+        <div className={`sidebar ${isOpen ? "open" : ""}`} style={{height:"100vh", overflowY:"scroll"}}>
+          <div class="logo_details  ">
+            <div class="logo_name fixed-top">
               {" "}
               <img src={sideimage} alt="logo" width="125px" />
             </div>
-            <i
+            {/* <i
               id="btn"
               onClick={toggleSidebar}
               className={`bx bx-menu ${
                 isOpen ? "bx-menu-alt-right" : "bx-menu"
               }`}
-            ></i>
+            ></i> */}
           </div>
           <ul class="nav-list">
             <li>
@@ -464,15 +464,17 @@ function Sidebar() {
                 </li>
               </div>
             )}
-            <li class="profile">
-              <div class="profile_details">
-                <img src='' alt="profile image" />
+            <li class="profile" >
+              <div class="profile_details" >
+                <div>
+                <i className="fa-solid fa-user" ></i>
+                </div>
+                {/* <img src='' alt="profile image" /> */}
                 <div class="profile_content">
                   <div class="name">Sai </div>
                   <div class="designation">Admin</div>
                 </div>
               </div>
-
               <i
                 class="bx bx-log-out"
                 id="log_out"

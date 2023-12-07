@@ -375,7 +375,7 @@ const Chapter = () => {
 									<option className="w-15">6</option>
 									<option className="w-15">7</option>
 									<option className="w-15">8</option>
-									<option className="w-15"></option>
+									<option className="w-15">9</option>
 									<option className="w-15">10</option>
 								</select>
 							</div>

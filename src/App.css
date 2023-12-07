@@ -3783,7 +3783,7 @@ margin-top: 10px;
   height: 50px;
   display: flex;
   align-items: center;
-  position: relative;
+  /* position: relative; */
 }
 
 .sidebar .logo_details .icon{
@@ -3795,10 +3795,17 @@ margin-top: 10px;
 
 .sidebar .logo_details .logo_name{
   color:var(--color-white);
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 600;
   opacity: 0;
   transition: all .5s ease;
+  
+}
+.logo_name{
+  background-color: rgb(12, 26, 46);
+  width: 247px;
+  padding: 12px;
+
 }
 
 .sidebar.open .logo_details .icon,
@@ -3966,6 +3973,7 @@ margin-top: 10px;
   bottom:-8px;
   padding:10px 14px;
   overflow: hidden;
+  opacity: 1;
   transition: all .5s ease;
 }
 
@@ -4285,4 +4293,22 @@ margin-top: 10px;
   border-radius: 5px;
   border: none;
   padding: 7px 10px;
+}
+::-webkit-scrollbar {
+  width: 0px; 
+  height: 0px;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #bfbdbf; 
+}
+::-webkit-scrollbar-thumb {
+  background: #ffffff; 
+  border-radius: 5px; 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #333;
 }
