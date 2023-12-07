@@ -4241,3 +4241,19 @@ margin-top: 10px;
 .skill_img {
   height: 50px;
 }
+/* .bars {
+  font-size: 30px;
+} */
+
+.card-item {
+  box-shadow: 0px 5px 10px rgba(10, 99, 169, 0.16),
+    1px 1px 5px rgba(255, 255, 255, 0.70);
+}
+/* .sidebar.open {
+  width: 340px;
+  height: 100vh;
+} */
+/* input[type=text] {
+  border: none ;
+  padding: 10px;
+} */
