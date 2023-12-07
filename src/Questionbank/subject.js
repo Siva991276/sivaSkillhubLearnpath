@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import { Pagination } from "antd";
 
 const QbSubject = () => {
 	useEffect(() => {
@@ -174,42 +175,41 @@ const QbSubject = () => {
 			setOpen(!Open);
 		};
 	};
-	const onSubmitUpdatedForm = (_id,e) => {
+	const onSubmitUpdatedForm = (_id, e) => {
 		e.preventDefault();
 		const AddSubject = {
 			name: name,
 			description: Description,
 			subjectTag: subjecttag,
 		};
-		 const nonemptyuserData = Object.fromEntries(
-			Object.entries(AddSubject).filter(([key, value]) => value !== '')
-		  );		  
-		  axios
-			.post(`http://localhost:4010/v2/subject/${_id}`, {nonemptyuserData})
+		const nonemptyuserData = Object.fromEntries(
+			Object.entries(AddSubject).filter(([key, value]) => value !== "")
+		);
+		axios
+			.post(`http://localhost:4010/v2/subject/${_id}`, { nonemptyuserData })
 			.then((response) => {
-			  if (response.status === 200) {
-				toast("Institute Updated successfully", {
-				  position: "top-right",
-				  autoClose: 1000,
-				  hideProgressBar: false,
-				  closeOnClick: true,
-				  pauseOnHover: true,
-				  draggable: true,
-				  progress: undefined,
-				  theme: "colored",
-				  className: "custom-toast-custom",
-				});
-				setName("");
-				setDescription("");
-				setSubjectTag("");
-				
-			  }
+				if (response.status === 200) {
+					toast("Institute Updated successfully", {
+						position: "top-right",
+						autoClose: 1000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						className: "custom-toast-custom",
+					});
+					setName("");
+					setDescription("");
+					setSubjectTag("");
+				}
 			})
 			.catch((error) => {
-			  console.log(error.response.data);
-			  toast.error("Institute already Updated");
-			}); 
-	  };
+				console.log(error.response.data);
+				toast.error("Institute already Updated");
+			});
+	};
 	const [isOpen, setIsOpen] = useState(true);
 
 	const toggleSidebar = () => {
@@ -229,11 +229,11 @@ const QbSubject = () => {
 	};
 	const handleSubjectTagTypeSelection = (event) => {
 		setSubjectTag(
-		  event.target.options[event.target.selectedIndex].getAttribute(
-			"data-value"
-		  )
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			)
 		);
-	  };
+	};
 	return (
 		<div>
 			<div className="container-fluid">
@@ -244,16 +244,16 @@ const QbSubject = () => {
 						</div>
 					)}
 					<div
-						className={`my-3 col-12 col-md-${isOpen ? 8 : 12} col-lg-${
-							isOpen ? 8 : 12
+						className={`my-3 col-12 col-md-${isOpen ? 9 : 12} col-lg-${
+							isOpen ? 9 : 12
 						}`}
 					>
 						<div className=" d-lg-block d-none">
 							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-							<div className="card-item p-2">
+							<div className="card-item p-2 mt-2">
 								<div class=" row  ">
 									<div className="col-md-9">
-										<h6 className="">Subjects</h6>
+										<h5 className="">Subjects</h5>
 									</div>
 									<div className="col-md-3 text-end">
 										<button
@@ -262,7 +262,13 @@ const QbSubject = () => {
 											data-bs-toggle="modal"
 											data-bs-target="#myModal234565"
 											className="float-right"
-											style={{ backgroundColor: "black", color: "white" , borderRadius:"8px", border:"none", padding:"7px 20px"}}
+											style={{
+												backgroundColor: "black",
+												color: "white",
+												borderRadius: "8px",
+												border: "none",
+												padding: "7px 20px",
+											}}
 										>
 											+ Create Subject
 										</button>
@@ -331,16 +337,19 @@ const QbSubject = () => {
 																className="form-control mb-2"
 																// onChange={(e) => setSubjectTag(e.target.value)}
 																onChange={handleSubjectTagTypeSelection}
-
 															>
 																<option value="">--select subjects--</option>
-																<option data-value="algorithms">Algorithms</option>
+																<option data-value="algorithms">
+																	Algorithms
+																</option>
 																{/* <option value="algorithms">algorithms</option> */}
 																<option data-value="Botany">Botany</option>
 																<option data-value="C-programming">
 																	C-programming
 																</option>
-																<option data-value="Chemistry">Chemistry</option>
+																<option data-value="Chemistry">
+																	Chemistry
+																</option>
 																<option data-value="Communication">
 																	Communication
 																</option>
@@ -354,10 +363,14 @@ const QbSubject = () => {
 																<option data-value="Java-programming">
 																	Java-programming
 																</option>
-																<option data-value="Mathematics">Mathematics</option>
+																<option data-value="Mathematics">
+																	Mathematics
+																</option>
 																<option data-value="Others">Others</option>
 																<option data-value="Physics">Physics</option>
-																<option data-value="Programming">Programming</option>
+																<option data-value="Programming">
+																	Programming
+																</option>
 																<option data-value="Programming Skills">
 																	Programming Skills
 																</option>
@@ -405,7 +418,7 @@ const QbSubject = () => {
 													<p>Description *</p>
 													<input
 														type="text"
-                                                        className="form-control"
+														className="form-control"
 														placeholder="...description..."
 														style={{}}
 													/>
@@ -414,7 +427,7 @@ const QbSubject = () => {
 													<br></br>
 													<select
 														type="text"
-                                                        className="form-control"
+														className="form-control"
 														placeholder="...subject tag..."
 														style={{ width: "190px" }}
 													>
@@ -513,37 +526,61 @@ const QbSubject = () => {
 										<thead>
 											<tr>
 												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
+													style={{
+														fontSize: "14px",
+														backgroundColor: "#333",
+														color: "#fff",
+													}}
 													className="text-center"
 												>
 													SNO
 												</th>
 												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
+													style={{
+														fontSize: "14px",
+														backgroundColor: "#333",
+														color: "#fff",
+													}}
 													className="text-center"
 												>
 													NAME
 												</th>
 												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
+													style={{
+														fontSize: "14px",
+														backgroundColor: "#333",
+														color: "#fff",
+													}}
 													className="text-center"
 												>
 													TAG
 												</th>
 												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
+													style={{
+														fontSize: "14px",
+														backgroundColor: "#333",
+														color: "#fff",
+													}}
 													className="text-center"
 												>
 													CHAPTERS
 												</th>
 												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
+													style={{
+														fontSize: "14px",
+														backgroundColor: "#333",
+														color: "#fff",
+													}}
 													className="text-center"
 												>
 													TOTAL QUESTION
 												</th>
 												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
+													style={{
+														fontSize: "14px",
+														backgroundColor: "#333",
+														color: "#fff",
+													}}
 													className="text-center"
 												>
 													ACTION
@@ -570,7 +607,9 @@ const QbSubject = () => {
 															<i
 																className="fa-sharp fa-solid fa-pen mx-1"
 																style={{ color: "skyblue" }}
-															onClick={(e) => onSubmitUpdatedForm(blog1._id,e)}
+																onClick={(e) =>
+																	onSubmitUpdatedForm(blog1._id, e)
+																}
 															></i>
 														</button>
 														<button
@@ -589,7 +628,7 @@ const QbSubject = () => {
 										</tbody>
 									</table>
 								</div>
-								<div className="d-flex flex-row">
+								{/* <div className="d-flex flex-row">
 									<div>
 										<p>Showing 1 to 2 of entries</p>
 									</div>
@@ -597,9 +636,19 @@ const QbSubject = () => {
 									<div>
 										<p>Previous</p>
 									</div>
-								</div>
+								</div> */}
+								
+								
 							</div>
 						</div>
+						<div className="text-center">
+								<Pagination
+									defaultCurrent={1}
+									total={50}
+									className="my-3 fixed-bottom "
+									
+								/>
+								</div>
 					</div>
 				</div>
 			</div>

@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
+import { Pagination } from "antd";
 
 const McqView = () => {
 	const [blogslist, setBlogslist] = useState([]);
@@ -60,10 +61,10 @@ const McqView = () => {
 							isOpen ? 9 : 12
 						}`}
 					>
-						<div className="ml-5 d-lg-block d-none">
+						<div className=" d-lg-block d-none">
 							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
 							<div class=" row ">
-								<div className="col-md-9 py-3 ">
+								<div className="col-md-11 py-3 ">
 									<p>
 										<b>Fillter Text Question</b> :
 									</p>
@@ -125,7 +126,11 @@ const McqView = () => {
                         </div> */}
 
 										<div className="col-6">
-											<select type="text" placeholder="" className="form-control">
+											<select
+												type="text"
+												placeholder=""
+												className="form-control"
+											>
 												<option value="chapter"></option>
 
 												{blogslist.map((blog) => (
@@ -137,7 +142,11 @@ const McqView = () => {
 											<p>Select Chapter</p>
 										</div>
 										<div className="col-6">
-											<select type="text" placeholder="" className="form-control">
+											<select
+												type="text"
+												placeholder=""
+												className="form-control"
+											>
 												<option>Easy</option>
 												<option>Medium</option>
 												<option>Hard</option>
@@ -146,7 +155,11 @@ const McqView = () => {
 										</div>
 
 										<div className="col-6">
-											<select type="text" placeholder="" className="form-control">
+											<select
+												type="text"
+												placeholder=""
+												className="form-control"
+											>
 												<option></option>
 												<option value="refernce"></option>
 
@@ -160,7 +173,11 @@ const McqView = () => {
 										</div>
 
 										<div className="col-6">
-											<select type="text" placeholder="" className="form-control">
+											<select
+												type="text"
+												placeholder=""
+												className="form-control"
+											>
 												<option></option>
 												<option value="questiontype"></option>
 
@@ -172,40 +189,44 @@ const McqView = () => {
 											</select>
 											<p>Question type</p>
 										</div>
-									</div>
-									<div className="row">
-										<div className="col-5"></div>
-										<div className="col-2">
-											<button
-												className=" mx-5 my-3"
-												style={{
-													backgroundColor: "black",
-													color: "white",
-													border: "none",
-                                                    padding:"6px",
-                                                    borderRadius:"7px"
-												}}
-											>
-												Go
-											</button>
+										<div className="row">
+											<div className="col-5"></div>
+											<div className="col-1">
+												<button
+													className=" my-2"
+													style={{
+														backgroundColor: "black",
+														color: "white",
+														border: "none",
+														padding: "6px",
+														borderRadius: "7px",
+													}}
+												>
+													Go
+												</button>
+											</div>
+											<div className="col-2">
+												<button
+													className="my-2"
+													style={{
+														backgroundColor: "white",
+														color: "red",
+														border: "1px solid red",
+														padding: "6px",
+														borderRadius: "7px",
+													}}
+												>
+													Clear Fillter
+												</button>
+											</div>
 										</div>
-										<div className="col-2">
-											<button
-												className="w-15  my-3"
-												style={{
-													backgroundColor: "red",
-													color: "white",
-													border: "none",
-                                                    padding:"6px",
-                                                    borderRadius:"7px"
-												}}
-											>
-												Clear Fillter
-											</button>
-										</div>
 									</div>
-									<div className="row card-item">
-										<div className="col-12  ">
+
+									<div
+										className="row card-item  mt-3 pt-3 p-2"
+										style={{ overflowX: "scroll" }}
+									>
+										<div className="col-12 ">
 											<p>
 												<b>Question Table</b>
 											</p>
@@ -220,99 +241,144 @@ const McqView = () => {
 
 											<button style={{ width: "95px" }}>Reference</button>
 											<button style={{ width: "95px" }}>Action</button> */}
-                                            <table className="table table-bordered">
-										<thead>
-											<tr>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													ID
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													Modulue
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													Chapter
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													Question
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													Diffculty
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													Reference
-												</th>
-                                                <th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													Action
-												</th>
-											</tr>
-										</thead>
-										{/* <tbody>
-											{blogslist.map((blog1, index) => (
-												<tr key={index}>
-													<td className="text-center">{index + 1}</td>
-													<td className="text-center">{blog1.name}</td>
-													<td className="text-center">{blog1.subjecttag}</td>
-													<td className="text-center">{blog1.chapters}</td>
-													<td className="text-center">
-														{blog1.totalQuestions}
-													</td>
-													<td className="text-center">
-														<button
-															type="button"
-															className="btn"
-															data-bs-toggle="modal"
-															data-bs-target={#myModal${index + 1}}
-														>
-															<i
-																className="fa-sharp fa-solid fa-pen mx-1"
-																style={{ color: "skyblue" }}
-															></i>
-														</button>
-														<button
-															type="button"
-															className="btn"
-															onClick={() => handleDelete(blog1._id)}
-														>
-															<i
-																className="fa-solid fa-trash-can mx-2"
-																style={{ color: "red" }}
-															></i>
-														</button>
-													</td>
-												</tr>
-											))}
-										</tbody> */}
-									</table>
+											<div style={{ width: "1200px" }}>
+												<table className="table table-bordered">
+													<thead>
+														<tr>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																S NO
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																ID
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Modulue
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Chapter
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Question
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Diffculty
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Reference
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Quation Type
+															</th>
+															<th
+																style={{
+																	fontSize: "14px",
+																	backgroundColor: "#333",
+																	color: "#fff",
+																}}
+																className="text-center"
+															>
+																Action
+															</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td className="text-center">1</td>
+															<td className="text-center">iptalgh8</td>
+															<td className="text-center">React Js</td>
+															<td className="text-center">
+																Life cycle of component
+															</td>
+															<td className="text-center">What is React</td>
+															<td className="text-center">Easy</td>
+															<td className="text-center">
+																Multi Correct Option
+															</td>
+															<td className="text-center">Null</td>
+															<td className="text-center">
+																<i class="fa-regular fa-copy mx-1 copy"></i>
+																<i class="fa-solid fa-eye mx-1 eye"></i>
+
+																<i className="fa-sharp fa-solid fa-pen pen mx-1"></i>
+
+																<i className="fa-solid fa-trash-can trash mx-2"></i>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							questiontype
+							Questiontype
 						</div>
 						{blogslist.map((blog, index) => (
 							<p key={index}>{blog.questiontype}</p>
 						))}
+					</div>
+					<div className="text-center">
+						<Pagination
+							defaultCurrent={1}
+							total={50}
+							className="my-3 fixed-bottom "
+						/>
 					</div>
 				</div>
 			</div>
