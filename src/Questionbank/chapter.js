@@ -5,12 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
-import { Pagination } from "antd";
-
 
 const Chapter = () => {
 	useEffect(() => {
 		fetchblogs1();
+		fetchSubjects();
 	}, []);
 
 	const [Open, setOpen] = useState(true);
@@ -35,22 +34,23 @@ const Chapter = () => {
 	const [subjecttag1, setsubjecttag1] = useState("");
 	const [chaptertag, setchaptertag] = useState("");
 	const [data1, setData1] = useState("");
+	const [subjectId,setSubjectId ] = useState([]);
 
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
 
 		if (name1 && Description1 && subjecttag1 && chaptertag !== "") {
 			try {
-				const AddSubject = {
-					name1: name1,
-					Description1: Description1,
-					subjecttag1: subjecttag1,
-					chaptertag: chaptertag,
+				const AddChapter = {
+					Name: name1,
+					Description: Description1,
+					subject: subjecttag1,
+					ChapterTag: chaptertag,
 				};
 
 				const response = await axios.post(
-					"http://localhost:3051/chapterData",
-					AddSubject
+`http://localhost:4010/v1/addchapter/${subjectId}`,
+AddChapter
 				);
 
 				setData1(response.data);
@@ -67,21 +67,22 @@ const Chapter = () => {
 			window.alert("Error: Please fill in all fields");
 		}
 	};
-	console.log("data1");
+	console.log("");
 
 	const [Error, setError] = useState("");
-	const handleDelete = async (id) => {
+	
+	const handleDelete = async (subjectid,chapterid) => {
 		try {
-			if (!id) {
-				setError("Invalid ID provided for delete");
-				return;
-			}
-			console.log("Deleting subject with ID", id);
+			// if (subjectid && chapterid !== "") {
+			// 	setError("Invalid ID provided for delete");
+			// 	return;
+			// }
+			console.log("Deleting subject with ID", subjectid,chapterid);
 			const response = await axios.delete(
-				`http://localhost:3051/deleteInstitute/${id}`
+ `http://localhost:4010/v1/deleteChapter/${subjectid}/${chapterid}`
 			);
 			if (response.status === 200) {
-				window.alert("Subject deleted Successful", {
+				window.alert("Chapter deleted Successful", {
 					position: "top-right",
 					autoClose: 1000,
 					hideProgressBar: false,
@@ -91,7 +92,7 @@ const Chapter = () => {
 					progress: undefined,
 					theme: "colored",
 				});
-
+				fetchSubjects();
 				fetchblogs1();
 			} else {
 				alert("Error:" + response.data);
@@ -122,9 +123,105 @@ const Chapter = () => {
 			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
 		}
 	};
-	return (
-		// main content
+	const [allSubjects, setAllSubjects] = useState([]);
+	const fetchSubjects = async () => {
+		const api = "http://localhost:4010/v2/subjects";
+		try {
+			const response = await axios.get(api, {});
+			const data = response.data;
+			setAllSubjects(response.data);
+		} catch (error) {
+			console.error("Error fetch blogs:", error);
+		}
+	};
+	const onSubmitUpdatedForm = (subjectId,chapterId,e) => {
+		e.preventDefault();
+		const AddChapter = {
+			Name: name1,
+			Description: Description1,
+			subject: subjecttag1,
+			ChapterTag: chaptertag,
+		};
+		 const nonemptyuserData = Object.fromEntries(
+			Object.entries(AddChapter).filter(([key, value]) => value !== '')
+		  );	
+			  
+		  axios
+			.put(`http://localhost:4010/v1/updateChapter/${subjectId}/${chapterId}`, nonemptyuserData)
+			.then((response) => {
+			  if (response.status === 200) {
+				toast("Chapter Updated successfully", {
+				  position: "top-right",
+				  autoClose: 1000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "colored",
+				  className: "custom-toast-custom",
+				});
+				setname1("");
+				setDescription1("");
+				setChapters("");				
+			  }
+			})
+			.catch((error) => {
+			  console.log(error.response.data);
+			  toast.error("Institute already Updated");
+			}); 
+	  };
+	const [searchTerm, setSearchTerm] = useState('');
+  const [chapters, setChapters] = useState([]);
+  const [allChapters, setAllChapters] = useState([]);
+  console.log(allChapters,"sai")
 
+  const filterChapters = (selectedSubjectId) => {
+    const filteredChapters = allSubjects?.filter(chapter =>
+      chapter._id === selectedSubjectId)
+	  console.log("Filtered Data:", filteredChapters);
+    setAllChapters(filteredChapters);
+  };
+
+  const clearFilter = () => {
+	const clearfilteredChapters = allSubjects?.filter(chapter =>
+		chapter._id ==! selectedSubjectId)
+		console.log("Filtered Data:", clearfilteredChapters);
+	  setAllChapters(clearfilteredChapters);
+    // Reset to the original list of chapters
+  };
+
+  const getAllChapters = (id) => {
+    // Log all chapters to the console
+		console.log("Filtered Data:", allSubjects);
+	  setAllChapters(allSubjects);
+	};
+  const [selectedSubjectId, setSelectedSubjectId] = useState([]);
+  
+  const handleSubjectSelection = (e) => {
+	const subjectId = e.target.value;
+	setSelectedSubjectId(subjectId);
+	// Other logic...
+  };
+  
+  const handleSubjectTagTypeSelection = (event) => {
+	setsubjecttag1(
+	  event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+	  )
+	);
+	// setSubjectId(event.target.options[event.target.selectedIndex].getAttribute(
+	// 	"value"
+	//   ))
+  };
+  const handleChapterTagTypeSelection = (event) => {
+	setchaptertag(
+	  event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+	  )
+	);
+  };
+	return (
 		<div>
 			<div className="container-fluid">
 				<div className="row">
@@ -140,10 +237,46 @@ const Chapter = () => {
 					>
 						<div className=" d-lg-block d-none">
 							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                            <div className="card-item p-2 mt-2">
+                            <div className="mt-4 card-item p-2">
 							<div class=" row ">
+								
+								 <div className="col-md-4">
+								 <select
+                                style={{padding:"5px"}}
+                                    className="w-100 select_item"
+                                    onChange={(e)=>handleSubjectSelection(e)}
+                                >
+                                    <option className="hidden" value="">
+                                        Select Subject Name
+                                    </option>
+                                    {allSubjects?.map((eachsubject) => (
+                                        <>
+                                        <option
+                                            className="name_item"
+                                            key={eachsubject._id} // Use a unique key for each option
+                                            data-value={eachsubject.name}
+                                            value={eachsubject._id}
+                                        >
+                                            {eachsubject.name}
+                                        </option>
+                                        </>
+                                    ))}
+                                </select>
+
+								</div>
+								<div className="col-md-2">
+									<button className="btn btn-secondary" onClick={()=>filterChapters(selectedSubjectId)}>Go</button>
+								</div>
 								<div className="col-md-3">
-									<h6 className="">Subjects</h6>
+									<button className="btn btn-secondary" onClick={clearFilter}>Clear Filter</button>
+								</div>
+								<div className="col-md-3">
+									<button className="btn btn-secondary" onClick={()=>getAllChapters(allSubjects._id)}>Get All Chapters</button>
+								</div>									
+							</div>
+							<div class=" row mt-4">
+								<div className="col-md-3 py-4 ">
+									<h6 className="">Chapters</h6>
 								</div>
 								<div className="col-md-9 text-end">
 									<button
@@ -151,8 +284,8 @@ const Chapter = () => {
 										class="btn "
 										data-bs-toggle="modal"
 										data-bs-target="#myModal234565"
-										className="float-right"
-										style={{ backgroundColor: "black", color: "white", borderRadius:"7px", padding:"7px 20px", border:"none" }}
+										className="float-right btn btn-danger"
+										
 									>
 										+ Create Subject
 									</button>
@@ -162,7 +295,7 @@ const Chapter = () => {
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h4 class="modal-title">Cerate Chapter</h4>
+												<h4 class="modal-title">Create Chapter</h4>
 
 												<button
 													type="button"
@@ -203,49 +336,63 @@ const Chapter = () => {
 														value={Description1}
 													/>
 													<br></br>
-													<p>chaptertag *</p>
-													<input
-														type="text"
-                                                        className="form-control"
-														placeholder="...chaptertag..."
-														onChange={(e) => setchaptertag(e.target.value)}
-														value={chaptertag}
-													/>
+													<label>Subjecttag *</label>
+													<select
+													style={{padding:"5px"}}
+														className="w-100 select_item"
+														onChange={handleSubjectTagTypeSelection}
+													>
+														<option className="hidden" value="">
+															Select subject tag
+														</option>
+														{allSubjects?.map((subject) => (
+															<>
+															<option
+																className="name_item"
+																key={subject._id} // Use a unique key for each option
+																data-value={subject.subjectTag}
+																value={subject._id}
+															>
+																{subject.subjectTag}
+															</option>
+															</>
+														))}
+													</select>
+
 													<br></br>
 
 													<label className="my-3 ">Chapter *</label>
 													<br></br>
 													<select
-                                                    className="form-control"
-														value={subjecttag1}
-														style={{ width: "190px" }}
-														onChange={(e) => setsubjecttag1(e.target.value)}
+                                                    	className="form-control"
+														value={chaptertag}
+														onChange={handleChapterTagTypeSelection}
 													>
-														<option value="">--select subjects--</option>
-														<option value="algorithms">Algorithms</option>
+														<option >--select subjects--</option>
+														<option data-value="Chapter1">Chapter1</option>
 														{/* <option value="algorithms">algorithms</option> */}
-														<option value="Botany">Botany</option>
-														<option value="C-programming">C-programming</option>
-														<option value="Chemistry">Chemistry</option>
-														<option value="Communication">Communication</option>
-														<option value="Data-reasoning">
-															Data-reasoning
+														<option data-value="chapter2">chapter2</option>
+														<option data-value="chapter3">chapter3</option>
+														<option data-value="chapter4">chapter4</option>
+														<option data-value="chapter5">chapter5</option>
+														<option data-value="chapter6">
+														chapter6
 														</option>
-														<option value="Data-structres">
-															Data-structres
+														<option data-value="chapter7">
+														chapter7
 														</option>
-														<option value="Dbms">Dbms</option>
-														<option value="Java-programming">
+														<option data-value="Dbms">Dbms</option>
+														<option data-value="Java-programming">
 															Java-programming
 														</option>
-														<option value="Mathematics">Mathematics</option>
-														<option value="Others">Others</option>
-														<option value="Physics">Physics</option>
-														<option value="Programming">Programming</option>
-														<option value="Programming Skills">
+														<option data-value="Mathematics">Mathematics</option>
+														<option data-value="Others">Others</option>
+														<option data-value="Physics">Physics</option>
+														<option data-value="Programming">Programming</option>
+														<option data-value="Programming Skills">
 															Programming Skills
 														</option>
-														<option value="Quntative apptitude">
+														<option data-value="Quntative apptitude">
 															Quntative apptitude
 														</option>
 														{/* Add other options similarly */}
@@ -256,6 +403,7 @@ const Chapter = () => {
 															type="submit"
 															className="btn btn-danger"
 															data-bs-dismiss="modal"
+
 														>
 															Submit
 														</button>
@@ -264,8 +412,7 @@ const Chapter = () => {
 											</div>
 										</div>
 									</div>
-								</div>
-							
+								</div>				
 
 							{/* pen */}
 
@@ -273,7 +420,7 @@ const Chapter = () => {
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<h4 class="modal-title">Cerate Chapter</h4>
+											<h4 class="modal-title">Create Chapter</h4>
 											<button
 												type="button"
 												class="btn-close"
@@ -333,33 +480,8 @@ const Chapter = () => {
 
 							{/* Delete */}
 
-							<div class="modal" id="myModal234567">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h4 class="modal-title">Delete Subject</h4>
-											<button
-												type="button"
-												class="btn-close"
-												data-bs-dismiss="modal"
-											></button>
-										</div>
-
-										<div class="modal-body">Are Sure Delete this subject</div>
-
-										<div class="modal-footer">
-											<p>No</p>
-											<button
-												type="button"
-												class="btn btn-danger"
-												data-bs-dismiss="modal"
-											>
-												Yes
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
+							
+						
 						</div>
 						<div className="d-flex flex-row">
 							<div>
@@ -415,117 +537,198 @@ const Chapter = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{blogslist.map((blog1, index) => (
+									{allChapters?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
 										<tr key={index}>
 											<td className="text-center">{index + 1}</td>
-											<td className="text-center">{blog1.name1}</td>
-											<td className="text-center">{blog1.Description1}</td>
+											<td className="text-center">{chapter.Name}</td>
+											<td className="text-center">{chapter.subject}</td>
 											{/* <td className="text-center">{blog1.chapters}</td> */}
-											<td className="text-center">{blog1.subjecttag1}</td>
-											<td className="text-center">{blog1.chaptertag}</td>
+											<td className="text-center">{chapter.subjectTag}</td>
+											<td className="text-center">{chapter.ChapterTag}</td>
 											<td className="text-center">
 												<button
 													type="button"
 													className="btn"
 													data-bs-toggle="modal"
-													data-bs-target={`#myModal${index + 1}`}
+													data-bs-target="#myModalView"
+													
 												>
 													<i
 														className="fa-sharp fa-solid fa-pen"
 														style={{ color: "skyblue" }}
 													></i>
 												</button>
+												<div class="modal" id="myModalView">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title">Update Chapter</h4>
+
+												<button
+													type="button"
+													class="btn-close"
+													data-bs-dismiss="modal"
+												></button>
+											</div>
+
+											<ToastContainer
+												position="top-right"
+												autoClose={5000}
+												hideProgressBar={false}
+												newestOnTop={false}
+												closeOnClick
+												rtl={false}
+												pauseOnFocusLoss
+												draggable
+												pauseOnHover
+												theme="light"
+											/>
+											<div class="modal-body">
+												<form>
+													<label style={{float:"left"}}>Name *</label>
+													<input
+                                                        className="form-control"
+														type="text"
+														placeholder="...name..."
+														onChange={(e) => setname1(e.target.value)}
+														value={name1 || chapter.Name}
+													/>
+
+													<label style={{float:"left"}}>Description *</label>
+													<input
+                                                        className="form-control"
+														type="text"
+														placeholder="...description..."
+														onChange={(e) => setDescription1(e.target.value)}
+														value={Description1 || chapter.Description}
+													/>
+													<br></br>
+													<label style={{float:"left"}}>Subjecttag *</label>
+													<select
+													style={{padding:"5px"}}
+													className="form-control"
+														onChange={handleSubjectTagTypeSelection}
+														
+													>
+														{allSubjects?.map((subject) => (
+															<>
+															<option
+																className="name_item"
+																key={subject._id} // Use a unique key for each option
+																data-value={subject.subjectTag}
+																value={subjecttag1 || ""}
+															>
+																{subject.subjectTag }
+															</option>
+															</>
+														))}
+													</select>
+
+													<br></br>
+
+													<label className="my-3 " style={{float:"left"}}>Chapter *</label>
+													<br></br>
+													<select
+                                                    	className="form-control"
+														value={chaptertag || chapter.ChapterTag}
+														onChange={handleChapterTagTypeSelection}
+													>
+														<option >--select subjects--</option>
+														<option data-value="Chapter1">Chapter1</option>
+														{/* <option value="algorithms">algorithms</option> */}
+														<option data-value="chapter2">chapter2</option>
+														<option data-value="chapter3">chapter3</option>
+														<option data-value="chapter4">chapter4</option>
+														<option data-value="chapter5">chapter5</option>
+														<option data-value="chapter6">
+														chapter6
+														</option>
+														<option data-value="chapter7">
+														chapter7
+														</option>
+														<option data-value="Dbms">Dbms</option>
+														<option data-value="Java-programming">
+															Java-programming
+														</option>
+														<option data-value="Mathematics">Mathematics</option>
+														<option data-value="Others">Others</option>
+														<option data-value="Physics">Physics</option>
+														<option data-value="Programming">Programming</option>
+														<option data-value="Programming Skills">
+															Programming Skills
+														</option>
+														<option data-value="Quntative apptitude">
+															Quntative apptitude
+														</option>
+														{/* Add other options similarly */}
+													</select>
+
+													<div className="modal-footer">
+														<button
+															type="submit"
+															className="btn btn-danger"
+															data-bs-dismiss="modal"
+															onClick={(e) => onSubmitUpdatedForm(subject._id,chapter._id,e)}
+														>
+															Submit
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+
 												<button
 													type="button"
 													className="btn"
-													onClick={() => handleDelete(blog1._id)}
+													data-bs-toggle="modal"
+													data-bs-target="#myModal"
+												onClick={() => handleDelete(subject._id,chapter._id)}
 												>
 													<i
 														className="fa-solid fa-trash-can "
 														style={{ color: "red" }}
+
 													></i>
 												</button>
+												<div class="modal" id="myModalDelete">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="modal-title">Delete Subject</h4>
+											<button
+												type="button"
+												class="btn-close"
+												data-bs-dismiss="modal"
+											></button>
+										</div>
+
+										<div class="modal-body">Are Sure Delete this subject</div>
+
+										<div class="modal-footer">
+											<p>No</p>
+											<button
+												type="button"
+												class="btn btn-danger"
+												data-bs-dismiss="modal"
+												onClick={() => handleDelete(subject._id,chapter._id)}
+											>
+												Yes
+											</button>
+										</div>
+									</div>
+								</div>
+												</div>
 											</td>
 										</tr>
-									))}
+										)
+									)))}
 								</tbody>
-							</table>
-
-							{/* <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th style={{ fontSize: "14px", marginLeft: "-200px" }} className="text-center">SNO</th>
-                                        <th style={{ fontSize: "14px", }} className="text-center">NAME</th>
-                                        <th style={{ fontSize: "14px" }} className="text-center">TAG</th>
-                                        <th style={{ fontSize: "14px" }} className="text-center">CHAPTERS</th>
-                                        <th style={{ fontSize: "14px" }} className="text-center">TOTAL QUESTION</th>
-                                        <th style={{ fontSize: "14px" }} className="text-center">ACTION</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <tr>
-                                        {blogslist.map((blog1) => (
-                                            <div>
-                                                <tr>
-                                                    <th className="text-center  mx-3">1</th>
-                                                </tr>
-                                                <tr>
-
-                                                    <th className="text-center  mx-3">{blog1.name}</th>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-center mx-3" >{blog1.Description}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-center  mx-3">{blog1.subjecttag}</td>
-                                                </tr>
-
-
-
-
-                                                <td>
-                                                    <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#myModal23456">
-                                                        <i class="fa-sharp fa-solid fa-pen mx-1" style={{ color: "skyblue" }}></i>
-                                                    </button>
-                                                    <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#myModal234567">
-
-                                                        <i class="fa-solid fa-trash-can mx-2" style={{ color: "red" }}></i>
-                                                    </button>
-                                                </td>
-                                                <td><i class="fa-sharp fa-solid fa-pen mx-4" style={{ color: "skyblue" }}></i><i class="fa-solid fa-trash-can mx-2" style={{ color: "red" }}></i></td>
-                                            </div>
-                                        ))}
-                                    </tr>
-
-
-
-
-                                   
-
-
-                                </tbody>
-
-                            </table> */}
-							{/* <tr>
-                                        <td className="text-center">2</td>
-                                        <td className="text-center">javaprogramm</td>
-                                        <td className="text-center">java-programming</td>
-                                        <td className="text-center">1</td>
-                                        <td></td>
-                                        <td><i class="fa-sharp fa-solid fa-pen mx-4" style={{ color: "skyblue" }}></i><i class="fa-solid fa-trash-can mx-2" style={{ color: "red" }}></i></td>
-
-                                    </tr> */}
-
-							{/* {blogslist.map((blog) => (
-                                        <tr key={blog.id}>
-                                            <td>{blog.name}</td>
-                                            <td>{blog.Description}</td>
-                                            <td>{blog.subjecttag}</td>
-                                        </tr>
-                                    ))} */}
+							</table>							
 						</div>
-						{/* <div className="d-flex flex-row">
+						<div className="d-flex flex-row">
 							<div>
 								<p>Showing 1 to 2 of entries</p>
 							</div>
@@ -533,21 +736,14 @@ const Chapter = () => {
 							<div>
 								<p>Previous</p>
 							</div>
-						</div> */}
+						</div>
 					</div>
 				</div>
-				<div className="text-center">
-								<Pagination
-									defaultCurrent={1}
-									total={50}
-									className="my-3 fixed-bottom "
-									
-								/>
-								</div>
                 </div>
                 </div>
 			</div>
-		</div>
+			</div>
+		
 	);
 };
 export default Chapter;

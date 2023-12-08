@@ -323,9 +323,9 @@ function Sidebar() {
                       <span className="tooltip">View</span>
                     </li>
                     <li>
-                      <a href="#">
+                      <a href="/upload">
                         <i class="fa-solid fa-video"></i>
-                        <Link to="#">
+                        <Link to="/upload">
                           <span className="link_name">
                             Upload
                           </span>
