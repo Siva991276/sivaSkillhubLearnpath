@@ -1,504 +1,168 @@
-import React from "react";
+import React, { useState, useRef } from "react";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Basic from "./BasicCoding";
 import Sidebar from "../Sidebar";
-import { useState } from "react";
 
+const steps = ["BASIC", "SAMPLECODE", "TEST CASESS"];
 const Coding = () => {
-    const [isOpen, setIsOpen] = useState(true);
-
-    const toggleSidebar = () => {
-      setIsOpen(!isOpen);
-      menuBtnChange();
-    };
-  
-    const menuBtnChange = () => {
-      const sidebar = document.querySelector(".sidebar");
-      const closeBtn = document.querySelector("#btn");
-      const searchBtn = document.querySelector(".bx-search");
-  
-      if (sidebar?.classList.contains("open")) {
-        closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
-      } else {
-        closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
-      }
-    };
-    return (
-        <div className="container">
-            <div className="row">
-            {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
-              <Sidebar/>
-              </div>
-					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
-                    <div> 
-            <h4>CREATE Coding Question</h4>
-                    <div className="row">
-                        <div className="col-1"></div>
-                        <div className="col-3">
-                            <input type="radio" />
-                            <p>BASIC</p>
-                            <hr style={{ color: "red" }} />
-                        </div>
-
-
-
-                        <div className="col-4">
-                            <input type="radio" />
-                            <p>SAMPLE CODE</p>
-                            <hr style={{ color: "black" }} />
-                           
-                        </div>
-                        <div className="col-4">
-                            <input type="radio" />
-                            <p>TEST CASE</p>
-                            <hr style={{ color: "black" }} />
-                        </div>
-                    </div>
-
-
-
-                    <label style={{ fontSize: "15px" }}><b>Subjects *</b></label>
-                    <select type="text" placeholder="....Select Subject ..." className="card">
-                        <option>...select Subject..</option>
-                        <option>Front end</option>
-
-                    </select>
-                    <label style={{ fontSize: "15px" }}><b>Chapter *</b></label>
-                    <select type="text" placeholder="...Select Chapter" className="card">
-                        <option>...select Chapter...</option>
-                    </select>
-
-                    <label style={{ fontSize: "15px" }}><b>Tittle *</b></label>
-                    <select type="text" placeholder="...Select Chapter" className="card">
-                        <option>...select Chapter...</option>
-                    </select>
-
-
-                    <label style={{ fontSize: "15px" }}><b>Programming Languages *</b></label>
-                    <select type="text" placeholder="" className="card">
-                        <option>...select Porgramming Languages..</option>
-                        <option>C</option>
-                        <option>Python</option>
-                        <option>Java</option>
-                        <option>CPP</option>
-                        <option>JavaScript</option>
-                        <option>React</option>
-
-                    </select>
-
-
-
-
-                    <label style={{ fontSize: "15px" }} className="my-3"><b>Description *</b></label>
-
-
-
-
-                    <div className="row card mx-1">
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <p>Edit</p>
-                            </div>
-                            <div className="col-2 ">
-                                view
-                            </div>
-
-                            <div className="col-2">
-                                Insert
-                            </div>
-                            <div className="col-2">
-                                Format
-                            </div>
-                            <div className="col-2">
-                                Table
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div className="card">
-
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <i class="fa-solid fa-share"></i>
-                            </div>
-                            <div className="col-2  ">
-                                paragraph
-                            </div>
-
-                            <div className="col-2">
-                                <i class="fa-sharp fa-solid fa-b"></i>
-                            </div>
-                            <div className="col-2">
-                                <i class="fa-sharp fa-regular fa-i"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-regular fa-circle-question"></i>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-
-
-                    <textarea />
-                    <div className="card">
-
-                        <div className="row">
-                            <div className="col-1">
-                                <p>p</p>
-
-                            </div>
-                            <div className="col-1">
-
-                            </div>
-                            <div className="col-10 text-end">
-                                <p>0 words powderd by tinny</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div className="my-1">
-                        <p><b>Description Image</b></p>
-                    </div>
-
-                    <div className="my-1" style={{ width: "110px" }}>
-                        <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                    </div>
-
-
-
-
-                    <label style={{ fontSize: "15px" }} className="my-3"><b>Constarin *</b></label>
-
-                    <div className="row card mx-1">
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <p>Edit</p>
-                            </div>
-                            <div className="col-2 ">
-                                view
-                            </div>
-
-                            <div className="col-2">
-                                Insert
-                            </div>
-                            <div className="col-2">
-                                Format
-                            </div>
-                            <div className="col-2">
-                                Table
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div className="card">
-
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <i class="fa-solid fa-share"></i>
-                            </div>
-                            <div className="col-2  ">
-                                paragraph
-                            </div>
-
-                            <div className="col-2">
-                                <i class="fa-sharp fa-solid fa-b"></i>
-                            </div>
-                            <div className="col-2">
-                                <i class="fa-sharp fa-regular fa-i"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-regular fa-circle-question"></i>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-
-
-                    <textarea />
-                    <div className="card">
-
-                        <div className="row">
-                            <div className="col-1">
-                                <p>p</p>
-
-                            </div>
-                            <div className="col-1">
-
-                            </div>
-                            <div className="col-10 text-end">
-                                <p>0 words powderd by tinny</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div className="my-1">
-                        <p><b>Constraints Image</b></p>
-                    </div>
-
-                    <div className="my-1" style={{ width: "110px" }}>
-                        <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                    </div>
-
-
-
-
-                    <label style={{ fontSize: "15px" }} className="my-3"><b>Example *</b></label>
-
-
-
-
-                    <div className="row card mx-1">
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <p>Edit</p>
-                            </div>
-                            <div className="col-2 ">
-                                view
-                            </div>
-
-                            <div className="col-2">
-                                Insert
-                            </div>
-                            <div className="col-2">
-                                Format
-                            </div>
-                            <div className="col-2">
-                                Table
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div className="card">
-
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <i class="fa-solid fa-share"></i>
-                            </div>
-                            <div className="col-2  ">
-                                paragraph
-                            </div>
-
-                            <div className="col-2">
-                                <i class="fa-sharp fa-solid fa-b"></i>
-                            </div>
-                            <div className="col-2">
-                                <i class="fa-sharp fa-regular fa-i"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-regular fa-circle-question"></i>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-
-
-                    <textarea />
-                    <div className="card">
-
-                        <div className="row">
-                            <div className="col-1">
-                                <p>p</p>
-
-                            </div>
-                            <div className="col-1">
-
-                            </div>
-                            <div className="col-10 text-end">
-                                <p>0 words powderd by tinny</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div className="my-1">
-                        <p><b>Example Image</b></p>
-                    </div>
-
-                    <div className="my-1" style={{ width: "110px" }}>
-                        <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                    </div>
-
-
-
-
-
-                    <label style={{ fontSize: "15px" }} className="my-3"><b>Explanation *</b></label>
-
-
-
-
-                    <div className="row card mx-1">
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <p>Edit</p>
-                            </div>
-                            <div className="col-2 ">
-                                view
-                            </div>
-
-                            <div className="col-2">
-                                Insert
-                            </div>
-                            <div className="col-2">
-                                Format
-                            </div>
-                            <div className="col-2">
-                                Table
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div className="card">
-
-                        <div className="d-flex flex-row">
-                            <div className="col-1 my-1">
-                                <i class="fa-solid fa-share"></i>
-                            </div>
-                            <div className="col-2  ">
-                                paragraph
-                            </div>
-
-                            <div className="col-2">
-                                <i class="fa-sharp fa-solid fa-b"></i>
-                            </div>
-                            <div className="col-2">
-                                <i class="fa-sharp fa-regular fa-i"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-solid fa-list"></i>
-                            </div>
-                            <div className="col-1">
-                                <i class="fa-regular fa-circle-question"></i>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-
-
-                    <textarea />
-                    <div className="card">
-
-                        <div className="row">
-                            <div className="col-1">
-                                <p>p</p>
-
-                            </div>
-                            <div className="col-1">
-
-                            </div>
-                            <div className="col-10 text-end">
-                                <p>0 words powderd by tinny</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div className="my-1">
-                        <p><b>Explanation Image</b></p>
-                    </div>
-
-                    <div className="my-1" style={{ width: "110px" }}>
-                        <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                    </div>
-                    <div className="cotue">
-
-                        <button className=" my-4" style={{ backgroundColor: "blue", color: "white", border: "1px solid blue" }}>Continue</button>
-                    </div>
-
-
-
-                </div>
-
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [skipped, setSkipped] = React.useState(new Set());
+  const [isOpen, setIsOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+    menuBtnChange();
+  };
+  const isStepOptional = (step) => {
+    return step === 1;
+  };
+
+  const isStepSkipped = (step) => {
+    return skipped.has(step);
+  };
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // You probably want to guard against something like this,
+      // it should never occur unless someone's actively trying to break something.
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  const menuBtnChange = () => {
+    const sidebar = document.querySelector(".sidebar");
+    const closeBtn = document.querySelector("#btn");
+    const searchBtn = document.querySelector(".bx-search");
+
+    if (sidebar?.classList.contains("open")) {
+      closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
+    } else {
+      closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
+    }
+  };
+  return (
+    <div className="container">
+      <div className="row">
+        {isOpen && (
+          <div className=" col-12 col-md-2 sectioncard121">
+          <Sidebar/>
+          </div>
+        )}
+        <div
+          className={`my-3 col-12 col-md-${isOpen ? 10 : 12} col-lg-${
+            isOpen ? 10 : 12
+          }`}
+        >
+          <div className="ml-5 d-lg-block d-none">
+            <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
+            <div class="mx-5">
+              <Container>
+                <Box
+                  sx={{ width: "790px", bgcolor: "#dfe7ee" }}
+                  style={{ padding: "30px 30px 30px 30px" }}
+                >
+                  <Stepper activeStep={activeStep}>
+                    {steps.map((label, index) => {
+                      const stepProps = {};
+                      const labelProps = {};
+                      if (isStepOptional(index)) {
+                        labelProps.optional = (
+                          <Typography variant="caption">Optional</Typography>
+                        );
+                      }
+                      if (isStepSkipped(index)) {
+                        stepProps.completed = false;
+                      }
+                      return (
+                        <Step key={label} {...stepProps}>
+                          <StepLabel {...labelProps}>{label}</StepLabel>
+                        </Step>
+                      );
+                    })}
+                  </Stepper>
+                  {activeStep === steps.length ? (
+                    <React.Fragment>
+                      <Typography sx={{ mt: 2, mb: 1 }}>
+                        All steps completed - you&apos;re finished
+                      </Typography>
+                      <Box
+                        sx={{ display: "flex", flexDirection: "row", pt: 2 }}
+                      >
+                        <Box sx={{ flex: "1 1 auto" }} />
+                        <Button onClick={handleReset}>Reset</Button>
+                      </Box>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      {activeStep === 0 && <Basic />}
+                      {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
+                      <Box
+                        sx={{ display: "flex", flexDirection: "row", pt: 2 }}
+                      >
+                        <Button
+                          color="inherit"
+                          disabled={activeStep === 0}
+                          onClick={handleBack}
+                          sx={{ mr: 1 }}
+                        >
+                          Back
+                        </Button>
+                        <Box sx={{ flex: "1 1 auto" }} />
+                        {isStepOptional(activeStep) && (
+                          <Button
+                            color="inherit"
+                            onClick={handleSkip}
+                            sx={{ mr: 1 }}
+                          >
+                            Skip
+                          </Button>
+                        )}
+
+                        <Button onClick={handleNext}>
+                          {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                        </Button>
+                      </Box>
+                    </React.Fragment>
+                  )}
+                </Box>
+              </Container>
             </div>
-
-
+          </div>
         </div>
-
-        </div>
-        </div>
-        </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 export default Coding;

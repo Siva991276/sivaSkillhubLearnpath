@@ -3,33 +3,53 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import { Pagination } from "antd";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const McqView = () => {
-	const [blogslist, setBlogslist] = useState([]);
+	const [selectQuestionType, setSelectQuestionType] = useState("");
+	const [selectedSubject, setSelectedSubject] = useState("");
+	const [selectedChapter, setSelectedChapter] = useState("");
+	const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  	const [reference, setReferencce] = useState("");
+	const [question, setQuestion] = useState("");
+	const [option1, setOption1] = useState("");
+	const [option2, setOption2] = useState("");
+	const [option3, setOption3] = useState("");
+	const [correctAnswer, setCorrectAnswer] = useState("");
+	const [allquestionData, setallquestionData] = useState("");
+	const [allsubjectsData, setAllsubjectsData] = useState([]);
+	const [allMcqsList, setallMCqsList] = useState([]);
 
-	useEffect(() => {
-		fetchblogs();
-	});
+	
 
-	// const fetchBlogs = async () => {
-	//     try {
-	//         const response = await axios.get("http://localhost:3051/allperfexData/");
-	//         setBlogslist(response.data);
-	//     } catch (error) {
-	//         console.error("Error fetching data:", error);
-	//     }
-	// };
-	const fetchblogs = async () => {
-		const api = "http://localhost:3051/allperfexData";
+	const fetchsubjectsData = async () => {
+		const api = "http://localhost:4010/v2/subjects";
+		try {
+			const response = await axios.get(api, {});
+			const data = response.data;
+			setAllsubjectsData(response.data);
+		} catch (error) {
+			console.error("Error fetch blogs:", error);
+		}
+	};
+	console.log("allsubjectsData",typeof(allsubjectsData),allsubjectsData);
+
+	const fetchMCQs = async () => {
+		const api = "http://localhost:4010/v1/getMCQs/subjectId/chapterId";
 
 		try {
 			const response = await axios.get(api);
-			setBlogslist(response.data);
+			setallMCqsList(response.data);
 		} catch (error) {
 			console.error("Error fetching blogs:", error);
 		}
 	};
-	console.log(blogslist);
+	console.log(fetchMCQs);
+	useEffect(() => {
+		fetchsubjectsData();
+		fetchMCQs();
+	},[]);
 	const [isOpen, setIsOpen] = useState(true);
 
 	const toggleSidebar = () => {
@@ -47,6 +67,20 @@ const McqView = () => {
 			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
 		}
 	};
+	const [selectedSubjectId, setSelectedSubjectId] = useState([]);
+
+	const handleSubjectTagTypeSelection = (event) => {
+		setSelectedSubject(
+		  event.target.options[event.target.selectedIndex].getAttribute(
+			"data-value"
+		  )
+		);
+		setSelectedSubjectId(
+			event.target.options[event.target.selectedIndex].getAttribute(
+			  "value"
+			)
+		  );
+		  }
 	return (
 		<div>
 			<div className="container-fluid">
@@ -54,6 +88,7 @@ const McqView = () => {
 					{isOpen && (
 						<div className=" col-12 col-md-3 sectioncard121">
 							<Sidebar />
+							<ToastContainer/>
 						</div>
 					)}
 					<div
@@ -68,62 +103,34 @@ const McqView = () => {
 									<p>
 										<b>Fillter Text Question</b> :
 									</p>
-									<div className="row card-item p-2">
-										{/* <div className="col-2">
-
-
-                                <select type="text" placeholder="frontend" className="w-100">
-                                    <option value="modlue">
-
-                                    {blogslist.map((blog) => (
-                                        
-                                            <option>{blog.module}</option>
-                                    
-                                    )
-
-                                    )}
-                                    </option>
-                                    
-                                </select>
-                                 
-                            </div>  */}
+									<div className="row card-item p-2">									
 										<div className="col-6">
-											{/* <select type="text" placeholder="frontend" className="w-100">
-                                    {blogslist.map((blog, index) => (
-                                        <option key={index} value={blog.module}>
-                                            {blog.module}
-                                        </option>
-                                    ))}
-                                </select> */}
-											<select
-												type="text"
-												placeholder="....Select Subject ..."
-												className="form-control"
-											>
-												<option>...select Subject..</option>
-												<option>Front end</option>
-											</select>
+										<select
+					style={{padding:"5px"}}
+					className="form-control"
+						onChange={handleSubjectTagTypeSelection}
+						
+					>
+						 <option className="hidden" value="">
+                                        Select Subject 
+                                    </option>
+						{allsubjectsData?.map((subject) => (
+							<>
+							<option
+								className="name_item"
+								key={subject._id} // Use a unique key for each option
+								data-value={subject.subjectTag}
+								value={subject._id}
+							>
+								{subject.subjectTag }
+							</option>
+							</>
+						))} 
+					</select>
 											<p>Select Subject</p>
 										</div>
 
-										{/* <div className="col-2">
-                            <select
-                          
-                          
-                        >
-                          <option value="Select Batch">
-                            ---Select Batch---
-                          </option>
-                          {blogslist.map((blog) => (
-                            <option
-                             
-                              
-                            >
-                              {blog.module}
-                            </option>
-                          ))}
-                        </select>
-                        </div> */}
+										
 
 										<div className="col-6">
 											<select
@@ -133,11 +140,13 @@ const McqView = () => {
 											>
 												<option value="chapter"></option>
 
-												{blogslist.map((blog) => (
-													<option key={blog.id} value={blog.chapter}>
-														{blog.chapter}
+												{ allsubjectsData?.map((blog) => (
+													<>
+													<option key={blog._id} value={blog._id}>
+														{blog._id}
 													</option>
-												))}
+													</>
+												))} 
 											</select>
 											<p>Select Chapter</p>
 										</div>
@@ -155,7 +164,7 @@ const McqView = () => {
 										</div>
 
 										<div className="col-6">
-											<select
+											{/* <select
 												type="text"
 												placeholder=""
 												className="form-control"
@@ -163,12 +172,12 @@ const McqView = () => {
 												<option></option>
 												<option value="refernce"></option>
 
-												{blogslist.map((blog) => (
+												{allsubjectsData?.map((blog) => (
 													<option key={blog.id} value={blog.refernce}>
 														{blog.refernce}
 													</option>
 												))}
-											</select>
+											</select> */}
 											<p>Reference</p>
 										</div>
 
@@ -181,11 +190,11 @@ const McqView = () => {
 												<option></option>
 												<option value="questiontype"></option>
 
-												{blogslist.map((blog) => (
+												{/* {allsubjectsData?.map((blog) => (
 													<option key={blog.id} value={blog.questiontype}>
 														{blog.questiontype}
 													</option>
-												))}
+												))} */}
 											</select>
 											<p>Question type</p>
 										</div>
@@ -369,7 +378,7 @@ const McqView = () => {
 							</div>
 							Questiontype
 						</div>
-						{blogslist.map((blog, index) => (
+						{allMcqsList.map((blog, index) => (
 							<p key={index}>{blog.questiontype}</p>
 						))}
 					</div>

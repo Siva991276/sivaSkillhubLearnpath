@@ -44,6 +44,8 @@ import ParagView from '../src/Questionbank/paragview';
 import Coding from '../src/Questionbank/coding';
 import Codingview from '../src/Questionbank/codingview';
 import Upload from "./Questionbank/upload";
+import ParagEdit from "./Questionbank/paragEdit";
+import Basic from './Questionbank/BasicCoding';
 
 
 
@@ -92,7 +94,8 @@ function App() {
         <Route exact path="/Coding" element={<Coding />} />
         <Route exact path="/Codingview" element={<Codingview />} />
         <Route exact path="/upload" element={<Upload />} />
-        
+        <Route exact path="/ParagEdit" element={<ParagEdit />} />
+        <Route exact path="/Basic" element={<Basic />} />        
         <Route
           exact
           path="/VideoPage/:VideofolderName"
