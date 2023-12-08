@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import Sidebar from "../Sidebar";
 import "./parag.css";
 import { Editor } from "@tinymce/tinymce-react";
 
-const ParagHome = () => {
+const ParagEdit = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -23,7 +24,7 @@ const ParagHome = () => {
     }
   };
   return (
-    <div>
+    <>
       <div className="container ">
         <div className="row">
           {isOpen && (
@@ -129,7 +130,7 @@ const ParagHome = () => {
                   </div>
                   <div className="my-3">
                     <button type="submit" className="paragbtn">
-                      Create
+                      Update
                     </button>
                   </div>
                 </form>
@@ -138,7 +139,7 @@ const ParagHome = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
-export default ParagHome;
+export default ParagEdit;

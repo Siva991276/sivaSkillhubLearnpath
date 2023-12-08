@@ -5,23 +5,15 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
-import { Pagination } from "antd";
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
 const QbSubject = () => {
 	useEffect(() => {
 		fetchblogs1();
 	}, []);
-
 	const [Open, setOpen] = useState(true);
-
-	// const [name, setname] = useState([]);
-	// const [Description, setDescription] = useState([]);
-	// const [subjecttag, setsubjecttag] = useState([]);
-
 	const [blogslist, setBlogslist] = useState([]);
-
 	let navigate = useNavigate("");
-
 	const fetchblogs1 = async () => {
 		const api = "http://localhost:4010/v2/subjects";
 		try {
@@ -32,83 +24,21 @@ const QbSubject = () => {
 			console.error("Error fetch blogs:", error);
 		}
 	};
-	// const [name, setname] = useState("");
-	// const [Description, setDescription] = useState("");
-	// const [subjecttag, setsubjecttag] = useState("");
-
-	// const [data1, setdata1] = useState([]);
-
-	// const AddSubject = {
-	//     name: name,
-	//     Description: Description,
-	//     subjecttag: subjecttag
-
-	// };
-	// console.log(AddSubject);
-
-	// const onSubmitForm = (e) => {
-	//     e.preventDefault();
-
-	//     if (name && Description && subjecttag !== "") {
-
-	//         const AddSubject = {
-	//             name: name,
-	//             Description: Description,
-	//             subjecttag: subjecttag
-
-	//         };
-
-	//         axios
-	//             .post(" http://localhost:3051/subjectData", AddSubject)
-	//             .then((response) => {
-	//                 setdata1(response.data);
-	//                 console.log(response.data);
-	//                 if (response.status === 200) {
-	//                     toast.success("Subject created Successful", {
-	//                         position: "top-right",
-	//                         autoClose: 1000,
-	//                         hideProgressBar: false,
-	//                         closeOnClick: true,
-	//                         pauseOnHover: true,
-	//                         draggable: true,
-	//                         progress: undefined,
-	//                         theme: "colored",
-	//                     });
-
-	//                     setTimeout(function () {
-
-	//                     }, 3000);
-	//                 }
-	//             })
-	//             .catch((error) => {
-	//                 if (error.response && error.response.status === 400) {
-	//                     toast.error("subject created not sucessfully", {
-	//                         position: "top-right",
-	//                         autoClose: 1000,
-	//                         hideProgressBar: false,
-	//                         closeOnClick: true,
-	//                         pauseOnHover: true,
-	//                         draggable: true,
-	//                         progress: undefined,
-	//                         theme: "colored",
-	//                     });
-	//                 }
-	//                 console.log(error);
-	//             });
-	//     } else {
-	//         toast.warning("Enter the Required Details");
-
-	//     }
-	// };
-
 	const [name, setName] = useState("");
 	const [Description, setDescription] = useState("");
 	const [subjecttag, setSubjectTag] = useState("");
 	const [data1, setData1] = useState("");
 
+	const handleSubjectTagTypeSelection = (event) => {
+		setSubjectTag(
+		  event.target.options[event.target.selectedIndex].getAttribute(
+			"data-value"
+		  )
+		);
+	  };
+
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
-
 		if (name && Description && subjecttag !== "") {
 			try {
 				const AddSubject = {
@@ -116,13 +46,10 @@ const QbSubject = () => {
 					description: Description,
 					subjectTag: subjecttag,
 				};
-
 				const response = await axios.post(
-					// "http://localhost:3051/subjectData",
 					"http://localhost:4010/v2/subject",
 					AddSubject
 				);
-
 				setData1(response.data);
 				console.log(response.data);
 				if (response.status === 200) {
@@ -130,7 +57,6 @@ const QbSubject = () => {
 					fetchblogs1();
 				}
 			} catch (error) {
-				// Handle error and display appropriate notifications
 				console.log(error);
 			}
 		} else {
@@ -138,7 +64,6 @@ const QbSubject = () => {
 		}
 	};
 	console.log("data1");
-
 	const [Error, setError] = useState("");
 	const handleDelete = async (id) => {
 		try {
@@ -148,10 +73,11 @@ const QbSubject = () => {
 			}
 			console.log("Deleting subject with ID", id);
 			const response = await axios.delete(
-				`http://localhost:3051/deleteInstitute/${id}`
+			`http://localhost:4010/v2/subjet/${id}`
+				
 			);
 			if (response.status === 200) {
-				window.alert("Subject deleted Successful", {
+				window.alert("Deleted Successfully", {
 					position: "top-right",
 					autoClose: 1000,
 					hideProgressBar: false,
@@ -175,41 +101,42 @@ const QbSubject = () => {
 			setOpen(!Open);
 		};
 	};
-	const onSubmitUpdatedForm = (_id, e) => {
+	const onSubmitUpdatedForm = (_id,e) => {
 		e.preventDefault();
 		const AddSubject = {
 			name: name,
 			description: Description,
 			subjectTag: subjecttag,
 		};
-		const nonemptyuserData = Object.fromEntries(
-			Object.entries(AddSubject).filter(([key, value]) => value !== "")
-		);
-		axios
-			.post(`http://localhost:4010/v2/subject/${_id}`, { nonemptyuserData })
+		 const nonemptyuserData = Object.fromEntries(
+			Object.entries(AddSubject).filter(([key, value]) => value !== '')
+		  );		  
+		  axios
+			.put(`http://localhost:4010/v2/subject/${_id}`, nonemptyuserData)
 			.then((response) => {
-				if (response.status === 200) {
-					toast("Institute Updated successfully", {
-						position: "top-right",
-						autoClose: 1000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						progress: undefined,
-						theme: "colored",
-						className: "custom-toast-custom",
-					});
-					setName("");
-					setDescription("");
-					setSubjectTag("");
-				}
+			  if (response.status === 200) {
+				toast("Institute Updated successfully", {
+				  position: "top-right",
+				  autoClose: 1000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "colored",
+				  className: "custom-toast-custom",
+				});
+				setName("");
+				setDescription("");
+				setSubjectTag("");
+				
+			  }
 			})
 			.catch((error) => {
-				console.log(error.response.data);
-				toast.error("Institute already Updated");
-			});
-	};
+			  console.log(error.response.data);
+			  toast.error("Institute already Updated");
+			}); 
+	  };
 	const [isOpen, setIsOpen] = useState(true);
 
 	const toggleSidebar = () => {
@@ -227,13 +154,38 @@ const QbSubject = () => {
 			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
 		}
 	};
-	const handleSubjectTagTypeSelection = (event) => {
-		setSubjectTag(
-			event.target.options[event.target.selectedIndex].getAttribute(
-				"data-value"
-			)
-		);
+	
+	  const columns: GridColDef[] = [
+		{ field: 'SNO', headerName: 'SNO', width: 70 },
+		{ field: 'NAME', headerName: 'NAME', width: 130 },
+		{ field: 'TAG', headerName: 'TAG', width: 130 },
+		{ field: 'TAG', headerName: 'TAG', width: 130 },
+		{ field: 'TAG', headerName: 'TAG', width: 130 },
+		{ field: 'TAG', headerName: 'TAG', width: 130 },
+
+	  ];
+	  
+	  const rows = blogslist.map((blog, index) => ({
+		SNO: index + 1, // Assuming index is a unique identifier; replace with an actual unique identifier if available
+		NAME: blog.name,
+		TAG: blog.class,
+		CHAPTERS: blog.totalqustions,
+		TOTALQUESTION: ``,
+		ACTION:``
+	  }));
+const [selectedSubject, setSelectedSubject] = useState(null);
+console.log(selectedSubject)
+	  const GotohandleViewClick =(data)=>{
+		setSelectedSubject(data);
 	};
+const handleSubjectTagSelection = (event) => {
+	setSubjectTag(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	};
+	
 	return (
 		<div>
 			<div className="container-fluid">
@@ -244,37 +196,30 @@ const QbSubject = () => {
 						</div>
 					)}
 					<div
-						className={`my-3 col-12 col-md-${isOpen ? 9 : 12} col-lg-${
-							isOpen ? 9 : 12
+						className={`my-3 col-12 col-md-${isOpen ? 8 : 12} col-lg-${
+							isOpen ? 8 : 12
 						}`}
 					>
 						<div className=" d-lg-block d-none">
 							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-							<div className="card-item p-2 mt-2">
+							<div className="card-item p-2">
 								<div class=" row  ">
 									<div className="col-md-9">
-										<h5 className="">Subjects</h5>
+										<h6 className="">Subjects</h6>
 									</div>
 									<div className="col-md-3 text-end">
 										<button
 											type="button"
 											class="btn "
 											data-bs-toggle="modal"
-											data-bs-target="#myModal234565"
-											className="float-right"
-											style={{
-												backgroundColor: "black",
-												color: "white",
-												borderRadius: "8px",
-												border: "none",
-												padding: "7px 20px",
-											}}
+											data-bs-target="#myModalCreate"
+											className="float-right btn btn-danger"
 										>
 											+ Create Subject
 										</button>
 									</div>
 
-									<div class="modal" id="myModal234565">
+									<div class="modal" id="myModalCreate">
 										<div class="modal-dialog">
 											<div class="modal-content">
 												<div class="modal-header">
@@ -337,19 +282,16 @@ const QbSubject = () => {
 																className="form-control mb-2"
 																// onChange={(e) => setSubjectTag(e.target.value)}
 																onChange={handleSubjectTagTypeSelection}
+
 															>
 																<option value="">--select subjects--</option>
-																<option data-value="algorithms">
-																	Algorithms
-																</option>
+																<option data-value="algorithms">Algorithms</option>
 																{/* <option value="algorithms">algorithms</option> */}
 																<option data-value="Botany">Botany</option>
 																<option data-value="C-programming">
 																	C-programming
 																</option>
-																<option data-value="Chemistry">
-																	Chemistry
-																</option>
+																<option data-value="Chemistry">Chemistry</option>
 																<option data-value="Communication">
 																	Communication
 																</option>
@@ -363,14 +305,10 @@ const QbSubject = () => {
 																<option data-value="Java-programming">
 																	Java-programming
 																</option>
-																<option data-value="Mathematics">
-																	Mathematics
-																</option>
+																<option data-value="Mathematics">Mathematics</option>
 																<option data-value="Others">Others</option>
 																<option data-value="Physics">Physics</option>
-																<option data-value="Programming">
-																	Programming
-																</option>
+																<option data-value="Programming">Programming</option>
 																<option data-value="Programming Skills">
 																	Programming Skills
 																</option>
@@ -389,75 +327,6 @@ const QbSubject = () => {
 															</div>
 														</div>
 													</form>
-												</div>
-											</div>
-										</div>
-									</div>
-
-									{/* pen */}
-
-									<div class="modal" id="myModal23456">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h4 class="modal-title">Create Subject</h4>
-													<button
-														type="button"
-														class="btn-close"
-														data-bs-dismiss="modal"
-													></button>
-												</div>
-
-												<div class="modal-body">
-													<p>Name *</p>
-													<input
-														type="text"
-														placeholder="...name..."
-														style={{}}
-													/>
-													<p>Description *</p>
-													<input
-														type="text"
-														className="form-control"
-														placeholder="...description..."
-														style={{}}
-													/>
-													<br></br>
-													<label className="mt-3 ">Subject *</label>
-													<br></br>
-													<select
-														type="text"
-														className="form-control"
-														placeholder="...subject tag..."
-														style={{ width: "190px" }}
-													>
-														<option>algorithms</option>
-														<option>Botany</option>
-														<option>C-programming</option>
-														<option>Chemistry</option>
-														<option>Communication</option>
-														<option>Data-reasoning</option>
-														<option>Data-structres</option>
-														<option>Dbms</option>
-														<option>java-programming</option>
-														<option>Mathematics</option>
-														<option>others</option>
-														<option>physics</option>
-														<option>programming</option>
-														<option>programming Skills</option>
-														<option>Quntative apptitude</option>
-													</select>
-													<p></p>
-												</div>
-
-												<div class="modal-footer">
-													<button
-														type="button"
-														class="btn btn-danger"
-														data-bs-dismiss="modal"
-													>
-														Submitt
-													</button>
 												</div>
 											</div>
 										</div>
@@ -526,61 +395,37 @@ const QbSubject = () => {
 										<thead>
 											<tr>
 												<th
-													style={{
-														fontSize: "14px",
-														backgroundColor: "#333",
-														color: "#fff",
-													}}
+													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
 													className="text-center"
 												>
 													SNO
 												</th>
 												<th
-													style={{
-														fontSize: "14px",
-														backgroundColor: "#333",
-														color: "#fff",
-													}}
+													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
 													className="text-center"
 												>
 													NAME
 												</th>
 												<th
-													style={{
-														fontSize: "14px",
-														backgroundColor: "#333",
-														color: "#fff",
-													}}
+													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
 													className="text-center"
 												>
 													TAG
 												</th>
 												<th
-													style={{
-														fontSize: "14px",
-														backgroundColor: "#333",
-														color: "#fff",
-													}}
+													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
 													className="text-center"
 												>
 													CHAPTERS
 												</th>
 												<th
-													style={{
-														fontSize: "14px",
-														backgroundColor: "#333",
-														color: "#fff",
-													}}
+													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
 													className="text-center"
 												>
 													TOTAL QUESTION
 												</th>
 												<th
-													style={{
-														fontSize: "14px",
-														backgroundColor: "#333",
-														color: "#fff",
-													}}
+													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
 													className="text-center"
 												>
 													ACTION
@@ -600,21 +445,92 @@ const QbSubject = () => {
 													<td className="text-center">
 														<button
 															type="button"
-															className="btn"
+															class="btn "
 															data-bs-toggle="modal"
-															data-bs-target={`#myModal${index + 1}`}
+															data-bs-target="#myModalView"
+															className="float-right btn btn-danger"
+        													onClick={() => GotohandleViewClick(blog1)}
+
 														>
 															<i
 																className="fa-sharp fa-solid fa-pen mx-1"
 																style={{ color: "skyblue" }}
-																onClick={(e) =>
-																	onSubmitUpdatedForm(blog1._id, e)
-																}
+															
 															></i>
-														</button>
+															</button>
+															<div class="modal" id="myModalView">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 class="modal-title">Create Subject</h4>
+												</div>
+												<div class="modal-body">
+													<div className="mb-1">
+														<label style={{float:"left"}}>Name<sup className="star">*</sup></label>
+														<input
+														type="text"
+														className="form-control"
+														placeholder="Name"
+														value={name || selectedSubject?.name}
+														onChange={(e) => setName(e.target.value)}
+														/>
+													</div>
+													<div className="mb-1">
+														<label style={{float:"left"}}>Description<sup className="star">*</sup></label>
+														<input
+														type="text"
+														className="form-control"
+														placeholder="Description"
+														value={Description || selectedSubject?.Description}
+														onChange={(e) => setDescription(e.target.value)}
+														/>
+													</div>													
+													<label className="mt-3 " style={{float:"left"}}>Subject *</label>
+													<select
+														type="text"
+                                                        className="form-control"
+														placeholder="...subject tag..."
+														value={subjecttag || selectedSubject?.subjectTag}
+														onChange={handleSubjectTagSelection}
+
+														// onChange={}
+													>
+														<option data-value="algorithms">algorithms</option>
+														<option data-value="Botany">Botany</option>
+														<option data-value="C-programming">C-programming</option>
+														<option data-value="Chemistry">Chemistry</option>
+														<option data-value="Communication">Communication</option>
+														<option data-value="Data-reasoning">Data-reasoning</option>
+														<option data-value="Data-structres">Data-structres</option>
+														<option data-value="Dbms">Dbms</option>
+														<option data-value="java-programming">java-programming</option>
+														<option data-value="Mathematics">Mathematics</option>
+														<option data-value="others">others</option>
+														<option data-value="physics">physics</option>
+														<option data-value="programming">programming</option>
+														<option data-value="programming Skills">programming Skills</option>
+														<option data-value="Quntative apptitude">Quntative apptitude</option>
+													</select>
+													<p></p>
+												</div>
+
+												<div class="modal-footer">
+													<button
+														type="button"
+														class="btn btn-danger"
+														data-bs-dismiss="modal"
+														onClick={(e) => onSubmitUpdatedForm(blog1._id,e)}
+													>
+														Submit
+													</button>
+												</div>
+											</div>
+										</div>
+															</div>
+														
 														<button
 															type="button"
-															className="btn"
+															className="btn btn-dark mx-2"
 															onClick={() => handleDelete(blog1._id)}
 														>
 															<i
@@ -628,7 +544,7 @@ const QbSubject = () => {
 										</tbody>
 									</table>
 								</div>
-								{/* <div className="d-flex flex-row">
+								<div className="d-flex flex-row">
 									<div>
 										<p>Showing 1 to 2 of entries</p>
 									</div>
@@ -636,19 +552,25 @@ const QbSubject = () => {
 									<div>
 										<p>Previous</p>
 									</div>
-								</div> */}
-								
-								
+								</div>
 							</div>
-						</div>
-						<div className="text-center">
-								<Pagination
-									defaultCurrent={1}
-									total={50}
-									className="my-3 fixed-bottom "
-									
+							{/* <>           
+								<div style={{ height: 400, width: '100%' }}>
+								<DataGrid
+									rows={rows}
+									columns={columns}
+									initialState={{
+									pagination: {
+										paginationModel: { page: 0, pageSize: 5 },
+									},
+									}}
+									pageSizeOptions={[5, 10]}
+								
 								/>
 								</div>
+											
+									</> */}
+						</div>
 					</div>
 				</div>
 			</div>

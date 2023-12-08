@@ -1,16 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Sidebar from "../Sidebar";
+import Cookies from "js-cookie";
 
-const Fourthquestion = () => {
-    let navigate = useNavigate();
+
+const  Fourthquestion = () => {
+	let navigate = useNavigate();
     const [selectedOption,setselectedOption]=useState("");
 
    const handleSelectChange= (event)=>{
     const selectedValue =event.target.value;
     setselectedOption(selectedValue);
 
-    if(selectedValue ==='firstquestion'){
-        navigate('/firstquestion');
+    if(selectedValue ==='CreateQuestion'){
+        navigate('/CreateQuestion');
     }else if(selectedValue ==='secondquestion'){
         navigate('/secondquestion');
     }
@@ -30,939 +34,775 @@ const Fourthquestion = () => {
         navigate('/seventh');
     }
    };
-    
-    return (
-        <div>
-
-            <div className="container ">
-                <div className="row">
-                    <div className="col-md-2 card" style={{ backgroundColor: "black", color: "white" }}>
-                        <div className="d-flex flex-row justify-content-between ">
-                            <div>
-                                <h5>Instacks</h5>
-                            </div>
-                            <div>
-                                <i class="fa-solid fa-bars"></i>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-calendar-days"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Dashboard</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div className="mx-2">
-
-                                <p>HomePage</p>
-                            </div>
-                        </div>
-
-
-                        <h5>INSTITUTIONS</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Institutions</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-
-                            </div>
-                            <div className="mx-2">
-                                <p>Batch Years</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Batches</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-regular fa-user"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Users</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-brands fa-algolia"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Search user</p>
-                            </div>
-                        </div>
-
-                        <h5>QUESTION BANK</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-layer-group"></i>
-                            </div>
-                            <div className="mx-2 ">
-                                <p className="dropdown-toggle">Self Created QB</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="#" style={{ color: "white" }}>Subject</a></li>
-                                    <li><a class="dropdown-item" href="#" style={{ color: "white" }}>Chapters</a></li>
-                                </ul>
-                                {/* <div class="dropdown">
-                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                        Dropdown button
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Link 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Link 2</a></li>
-                                        <li><a class="dropdown-item" href="#">Link 3</a></li>
-                                    </ul>
-                                </div> */}
-                                <p className="dropdown-toggle">MCQ Question</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="#" style={{ color: "white" }}>Create</a></li>
-                                    <li><a class="dropdown-item" href="/view" style={{ color: "white" }}>View</a></li>
-                                    <li><a class="dropdown-item" href="#" style={{ color: "white" }}>Upload</a></li>
-                                </ul>
-                                <p className="dropdown-toggle">Parag MCQ Question</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="/mcq" style={{ color: "white" }}>Create</a></li>
-                                    <li><a class="dropdown-item" href="/paragview" style={{ color: "white" }}>View</a></li>
-
-                                </ul>
-
-                                <p className="dropdown-toggle">Coding Question</p>
-                                <ul>
-                                    <li><a class="dropdown-item" href="/coding" style={{ color: "white" }}>Create</a></li>
-                                    <li><a class="dropdown-item" href="/codingview" style={{ color: "white" }}>View</a></li>
-
-                                </ul>
-
-                            </div>
-                        </div>
-                        <div>
-                            <div className="d-flex flex-row">
-
-                                <i class="fa-brands fa-algolia"></i>
-
-                                <div className="mx-2">
-                                    <p>Assigned QB</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h5>ASSESSMENTS</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Assessments</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Reports</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-regular fa-user"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Assigned Assessments</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-solid fa-down-left-and-up-right-to-center"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Compare</p>
-                            </div>
-                        </div>
-
-                        <h5>LEARNING PATH</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Learning Path</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Access</p>
-                            </div>
-                        </div>
-
-                        <h5>PRACTICE</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>pratice</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-solid fa-file-lines"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Participation Report</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-regular fa-user"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Assigned</p>
-                            </div>
-                        </div>
-
-
-                        <h5>Blogs</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-display"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Blogs</p>
-                            </div>
-                        </div>
-
-                        <h5>PROCTORING</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-circle-dot"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>proctoring</p>
-                            </div>
-                        </div>
-
-                        <h5>PROFILE</h5>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-dollar-sign"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>billing</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-folder"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Invoices</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-
-                                <i class="fa-solid fa-key"></i>
-                            </div>
-                            <div className="mx-2">
-                                <p>Change Password</p>
-                            </div>
-                        </div>
-                        <div className="d-flex flex-row">
-                            <div>
-                                <i class="fa-solid fa-house"></i>
-                            </div>
-                            <div className="mx-2">
-
-                                <p>Compiler Test</p>
-                            </div>
-                        </div>
-
-                        <hr style={{ backgroundColor: "white" }} />
-                        <div className="text-center" >
-                            <button style={{ backgroundColor: "blue", color: "white" }}>Logout</button>
-                        </div>
-                        <div className="text-center">
-                            <i class="fa-regular fa-message"></i>
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-                    <div className="col-1"></div>
-
-
-                    <div className="col-12 col-md-8 card">
-                        <h4>CREATE Question</h4>
-                        <label><b>Select Question Type*</b></label>
-                        <select value={selectedOption} onChange={handleSelectChange} type="text" placeholder="...select Question Type..." className="w-100" style={{ color: "1px solid blue" }} >
-                            <option>...Select Question Type....</option>
-                            <option value="firstquestion">Single Correct Option</option>
-
-                            <option value="secondquestion">Multi Correct Option</option>
-                            <option value="thitdquestion">Multi Correct Option With Partial Marketing</option>
-                            <option value="fourthquestion">Fill in the Blanks</option>
-                            <option value="fifth">True Or False</option>
-                            <option value="sixth">Writing</option>
-                            <option value="seventh">Speaking</option>
-                        </select>Option Question
-
-                        <p>Note:"<b>Fill in the blanks question</b>" student should enter student should enter the exact correct answer provide below </p>
-                        <label style={{ fontSize: "15px" }}><b>Subjects *</b></label>
-                        <select type="text" placeholder="....Select Subject ..." className="card">
-                            <option>...select Subject..</option>
-                            <option>Front end</option>
-
-                        </select>
-                        <label style={{ fontSize: "15px" }}><b>Chapter *</b></label>
-                        <select type="text" placeholder="...Select Chapter" className="card">
-                            <option>...select Chapter...</option>
-                        </select>
-
-                        <p className="my-3"><b>Difficulty *</b></p>
-                        <div className="row">
-                            <div className="d-flex flex-row col-4">
-                                <div>
-                                    <input type="radio" />
-                                </div>
-                                <div className="px-2">
-                                    Diffcult
-                                </div>
-                            </div>
-                            <div className="d-flex flex-row col-4">
-                                <div>
-                                    <input type="radio" />
-                                </div>
-                                <div className="mx-2">
-                                    Easy
-
-                                </div>
-                            </div>
-
-                            <div className="d-flex flex-row col-4">
-                                <div>
-                                    <input type="radio" />
-                                </div>
-                                <div className="mx-2">
-                                    Medium
-
-                                </div>
-                            </div>
-
-
-
-
-                        </div>
-
-
-                        <label><b>Reference <sup style={{color:"red"}}>*</sup></b></label>
-                        <select input type="text" placeholder="Reference">
-                            <option>Reference</option>
-
-                        </select>
-
-                        <p className="my-2"><b>Question*</b></p>
-                        <div className="row card mx-1">
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <p>Edit</p>
-                                </div>
-                                <div className="col-2 ">
-                                    view
-                                </div>
-
-                                <div className="col-2">
-                                    Insert
-                                </div>
-                                <div className="col-2">
-                                    Format
-                                </div>
-                                <div className="col-2">
-                                    Table
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-
-                        <div className="card">
-
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <i class="fa-solid fa-share"></i>
-                                </div>
-                                <div className="col-2  ">
-                                    paragraph
-                                </div>
-
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-solid fa-b"></i>
-                                </div>
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-regular fa-i"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-
-                        <textarea />
-                        <div className="card">
-
-                            <div className="row">
-                                <div className="col-1">
-                                    <p>p</p>
-
-                                </div>
-                                <div className="col-1">
-
-                                </div>
-                                <div className="col-10 text-end">
-                                    <p>0 words powderd by tinny</p>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div className="my-1">
-                            <p><b>Question Image</b></p>
-                        </div>
-
-                        <div className="my-1" style={{ width: "110px" }}>
-                            <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                        </div>
-
-                        <div className="my-3">
-                            <button style={{ width: "110px", backgroundColor: "blue", color: "white", border: "1px solid blue" }}>Insert Image</button>
-                        </div>
-
-
-                        {/* option 1 */}
-
-                        <div>
-                            <p><b>Option 1</b></p>
-                        </div>
-                        <div className="row card mx-1">
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <p>Edit</p>
-                                </div>
-                                <div className="col-2 ">
-                                    view
-                                </div>
-
-                                <div className="col-2">
-                                    Insert
-                                </div>
-                                <div className="col-2">
-                                    Format
-                                </div>
-                                <div className="col-2">
-                                    Table
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-
-                        <div className="card">
-
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <i class="fa-solid fa-share"></i>
-                                </div>
-                                <div className="col-2  ">
-                                    paragraph
-                                </div>
-
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-solid fa-b"></i>
-                                </div>
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-regular fa-i"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-
-
-                        <textarea />
-                        <div className="card">
-
-                            <div className="row">
-                                <div className="col-1">
-                                    <p>p</p>
-
-                                </div>
-                                <div className="col-1">
-
-                                </div>
-                                <div className="col-10 text-end">
-                                    <p>0 words powderd by tinny</p>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div className="my-1">
-                            <p>Option1 Image</p>
-                        </div>
-                        <div className="row">
-                            <div className="d-flex flex-row ">
-                                <div className="my-1" style={{ width: "110px" }}>
-                                    <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                                </div>
-                                <div className="col-4"></div>
-
-                                <div className="col-2 text-end w-50">
-                                    <button style={{ backgroundColor: "red", color: "white", border: "1px solid red" }}>Delete<br></br>
-                                        option</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="my-3">
-                            <button style={{ width: "110px", backgroundColor: "blue", color: "white", border: "1px solid blue" }}>Insert Image</button>
-                        </div>
-
-                        {/* option1 */}
-
-
-                        {/* option2 */}
-
-
-
-                        <div>
-                            <p><b>Option 2</b></p>
-                        </div>
-                        <div className="row card mx-1">
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <p>Edit</p>
-                                </div>
-                                <div className="col-2 ">
-                                    view
-                                </div>
-
-                                <div className="col-2">
-                                    Insert
-                                </div>
-                                <div className="col-2">
-                                    Format
-                                </div>
-                                <div className="col-2">
-                                    Table
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-
-                        <div className="card">
-
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <i class="fa-solid fa-share"></i>
-                                </div>
-                                <div className="col-2  ">
-                                    paragraph
-                                </div>
-
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-solid fa-b"></i>
-                                </div>
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-regular fa-i"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-
-
-                        <textarea />
-                        <div className="card">
-
-                            <div className="row">
-                                <div className="col-1">
-                                    <p>p</p>
-
-                                </div>
-                                <div className="col-1">
-
-                                </div>
-                                <div className="col-10 text-end">
-                                    <p>0 words powderd by tinny</p>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div className="my-1">
-                            <p>Option2 Image</p>
-                        </div>
-                        <div className="row">
-                            <div className="d-flex flex-row ">
-                                <div className="my-1" style={{ width: "110px" }}>
-                                    <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                                </div>
-                                <div className="col-4"></div>
-
-                                <div className="col-2 text-end w-50">
-                                    <button style={{ backgroundColor: "red", color: "white", border: "1px solid red" }}>Delete<br></br>
-                                        option</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="my-3">
-                            <button style={{ width: "110px", backgroundColor: "blue", color: "white", border: "1px solid blue" }}>Insert Image</button>
-                        </div>
-
-                        {/* option2 */}
-
-
-
-                        {/* option 3 */}
-
-
-                        <div>
-                            <p><b>Option 3</b></p>
-                        </div>
-                        <div className="row card mx-1">
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <p>Edit</p>
-                                </div>
-                                <div className="col-2 ">
-                                    view
-                                </div>
-
-                                <div className="col-2">
-                                    Insert
-                                </div>
-                                <div className="col-2">
-                                    Format
-                                </div>
-                                <div className="col-2">
-                                    Table
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-
-                        <div className="card">
-
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <i class="fa-solid fa-share"></i>
-                                </div>
-                                <div className="col-2  ">
-                                    paragraph
-                                </div>
-
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-solid fa-b"></i>
-                                </div>
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-regular fa-i"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-
-
-                        <textarea />
-                        <div className="card">
-
-                            <div className="row">
-                                <div className="col-1">
-                                    <p>p</p>
-
-                                </div>
-                                <div className="col-1">
-
-                                </div>
-                                <div className="col-10 text-end">
-                                    <p>0 words powderd by tinny</p>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div className="my-1">
-                            <p>Option3 Image</p>
-                        </div>
-                        <div className="row">
-                            <div className="d-flex flex-row ">
-                                <div className="my-1" style={{ width: "110px" }}>
-                                    <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                                </div>
-                                <div className="col-4"></div>
-
-                                <div className="col-2 text-end w-50">
-                                    <button style={{ backgroundColor: "red", color: "white", border: "1px solid red" }}>Delete<br></br>
-                                        option</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="my-3">
-                            <button style={{ width: "110px", backgroundColor: "blue", color: "white", border: "1px solid blue" }}>Insert Image</button>
-                        </div>
-
-                        {/* option 3 */}
-
-
-                        <button style={{ backgroundColor: "lightblue", color: "black", border: "1px solid blue" }}>Add Option</button>
-
-
-
-                        <label style={{ fontSize: "15px" }}>Correct Answer *</label>
-                        <select type="text" placeholder="....Select Correct Answer ..." className="card" >
-                            <option>...select Correct Answer..</option>
-                        </select>
-
-
-                        <label style={{ fontSize: "15px" }} className="my-3">Explanation *</label>
-
-
-
-                        <div>
-                            <p>Option 2</p>
-                        </div>
-                        <div className="row card mx-1">
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <p>Edit</p>
-                                </div>
-                                <div className="col-2 ">
-                                    view
-                                </div>
-
-                                <div className="col-2">
-                                    Insert
-                                </div>
-                                <div className="col-2">
-                                    Format
-                                </div>
-                                <div className="col-2">
-                                    Table
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-
-                        <div className="card">
-
-                            <div className="d-flex flex-row">
-                                <div className="col-1 my-1">
-                                    <i class="fa-solid fa-share"></i>
-                                </div>
-                                <div className="col-2  ">
-                                    paragraph
-                                </div>
-
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-solid fa-b"></i>
-                                </div>
-                                <div className="col-2">
-                                    <i class="fa-sharp fa-regular fa-i"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-sliders"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-solid fa-list"></i>
-                                </div>
-                                <div className="col-1">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-
-
-                        <textarea />
-                        <div className="card">
-
-                            <div className="row">
-                                <div className="col-1">
-                                    <p>p</p>
-
-                                </div>
-                                <div className="col-1">
-
-                                </div>
-                                <div className="col-10 text-end">
-                                    <p>0 words powderd by tinny</p>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div className="my-1">
-                            <p>Explanation Image</p>
-                        </div>
-
-                        <div className="my-1" style={{ width: "110px" }}>
-                            <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue" }}>Choose Image</button>
-                        </div>
-
-                        <div className="my-3">
-                            <button style={{ width: "110px", backgroundColor: "blue", color: "white", border: "1px solid blue" }}>Insert Image</button>
-                        </div>
-
-                        <div className="my-3">
-                            <button style={{ width: "70px", backgroundColor: "lightblue", color: "white", border: "1px solid blue" }}>Create</button>
-                        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-
-
-
-
-                </div>
-            </div>
-
-
-        </div>
-    )
-}
-
-export default Fourthquestion;
+
+	const [isOpen, setIsOpen] = useState(true);
+
+	const toggleSidebar = () => {
+		setIsOpen(!isOpen);
+		menuBtnChange();
+	};
+	const menuBtnChange = () => {
+		const sidebar = document.querySelector(".sidebar");
+		const closeBtn = document.querySelector("#btn");
+		const searchBtn = document.querySelector(".bx-search");
+
+		if (sidebar?.classList.contains("open")) {
+			closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
+		} else {
+			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
+		}
+	};
+	// const onSubmitForm = (e) => {
+	// 	e.preventDefault();
+	// 	const token = Cookies.get("token");  
+	// 	if (instituteName && headName && primaryemail && secondaryEmail && primaryContactNumber && password &&secondaryContactNumber && enterBatch && batchYear && cityName && instituteType && selectAccessPlans &&instituteCode !== "") {
+	// 	  axios
+	// 		.post(${apiList.addInstitute}, userData, {
+	// 		  headers: {
+	// 			token: token,
+	// 		  },
+	// 		})
+	// 		.then((response) => {
+	// 		  if (response.status === 200) {
+	// 			toast("Institute Added", {
+	// 			  position: "top-right",
+	// 			  autoClose: 1000,
+	// 			  hideProgressBar: false,
+	// 			  closeOnClick: true,
+	// 			  pauseOnHover: true,
+	// 			  draggable: true,
+	// 			  progress: undefined,
+	// 			  theme: "colored",
+	// 			  className: "custom-toast-custom",
+	// 			});
+	// 			setInstituteName("");
+	// 			setHeadName("");
+	// 			setPrimaryemail("");
+	// 			setPrimaryContactNumber("");
+	// 			setSecondaryEmail("");
+	// 			setSecondaryContactNumber("");
+	// 			setBatchYear("");
+	// 			setEnterBatch("");
+	// 			  setpassword("");
+	// 			  setCityName("");
+	// 			setInstituteCode("");
+	// 			setSelectAccessPlans("");
+	// 			setInstituteType("");
+	// 		  }
+	// 		})
+	// 		.catch((error) => {
+	// 		  console.log(error.response.data);
+	// 		  toast.error("Institute already added");
+	// 		});
+	
+	// 		} else {
+	// 	  toast.warning("Enter Required details");
+	// 	}
+	//   };
+	return (
+		<div>
+			<div className="container ">
+				<div className="row">
+					{isOpen && (
+						<div className=" col-12 col-md-2 sectioncard121">
+							<Sidebar />
+						</div>
+					)}
+					<div
+						className={`my-3 col-12 col-md-${isOpen ? 10 : 12} col-lg-${
+							isOpen ? 10 : 12
+						}`}
+					>
+						<div className=" d-lg-block d-none">
+							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
+							<div class="card-item p-3 mt-2">
+								<h4 className="text-center">Fill In The Blanks</h4>
+								<label>
+									<b>Select Question Type * </b>
+								</label>
+								<select
+									value={selectedOption}
+									onChange={handleSelectChange}
+									type="text"
+									placeholder="...select Question Type..."
+									className="form-control"
+								>
+									<option>...Select Question Type....</option>
+									<option value="CreateQuestion">Single Correct Option</option>
+									<option value="secondquestion">Multi Correct Option</option>
+									<option value="thitdquestion">
+										Multi Correct Option With Partial Marketing
+									</option>
+									<option value="fourthquestion">Fill in the Blanks</option>
+									<option value="fifth">True Or False</option>
+									<option value="sixth">Writing</option>
+									<option value="seventh">Speaking</option>
+								</select>
+								<span style={{ fontSize: "13px" }}>Option Question</span>
+								<div className="my-2">
+									<p style={{ fontSize: "14px", color: "orange" }}>
+										<span style={{ color: "black", fontSize: "16px" }}>
+											Note:
+										</span>
+										<b>Fill in the Blanks</b> Will have a minimum of 3
+										options and a maximum of 5 options. One of the option will
+										be the correct answer for this type of question.{" "}
+									</p>
+								</div>
+								<div className="row">
+									<div className="col-md-6">
+										<label style={{ fontSize: "15px" }}>
+											<b>Subjects *</b>
+										</label>
+										<select
+											type="text"
+											placeholder="....Select Subject ..."
+											className="form-control"
+										>
+											<option>...select Subject..</option>
+											<option>Front end</option>
+										</select>
+									</div>
+									<div className="col-md-6">
+										<label style={{ fontSize: "15px" }}>
+											<b>Chapter *</b>
+										</label>
+										<select
+											type="text"
+											placeholder="...Select Chapter"
+											className="form-control"
+										>
+											<option>...select Chapter...</option>
+										</select>
+									</div>
+								</div>
+
+								<div className="my-3">
+									<p className="m-0">
+										<b>Difficulty *</b>
+									</p>
+									<div className="row">
+										<div className="d-flex flex-row col-2">
+											<div>
+												<input type="radio" />
+											</div>
+											<div className="px-2">Diffcult</div>
+										</div>
+										<div className="d-flex flex-row col-2">
+											<div>
+												<input type="radio" />
+											</div>
+											<div className="mx-2">Easy</div>
+										</div>
+
+										<div className="d-flex flex-row col-2">
+											<div>
+												<input type="radio" />
+											</div>
+											<div className="mx-2">Medium</div>
+										</div>
+									</div>
+								</div>
+
+								<label>
+									<b>Reference *</b>
+								</label>
+								<select
+									input
+									type="text"
+									placeholder="Reference"
+									className="form-control "
+								>
+									<option>Reference</option>
+								</select>
+
+								<p className="my-2">
+									<b>Question*</b>
+								</p>
+								<div className="row card mx-1">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1 ">Edit</div>
+										<div className="col-1 ">view</div>
+
+										<div className="col-1">Insert</div>
+										<div className="col-1">Format</div>
+										<div className="col-1">Table</div>
+									</div>
+								</div>
+
+								<div className="card mx-1">
+									<div className="d-flex flex-row  p-2">
+										<div className="col-1 ">
+											<i class="fa-solid fa-share"></i>
+										</div>
+										<div className="col-2  ">paragraph</div>
+
+										<div className="col-1">
+											<i class="fa-sharp fa-solid fa-b"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-sharp fa-regular fa-i"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-regular fa-circle-question"></i>
+										</div>
+									</div>
+								</div>
+
+								<textarea className="mx-1 form-control p-2" rows={4} />
+								<div className="card p-2 mx-1">
+									<div className="row">
+										<div className="col-1">
+											<span>p</span>
+										</div>
+										<div className="col-1"></div>
+										<div className="col-10 text-end">
+											<span>0 words powderd by tinny</span>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-2">
+									<span>
+										<b>Question Image</b>
+									</span>
+								</div>
+
+								<div className="my-1">
+									<button
+										style={{
+											backgroundColor: "white",
+											width: "fit-content",
+											padding: "7px 20px",
+											borderRadius: "6px",
+											color: "black",
+											border: "1px solid black",
+										}}
+									>
+										Choose Image
+									</button>
+								</div>
+
+								<div className="my-3">
+									<button
+										style={{
+											width: "fit-content",
+											backgroundColor: "#333",
+											color: "white",
+											border: "none",
+											padding: "7px 20px",
+											borderRadius: "6px",
+										}}
+									>
+										Insert Image
+									</button>
+								</div>
+
+								{/* option 1 */}
+
+								<div className="my-2">
+									<span>
+										<b>Option 1</b>
+									</span>
+								</div>
+								<div className="row card mx-1 ">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1">Edit</div>
+										<div className="col-1 ">view</div>
+
+										<div className="col-1">Insert</div>
+										<div className="col-1">Format</div>
+										<div className="col-1">Table</div>
+									</div>
+								</div>
+
+								<div className="card mx-1">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1 ">
+											<i class="fa-solid fa-share"></i>
+										</div>
+										<div className="col-2  ">paragraph</div>
+
+										<div className="col-1">
+											<i class="fa-sharp fa-solid fa-b"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-sharp fa-regular fa-i"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-regular fa-circle-question"></i>
+										</div>
+									</div>
+								</div>
+
+								<textarea className="form-control mx-1 p-2" rows={4} />
+								<div className="card mx-1 p-2">
+									<div className="row">
+										<div className="col-1">
+											<span>p</span>
+										</div>
+										<div className="col-1"></div>
+										<div className="col-10 text-end">
+											<span>0 words powderd by tinny</span>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-1">
+									<p>Option1 Image</p>
+								</div>
+								<div className="row">
+									<div className="d-flex flex-row ">
+										<div className="my-1">
+											<button
+												style={{
+													width: "fit-content",
+													backgroundColor: "white",
+													color: "black",
+													border: "1px solid black",
+													padding: "7px 20px ",
+													borderRadius: "6px",
+												}}
+											>
+												Choose Image
+											</button>
+										</div>
+										<div className="col-4"></div>
+
+										<div className="col-4 text-end">
+											<button
+												style={{
+													backgroundColor: "red",
+													color: "white",
+													border: "1px solid red",
+													padding: "7px 20px",
+													borderRadius: "6px",
+												}}
+											>
+												Delete option
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-3">
+									<button
+										style={{
+											width: "fit-content",
+											backgroundColor: "#333",
+											color: "white",
+											border: "none",
+											borderRadius: "6px",
+											padding: "7px 20px",
+										}}
+									>
+										Insert Image
+									</button>
+								</div>
+
+								{/* option1 */}
+
+								{/* option2 */}
+
+								<div className="my-2">
+									<span>
+										<b>Option 2</b>
+									</span>
+								</div>
+								<div className="row card mx-1 ">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1">Edit</div>
+										<div className="col-1 ">view</div>
+
+										<div className="col-1">Insert</div>
+										<div className="col-1">Format</div>
+										<div className="col-1">Table</div>
+									</div>
+								</div>
+
+								<div className="card mx-1">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1 ">
+											<i class="fa-solid fa-share"></i>
+										</div>
+										<div className="col-2  ">paragraph</div>
+
+										<div className="col-1">
+											<i class="fa-sharp fa-solid fa-b"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-sharp fa-regular fa-i"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-regular fa-circle-question"></i>
+										</div>
+									</div>
+								</div>
+
+								<textarea className="form-control mx-1 p-2" rows={4} />
+								<div className="card mx-1 p-2">
+									<div className="row">
+										<div className="col-1">
+											<span>p</span>
+										</div>
+										<div className="col-1"></div>
+										<div className="col-10 text-end">
+											<span>0 words powderd by tinny</span>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-1">
+									<p>Option2 Image</p>
+								</div>
+								<div className="row">
+									<div className="d-flex flex-row ">
+										<div className="my-1">
+											<button
+												style={{
+													width: "fit-content",
+													backgroundColor: "white",
+													color: "black",
+													border: "1px solid black",
+													borderRadius: "6px",
+													padding: "7px 20px",
+												}}
+											>
+												Choose Image
+											</button>
+										</div>
+										<div className="col-4"></div>
+
+										<div className="col-4 text-end">
+											<button
+												style={{
+													backgroundColor: "red",
+													color: "white",
+													border: "1px solid red",
+													width: "fit-content",
+													padding: "7px 20px",
+													borderRadius: "6px",
+												}}
+											>
+												Delete option
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-3">
+									<button
+										style={{
+											width: "fit-content",
+											backgroundColor: "#333",
+											color: "white",
+											border: "none",
+											padding: "7px 20px",
+											borderRadius: "6px",
+										}}
+									>
+										Insert Image
+									</button>
+								</div>
+
+								{/* option2 */}
+
+								{/* option 3 */}
+
+								<div>
+									<p>
+										<b>Option 3</b>
+									</p>
+								</div>
+								<div className="row card mx-1 ">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1">Edit</div>
+										<div className="col-1 ">view</div>
+
+										<div className="col-1">Insert</div>
+										<div className="col-1">Format</div>
+										<div className="col-1">Table</div>
+									</div>
+								</div>
+
+								<div className="card mx-1">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1 ">
+											<i class="fa-solid fa-share"></i>
+										</div>
+										<div className="col-2  ">paragraph</div>
+
+										<div className="col-1">
+											<i class="fa-sharp fa-solid fa-b"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-sharp fa-regular fa-i"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-regular fa-circle-question"></i>
+										</div>
+									</div>
+								</div>
+
+								<textarea className="form-control mx-1 p-2" rows={4} />
+								<div className="card mx-1 p-2">
+									<div className="row">
+										<div className="col-1">
+											<span>p</span>
+										</div>
+										<div className="col-1"></div>
+										<div className="col-10 text-end">
+											<span>0 words powderd by tinny</span>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-1">
+									<p>Option3 Image</p>
+								</div>
+								<div className="row">
+									<div className="d-flex flex-row ">
+										<div className="my-1">
+											<button
+												style={{
+													width: "fit-content",
+													backgroundColor: "white",
+													color: "black",
+													border: "1px solid black",
+													padding: "7px 20px",
+													borderRadius: "6px",
+												}}
+											>
+												Choose Image
+											</button>
+										</div>
+										<div className="col-2"></div>
+
+										<div className="col-4 text-end w-50">
+											<button
+												style={{
+													width: "fit-content",
+													padding: "7px 20px",
+													borderRadius: "6px",
+													backgroundColor: "red",
+													color: "white",
+													border: "1px solid red",
+												}}
+											>
+												Delete option
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-3">
+									<button
+										style={{
+											width: "fit-content",
+											padding: "7px 20px",
+											borderRadius: "6px",
+											backgroundColor: "#333",
+											color: "white",
+											border: "none",
+										}}
+									>
+										Insert Image
+									</button>
+								</div>
+
+								{/* option 3 */}
+                                        <div className="text-center">
+                                        <button
+									style={{
+										backgroundColor: "#fff",
+										color: "#8c018a",
+                                        padding:"7px 20px",
+                                        borderRadius:"6px",
+                                        width:"fit-content",
+										border: "1px solid #8c018a",
+									}}
+								>
+									 Add Option
+								</button>
+                                        </div>
+								
+                                    <div>
+                                    <label style={{ fontSize: "15px" }}>Correct Answer *</label>
+								<select
+									type="text"
+									placeholder="....Select Correct Answer ..."
+									className="form-control"
+								>
+									<option>...select Correct Answer..</option>
+								</select>
+                                    </div>
+								
+
+								<label style={{ fontSize: "15px" }} className="my-3">
+									Explanation *
+								</label>
+
+								<div>
+									<p>Option 4</p>
+								</div>
+								<div className="row card mx-1 ">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1">Edit</div>
+										<div className="col-1 ">view</div>
+
+										<div className="col-1">Insert</div>
+										<div className="col-1">Format</div>
+										<div className="col-1">Table</div>
+									</div>
+								</div>
+
+								<div className="card mx-1">
+									<div className="d-flex flex-row p-2">
+										<div className="col-1 ">
+											<i class="fa-solid fa-share"></i>
+										</div>
+										<div className="col-2  ">paragraph</div>
+
+										<div className="col-1">
+											<i class="fa-sharp fa-solid fa-b"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-sharp fa-regular fa-i"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-sliders"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-solid fa-list"></i>
+										</div>
+										<div className="col-1">
+											<i class="fa-regular fa-circle-question"></i>
+										</div>
+									</div>
+								</div>
+
+								<textarea className="form-control mx-1 p-2" rows={4} />
+								<div className="card mx-1 p-2">
+									<div className="row">
+										<div className="col-1">
+											<span>p</span>
+										</div>
+										<div className="col-1"></div>
+										<div className="col-10 text-end">
+											<span>0 words powderd by tinny</span>
+										</div>
+									</div>
+								</div>
+
+								<div className="my-1">
+									<p>Explanation Image</p>
+								</div>
+
+								<div className="my-1">
+									<button
+										style={{
+                                            width:"fit-content",
+											backgroundColor: "white",
+											color: "black",
+											border: "1px solid black",
+                                            padding:"7px 20px",
+                                            borderRadius:"6px"
+										}}
+									>
+										Choose Image
+									</button>
+								</div>
+
+								<div className="my-3">
+									<button
+										style={{
+											width: "fit-content",
+											backgroundColor: "#333",
+											color: "white",
+											border: "none",
+                                            padding:"7px 20px",
+                                            borderRadius:"6px"
+										}}
+									>
+										Insert Image
+									</button>
+								</div>
+
+								<div className="text-center mb-3">
+									<button
+										style={{
+											width: "fit-content",
+											backgroundColor: "#8c018a",
+											color: "white",
+											border: "none",
+                                            padding:"7px 20px",
+                                            borderRadius:"6px"
+										}}
+										
+									>
+										Create
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+export default Fourthquestion;
