@@ -198,25 +198,22 @@ const BatchYear = () => {
   };
   return (
     <div>
-      <div className="container1">
-        <div className="row">
-          <div className=" mt-1">
+      <div className="container-fluid p-0">
             <div className="row">
             {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
+              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar/>
               </div>
 					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
-                  <div className="card section-31 shadow">
-                    <div className="d-flex flex-row">
-                      <div>
-                        <h4 className=" mx-4 mt-3">Filter Batch Years :</h4>
+            <div className={`my-3 col-12 col-md-${isOpen ? 12: 9} col-lg-${isOpen ? 9 : 12}`}>
+                <div className=" d-lg-block">
+                <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
+                <div class="">
+                  <div className="card section-31 shadow p-2 mb-3">
+                    <div className="row">
+                      <div className="col-md-4">
+                        <h4 className=" ">Filter Batch Years :</h4>
                       </div>
-                      <div className="col-12 col-md-6"></div>
 
                       {/* <div style={{ marginLeft: "auto" }} class="m-2">
                         <div>
@@ -780,18 +777,21 @@ const BatchYear = () => {
                           </div>
                         </div>
                       </div> */}
-                      <button className="extends12 p-1 mt-3">
+                      <div className="col-md-8 text-end">
+                      <button className="extends12 p-1 my-2">
                         {" "}
                         <i class="fa-solid fa-plus"></i>Create Batch Year
                       </button>
+                      </div>
+                     
                     </div>
 
-                    <div className="d-flex flex-row">
+                    <div className="row">
                       <div className="col-12 col-md-6">
                         <select
                           name=""
                           id=""
-                          className="m-2 p-2 w-100"
+                          className=" form-control"
                           onChange={handleCheckboxChange}
                         >
                           <option value="Select Institutions">
@@ -813,8 +813,8 @@ const BatchYear = () => {
 
                       <div className="col-12 col-md-3">
                         <button
-                          className=" p-2 w-25 mx-3 mt-1 selectbtn112"
-                          style={{ backgroundColor: "#a5059d" }}
+                          className=" p-2  selectbtn112"
+                          style={{ backgroundColor: "#a5059d", border:"none" }}
                           onClick={filterJobs}
                         >
                           Go
@@ -912,8 +912,7 @@ const BatchYear = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+     
     </div>
   );
 };

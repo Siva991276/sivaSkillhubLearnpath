@@ -82,6 +82,14 @@ function Sidebar() {
     menuBtnChange();
   };
 
+  const [isNavLinksVisible, setIsNavLinksVisible] = useState(false);
+
+ 
+
+  const toggleNavLinks = () => {
+    setIsNavLinksVisible(!isNavLinksVisible);
+  };
+
   const menuBtnChange = () => {
     const sidebar = document.querySelector(".sidebar");
     const closeBtn = document.querySelector("#btn");
@@ -148,6 +156,10 @@ function Sidebar() {
 	const [islearnOpen, setIslearnOpen] = useState(false);
 
 	const togglelearnopen = () => setIslearnOpen(!islearnOpen);
+
+
+  
+
 	return (
 		<div>
       <div className="side_item d-none d-lg-block" >
@@ -484,7 +496,7 @@ function Sidebar() {
           </ul>
         </div>
       </div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-dark d-lg-none p-0"  >
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark d-lg-none d-md-block p-0"  >
 				<div className="container-fluid">
 				<NavLink to="/" className="navbar-brand">
 						<img
@@ -495,13 +507,14 @@ function Sidebar() {
 					</NavLink>
 					{/* Toggle button for the sidebar */}
 					<button
-						className="navbar-toggler mx-3"
+						className="navbar-toggler"
 						type="button"
 						data-toggle="collapse"
 						data-target="#navbarNav"
 						aria-controls="navbarNav"
 						aria-expanded="false"
 						aria-label="Toggle navigation"
+            onClick={toggleNavLinks}
 					>
 						{/* <span className="navbar-toggler-icon"></span> */}
 						<i className="fa-solid fa-bars " ></i>
@@ -512,18 +525,18 @@ function Sidebar() {
 					
 
 					{/* Navbar links */}
-					<div className="collapse navbar-collapse p-3" id="navbarNav" style={{backgroundColor:"#000", height:"100%"}}>
+					<div className={`collapse navbar-collapse p-3 ${isNavLinksVisible ? "show" : ""}`} id="navbarNav" style={{backgroundColor:"transparent", height:"100%"}}>
 						<ul className="navbar-nav ml-auto">
 							{/* Add your navbar links here */}
 							<li className="nav-item" style={{color:"#fff"}}>
-								<NavLink to="/" className="nav-link">
+								<a href="#" className="nav-link">
 									Dashboard
-								</NavLink>
+								</a>
 							</li>
 							<li className="nav-item" style={{color:"#fff"}}>
-								<NavLink to="" className="nav-link">
+								<a href="#" className="nav-link">
 									Homepage
-								</NavLink>
+								</a>
 							</li>
 							<li className="nav-item">
 								<div className="mt-3">
@@ -550,20 +563,20 @@ function Sidebar() {
 									</div>
 									{isInstitutionsOpen && (
 										<div>
-											<div className="mt-1">
+											<div className="mt-2">
 												<NavLink
 													to="/AddInstitutions"
 													className="employement my-1"
 												>
-													<div className="d-flex "  style={{color:"#fff"}}>
-														<div>
+													<div className="d-flex  "  style={{color:"#fff"}}>
+														<div className="">
 															<i className="fa-solid fa-building-columns pr-3 "></i>
 														</div>
-														<div className="">Instutions</div>
+														<div className=""> Instutions</div>
 													</div>
 												</NavLink>
 											</div>
-											<div className="mt-1">
+											<div className="mt-2">
 												<NavLink to="/BatchYearsTab" className="employement my-1">
 													<div className="d-flex ">
 														<div>
@@ -573,7 +586,7 @@ function Sidebar() {
 													</div>
 												</NavLink>
 											</div>
-											<div className="mt-1">
+											<div className="mt-2">
 												<NavLink to="/BatchesTab" className="employement my-1">
 													<div className="d-flex ">
 														<div>
@@ -583,7 +596,7 @@ function Sidebar() {
 													</div>
 												</NavLink>
 											</div>
-											<div className="mt-1">
+											<div className="mt-2">
 												<NavLink to="/Usertab" className="employement my-3 ">
 													<div className="d-flex ">
 														<div>
@@ -593,7 +606,7 @@ function Sidebar() {
 													</div>
 												</NavLink>
 											</div>
-											<div className="mt-1">
+											<div className="mt-2">
 												<NavLink to="/SearchUserTab" className="employement my-1">
 													<div className="d-flex ">
 														<div>
