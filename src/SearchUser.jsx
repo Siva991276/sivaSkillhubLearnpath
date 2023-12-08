@@ -128,28 +128,28 @@ const SearchOption = () => {
 
   return (
     <div>
-      <div className="container1">
-        <div className="row">
-          <div className=" mt-1">
+      <div className="container-fluid p-0">
             <div className="row">
             {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
+              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar/>
               </div>
 					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
-                  <div className="card section-31 shadow">
+            <div className={`my-3 col-12 col-md-${isOpen ? 12: 10} col-lg-${isOpen ? 9 : 12}`}>
+                <div className=" d-lg-block ">
+                <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
+                <div class="">
+                  <div className="card section-31 shadow  p-2 mb-3">
                     <div className="row">
-                      <div className="p-2 m-3">
+                      <div className="">
                         <h4 className="">Download Users</h4>
                         <button
-                          className="col-12 col-md-2 m-2 p-1 text-white"
+                          className=" text-white"
                           style={{
                             borderRadius: "10px",
                             backgroundColor: "#a5059d",
+                            border:"none",
+                            padding:"7px 20px"
                           }}
                         >
                           Download
@@ -163,20 +163,21 @@ const SearchOption = () => {
                       <div className="col-12 col-md-6 w-75 m-3">
                         <input
                           type="text"
-                          className="search w-50 shadow"
+                          className="form-control"
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
                           style={{ border: "1px solid black" }}
                         />
+                        </div>
                         <button
-                          className="m-2 searchcontent text-white"
-                          style={{ backgroundColor: "#a5059d" }}
+                          className="mt-2 searchcontent text-white"
+                          style={{ backgroundColor: "#a5059d", border:"none" }}
                           onClick={handleSearch}
                         >
                           <i className="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <div></div>
-                      </div>
+                        
+                      
                     </div>
                   </div>
 
@@ -266,8 +267,7 @@ const SearchOption = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      
     </div>
   );
 };

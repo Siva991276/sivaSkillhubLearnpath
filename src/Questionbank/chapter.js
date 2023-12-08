@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import { Pagination } from "antd";
+
 
 const Chapter = () => {
 	useEffect(() => {
@@ -138,7 +140,7 @@ const Chapter = () => {
 					>
 						<div className=" d-lg-block d-none">
 							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                            <div className="card-item p-2">
+                            <div className="card-item p-2 mt-2">
 							<div class=" row ">
 								<div className="col-md-3">
 									<h6 className="">Subjects</h6>
@@ -373,7 +375,7 @@ const Chapter = () => {
 									<option className="w-15">6</option>
 									<option className="w-15">7</option>
 									<option className="w-15">8</option>
-									<option className="w-15"></option>
+									<option className="w-15">9</option>
 									<option className="w-15">10</option>
 								</select>
 							</div>
@@ -523,7 +525,7 @@ const Chapter = () => {
                                         </tr>
                                     ))} */}
 						</div>
-						<div className="d-flex flex-row">
+						{/* <div className="d-flex flex-row">
 							<div>
 								<p>Showing 1 to 2 of entries</p>
 							</div>
@@ -531,9 +533,17 @@ const Chapter = () => {
 							<div>
 								<p>Previous</p>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
+				<div className="text-center">
+								<Pagination
+									defaultCurrent={1}
+									total={50}
+									className="my-3 fixed-bottom "
+									
+								/>
+								</div>
                 </div>
                 </div>
 			</div>

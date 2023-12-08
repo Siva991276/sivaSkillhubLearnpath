@@ -328,25 +328,23 @@ const AdminDashboard = () => {
   // Corporate Office
   return (
     <div>
-      <div className="container1">
-        <div className="row">
-          <div className=" mt-1">
+      <div className="container-fluid p-0">
             <div className="row">
             {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
+              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar/>
               </div>
 					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
-                  <div className="card section-31 shadow">
-                    <div className="d-flex flex-row">
+            <div className={`my-3 col-12 col-md-${isOpen ? 12: 10} col-lg-${isOpen ? 9 : 12}`}>
+                <div className=" d-lg-block">
+                <i className="fa-solid fa-bars bars d-lg-block d-xl-block  d-none" onClick={toggleSidebar}></i>
+                <div class="">
+                  <div className="card section-31 shadow mx-2 p-2">
+                    <div className="d-flex justify-content-between">
                       <div>
-                        <h2 className="mt-2 mx-4 mt-3">institutions</h2>
+                        <h2 className="p-2">institutions</h2>
                       </div>
-                      <div className="col-12 col-md-7"></div>
+                      {/* <div className="col-12 "></div> */}
 
                       <div style={{ marginLeft: "auto" }} class="m-2">
                         {/* <b class="resumeh7 ">+ Add Employment</b> */}
@@ -358,13 +356,13 @@ const AdminDashboard = () => {
                           >
                             <i
                               type="button"
-                              class="material-symbols-outlined mx-3 mt-4"
+                              class="material-symbols-outlined  mt-4"
                               data-bs-toggle="modal"
                               data-bs-target="#myModal23"
                             >
                               edit_square
                             </i>
-                            <b class="resumeh7 row mx-3">+Add</b>
+                            <span class="resumeh7 ">+Add</span>
                           </button>
                           {/* <ToastContainer
                             position="top-right"
@@ -941,8 +939,6 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </div>
     </div>
   );
