@@ -442,27 +442,26 @@ const UsersDetails = () => {
 
   return (
     <div>
-      <div className="container1">
+      <div className="container-fluid p-0">
         <div className="row">
-          <div className=" mt-1">
+          <div className="">
             <div className="row">
             {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
+              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar/>
               </div>
 					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
-                  <div className="card section-31 shadow">
-                    <div className="d-flex flex-row">
-                      <div>
-                        <h4 className=" mx-4 mt-3">Filter Users</h4>
+            <div className={`my-3 col-12 col-md-${isOpen ? 12: 10} col-lg-${isOpen ? 9 : 12}`}>
+                <div className="d-lg-block">
+                <i className="fa-solid fa-bars bars  d-lg-block d-none" onClick={toggleSidebar}></i>
+                <div class="">
+                  <div className="card section-31 shadow p-2">
+                    <div className="row">
+                      <div className="col-md-4">
+                        <h4 className="">Filter Users</h4>
                       </div>
-                      <div className="col-12 col-md-6"></div>
-
-                      <div style={{ marginLeft: "auto" }} class="m-2">
+                        <div className="col-md-8 text-end">
+                        <div style={{ marginLeft: "auto" }} class="m-2">
                         <div>
                           <button
                             style={{ border: "none", backgroundColor: "white" }}
@@ -470,7 +469,7 @@ const UsersDetails = () => {
                           >
                             <i
                               type="button"
-                              class="material-symbols-outlined mx-3 mt-4"
+                              class="material-symbols-outlined "
                               data-bs-toggle="modal"
                               data-bs-target="#myModal23"
                             >
@@ -1052,8 +1051,9 @@ const UsersDetails = () => {
                             </div>
                           </div>
                         </div>
+                        
                       </div>
-                      <div className="col-12 col-md-2 pt-4">
+                      <div className="">
                         <button
                           className="extends12 p-2 bg-secoundary"
                           type="button"
@@ -1470,14 +1470,17 @@ const UsersDetails = () => {
                           </div>
                         </div>
                       </div>
+                     
+                        </div>
+                      
                     </div>
 
-                    <div className="d-flex flex-row">
-                      <div className="p-2">
+                    <div className="row">
+                      <div className="p-2 col-md-3">
                         <select
                           name=""
                           id=""
-                          className="m-2 p-2"
+                          className="form-control"
                           onChange={handleCheckboxChange}
                         >
                           <option value="Select Institutions">
@@ -1497,11 +1500,11 @@ const UsersDetails = () => {
                         </h6>
                       </div>
 
-                      <div className="p-2">
+                      <div className="p-2 col-md-3">
                         <select
                           name=""
                           id=""
-                          className="m-2 p-2"
+                          className="form-control"
                           onChange={handleBatchYearChange}
                         >
                           <option value="Select Batch Year">
@@ -1522,11 +1525,11 @@ const UsersDetails = () => {
                       </div>
 
                       {/* Batch filter */}
-                      <div className="p-2">
+                      <div className="p-2 col-md-3">
                         <select
                           name=""
                           id=""
-                          className="m-2 p-2"
+                          className="form-control"
                           onChange={handleBatchChange}
                         >
                           <option value="Select Batch">
@@ -1546,10 +1549,10 @@ const UsersDetails = () => {
                         </h6>
                       </div>
 
-                      <div className="p-2">
+                      <div className="p-2 col-md-3">
                         <button
-                          className="m-2 mx-3 p-1 selectbtn112"
-                          style={{ backgroundColor: "#a5059d" }}
+                          className="p-2 selectbtn112"
+                          style={{ backgroundColor: "#a5059d", border:"none" }}
                           onClick={filterJobs}
                         >
                           Go
