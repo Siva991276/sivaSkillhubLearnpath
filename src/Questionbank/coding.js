@@ -72,6 +72,127 @@ const Coding = () => {
       closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
     }
   };
+
+  const handleCodingQuestionType = (event) => {
+		setCodingQuestionType(
+		  event.target.options[event.target.selectedIndex].getAttribute(
+			"data-value"
+		  )
+		);
+	  }; 
+
+  const [allcodingData, setallcodingdata]=useState([]);
+  const fetchcodingData=async () =>{
+    const api = "/addbasic/:subjectId/:chapterId";
+    try {
+			const response = await axios.get(api, {});
+			const data = response.data;
+			setAllsubjectsData(response.data);
+		} catch (error) {
+			console.error("Error fetch blogs:", error);
+		}
+  };
+  useEffect(() => {
+		fetchcodingData();
+	}, []);
+ const [Subjects,setSubjects]=useState("");
+ const [Chapters,setChapters]=useState("");
+ const [Title,setTitle]=useState("");
+ const [Programminglanguage,setProgramminglanguage]=useState("");
+ const [Description,setDescription]=useState("");
+ const [Constraints,setConstraints]=useState("");
+ const onSubmitForm = async (e) => {
+  e.preventDefault();
+  // const token = Cookies.get("token");  
+  if (Subjects && Chapters && Title && Programminglanguage && Constraints && Description  !== "") {
+    try {
+      const CodingData ={
+        Subjects:Subjects,
+        Chapters:Chapters,
+        Title:Title,
+        Programminglanguage:Programminglanguage,
+        Description:Description,
+        Constraints:Constraints,
+        // questionImage:'',
+        // Option1:option1,
+        // Option2:option2,
+        // Option3:option3,
+        // correctAnswer:correctAnswer
+        // Explanation:'',
+      }
+      console.log(CodingData)
+   const response= await axios.post(`/addbasic/:subjectId/:chapterId/${selectedSubjectId}/${selectedChapterId}`, CodingData)
+    //   headers: {
+    // 	token: token,
+    //   },
+      setallquestionData(response.data);
+      console.log(response.data);
+      if (response.status === 200) {
+      toast("Coding Added", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        className: "custom-toast-custom",
+      });
+      
+      }
+
+    }
+    catch(error){
+      console.log(error.response.data);
+      toast.error("Coding already added");
+    }
+
+    } else {
+    toast.warning("Enter Required details");
+  }
+  };
+  const [selectedSubjectsId, setSelectedSubjectsId] = useState([]);
+	  const handleSubjectsTypeSelection = (event) => {
+      setSelectedSubjects(
+		  event.target.options[event.target.selectedIndex].getAttribute(
+			"data-value"
+		  )
+		);
+		setSelectedSubjectsId(
+			event.target.options[event.target.selectedIndex].getAttribute(
+			  "value"
+			)
+		  );
+		  }
+      const [selectedChaptersId, setSelectedChaptersId] = useState([]);
+	const handleChaptersTagTypeSelection = (event) => {
+		setSelectedChapters(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	setSelectedChaptersId(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		  "value"
+		)
+	  );
+	};
+
+  	
+	const handleTitleChange = (event) => {
+		setSelectedTitle(event.target.value);
+	  };
+	const handleDescriptionSelection = (event) => {
+	setDescription(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	};
+
+
+
   return (
     <div className="container">
       <div className="row">
