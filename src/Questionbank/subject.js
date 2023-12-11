@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 const QbSubject = () => {
 	useEffect(() => {
@@ -13,6 +13,8 @@ const QbSubject = () => {
 	}, []);
 	const [Open, setOpen] = useState(true);
 	const [blogslist, setBlogslist] = useState([]);
+
+	console.log(blogslist);
 	let navigate = useNavigate("");
 	const fetchblogs1 = async () => {
 		const api = "http://localhost:4010/v2/subjects";
@@ -20,7 +22,6 @@ const QbSubject = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setBlogslist(response.data);
-			console.log("allsubject",response.data)
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
 		}
@@ -32,11 +33,11 @@ const QbSubject = () => {
 
 	const handleSubjectTagTypeSelection = (event) => {
 		setSubjectTag(
-		  event.target.options[event.target.selectedIndex].getAttribute(
-			"data-value"
-		  )
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			)
 		);
-	  };
+	};
 
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
@@ -44,10 +45,9 @@ const QbSubject = () => {
 			try {
 				const AddSubject = {
 					name: name,
-					Description: Description,
+					description: Description,
 					subjectTag: subjecttag,
 				};
-				console.log(AddSubject)
 				const response = await axios.post(
 					"http://localhost:4010/v2/subject",
 					AddSubject
@@ -75,8 +75,7 @@ const QbSubject = () => {
 			}
 			console.log("Deleting subject with ID", id);
 			const response = await axios.delete(
-			`http://localhost:4010/v2/subjet/${id}`
-				
+				`http://localhost:4010/v2/subjet/${id}`
 			);
 			if (response.status === 200) {
 				window.alert("Deleted Successfully", {
@@ -103,42 +102,42 @@ const QbSubject = () => {
 			setOpen(!Open);
 		};
 	};
-	const onSubmitUpdatedForm = (_id,e) => {
+	const onSubmitUpdatedForm = (_id, e) => {
 		e.preventDefault();
 		const AddSubject = {
 			name: name,
 			description: Description,
 			subjectTag: subjecttag,
 		};
-		 const nonemptyuserData = Object.fromEntries(
-			Object.entries(AddSubject).filter(([key, value]) => value !== '')
-		  );		  
-		  axios
+		const nonemptyuserData = Object.fromEntries(
+			Object.entries(AddSubject).filter(([key, value]) => value !== "")
+		);
+		axios
 			.put(`http://localhost:4010/v2/subject/${_id}`, nonemptyuserData)
 			.then((response) => {
-			  if (response.status === 200) {
-				toast("Institute Updated successfully", {
-				  position: "top-right",
-				  autoClose: 1000,
-				  hideProgressBar: false,
-				  closeOnClick: true,
-				  pauseOnHover: true,
-				  draggable: true,
-				  progress: undefined,
-				  theme: "colored",
-				  className: "custom-toast-custom",
-				});
-				setName("");
-				setDescription("");
-				setSubjectTag("");
-				
-			  }
+				if (response.status === 200) {
+					toast("Institute Updated successfully", {
+						position: "top-center",
+						autoClose: 1000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						className: "custom-toast-custom",
+					});
+					setName("");
+					setDescription("");
+					setSubjectTag("");
+				}
 			})
 			.catch((error) => {
-			  console.log(error.response.data);
-			  toast.error("Institute already Updated");
-			}); 
-	  };
+				console.log(error.response.data);
+				toast.error("Institute already Updated");
+			});
+	};
+
 	const [isOpen, setIsOpen] = useState(true);
 
 	const toggleSidebar = () => {
@@ -156,341 +155,368 @@ const QbSubject = () => {
 			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
 		}
 	};
-	
-	  const columns: GridColDef[] = [
-		{ field: 'SNO', headerName: 'SNO', width: 70 },
-		{ field: 'NAME', headerName: 'NAME', width: 130 },
-		{ field: 'TAG', headerName: 'TAG', width: 130 },
-		{ field: 'TAG', headerName: 'TAG', width: 130 },
-		{ field: 'TAG', headerName: 'TAG', width: 130 },
-		{ field: 'TAG', headerName: 'TAG', width: 130 },
 
-	  ];
-	  
-	  const rows = blogslist.map((blog, index) => ({
-		SNO: index + 1, // Assuming index is a unique identifier; replace with an actual unique identifier if available
+	const columns: GridColDef[] = [
+		{ field: "SNO", headerName: "SNO", width: 170 },
+		{ field: "NAME", headerName: "NAME", width: 170 },
+		{ field: "TAG", headerName: "TAG", width: 170 },
+		{ field: "CHAPTERS", headerName: "CHAPTERS", width: 170 },
+		{ field: "TOTAL QUESTION", headerName: "TOTAL QUESTION", width: 250 },
+		{
+			field: "ACTION",
+			headerName: "ACTION",
+			width: 170,
+			renderCell: (params) => renderActionButtons(params.row),
+		},
+	];
+
+	const headerColumns = columns.map((col) => ({
+		field: col.field,
+		headerName: col.headerName,
+		width: col.width,
+		renderCell: col.renderCell,
+	}));
+
+	const renderActionButtons = (blogId) => (
+		<div>
+			<button
+				type="button"
+				className="btn btn-danger mx-1"
+				data-bs-toggle="modal"
+				data-bs-target="#myModalView"
+				onClick={() => GotohandleViewClick(blogId)}
+			>
+				<i
+					className="fas fa-pencil-alt"
+					onClick={() => setUpdateModalOpen(false)}
+					style={{ color: "white" }}
+				></i>
+			</button>
+
+			<button
+				type="button"
+				className="btn btn-dark mx-1"
+				onClick={() => handleDelete(blogId)}
+			>
+				<i className="fas fa-trash" style={{ color: "white" }}></i>
+			</button>
+		</div>
+	);
+
+	const rows = blogslist.map((blog, index) => ({
+		id: index + 1, // Add this line to include a unique id for each row
+		SNO: index + 1,
 		NAME: blog.name,
-		TAG: blog.class,
+		TAG: blog.subjectTag,
 		CHAPTERS: blog.totalqustions,
 		TOTALQUESTION: ``,
-		ACTION:``
-	  }));
-const [selectedSubject, setSelectedSubject] = useState(null);
-console.log(selectedSubject)
-	  const GotohandleViewClick =(data)=>{
+		ACTION: renderActionButtons(blog._id),
+	}));
+
+	const [selectedSubject, setSelectedSubject] = useState(null);
+	const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+	console.log(selectedSubject);
+	const GotohandleViewClick = (data) => {
 		setSelectedSubject(data);
+		setUpdateModalOpen(true);
 	};
-const handleSubjectTagSelection = (event) => {
-	setSubjectTag(
-		event.target.options[event.target.selectedIndex].getAttribute(
-		"data-value"
-		)
-	);
+	const handleSubjectTagSelection = (event) => {
+		setSubjectTag(
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			)
+		);
 	};
-	
+
 	return (
 		<div>
-			<div className="container-fluid">
+			<div className="container-fluid ">
 				<div className="row">
 					{isOpen && (
-						<div className=" col-12 col-md-3 sectioncard121">
+						<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
 							<Sidebar />
 						</div>
 					)}
 					<div
-						className={`my-3 col-12 col-md-${isOpen ? 8 : 12} col-lg-${
-							isOpen ? 8 : 12
+						className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+							isOpen ? 9 : 12
 						}`}
 					>
-						<div className=" d-lg-block d-none">
-							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-							<div className="card-item p-2">
-								<div class=" row  ">
-									<div className="col-md-9">
-										<h6 className="">Subjects</h6>
-									</div>
-									<div className="col-md-3 text-end">
-										<button
-											type="button"
-											class="btn "
-											data-bs-toggle="modal"
-											data-bs-target="#myModalCreate"
-											className="float-right btn btn-danger"
-										>
-											+ Create Subject
-										</button>
-									</div>
-
-									<div class="modal" id="myModalCreate">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h4 class="modal-title">Create Subject</h4>
-													<button
-														type="button"
-														class="btn-close"
-														data-bs-dismiss="modal"
-													></button>
-												</div>
-												<ToastContainer
-													position="top-right"
-													autoClose={5000}
-													hideProgressBar={false}
-													newestOnTop={false}
-													closeOnClick
-													rtl={false}
-													pauseOnFocusLoss
-													draggable
-													pauseOnHover
-													theme="light"
-												/>
-												<div class="modal-body">
-													<form onSubmit={onSubmitForm}>
-														<div className="row">
-															<div className="col-lg-6 col-md-6">
-																<div className="mb-1">
-																	<label>
-																		Name<sup className="star">*</sup>
-																	</label>
-																	<input
-																		type="text"
-																		className="form-control"
-																		placeholder="...name..."
-																		value={name}
-																		onChange={(e) => setName(e.target.value)}
-																	/>
-																</div>
-															</div>
-															<div className="col-lg-6 col-md-6">
-																<div className="mb-1">
-																	<label>
-																		Description<sup className="star">*</sup>
-																	</label>
-																	<input
-																		type="text"
-																		className="form-control"
-																		placeholder="...Description..."
-																		value={Description}
-																		onChange={(e) =>
-																			setDescription(e.target.value)
-																		}
-																	/>
-																</div>
-															</div>
-															<label className="my-3 ">Subject *</label>
-															<select
-																value={subjecttag}
-																style={{ width: "190px" }}
-																className="form-control mb-2"
-																// onChange={(e) => setSubjectTag(e.target.value)}
-																onChange={handleSubjectTagTypeSelection}
-
-															>
-																<option value="">--select subjects--</option>
-																<option data-value="algorithms">Algorithms</option>
-																{/* <option value="algorithms">algorithms</option> */}
-																<option data-value="Botany">Botany</option>
-																<option data-value="C-programming">
-																	C-programming
-																</option>
-																<option data-value="Chemistry">Chemistry</option>
-																<option data-value="Communication">
-																	Communication
-																</option>
-																<option data-value="Data-reasoning">
-																	Data-reasoning
-																</option>
-																<option data-value="Data-structres">
-																	Data-structres
-																</option>
-																<option data-value="Dbms">Dbms</option>
-																<option data-value="Java-programming">
-																	Java-programming
-																</option>
-																<option data-value="Mathematics">Mathematics</option>
-																<option data-value="Others">Others</option>
-																<option data-value="Physics">Physics</option>
-																<option data-value="Programming">Programming</option>
-																<option data-value="Programming Skills">
-																	Programming Skills
-																</option>
-																<option data-value="Quntative apptitude">
-																	Quntative apptitude
-																</option>
-															</select>
-															<div className="modal-footer">
-																<button
-																	type="submit"
-																	className="btn btn-danger"
-																	data-bs-dismiss="modal"
-																>
-																	Submit
-																</button>
-															</div>
-														</div>
-													</form>
-												</div>
-											</div>
+						<div className=" ">
+							<div className=" d-lg-block">
+								<i
+									className="fa-solid fa-bars bars d-lg-block d-none"
+									onClick={toggleSidebar}
+								></i>
+								<div className="card-item p-2">
+									<div class=" row  ">
+										<div className="col-md-9">
+											<h5 className="">Subjects</h5>
 										</div>
-									</div>
-
-									{/* Delete */}
-
-									<div class="modal" id="myModal234567">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h4 class="modal-title">Delete Subject</h4>
-													<button
-														type="button"
-														class="btn-close"
-														data-bs-dismiss="modal"
-													></button>
-												</div>
-
-												<div class="modal-body">
-													Are Sure Delete this subject
-												</div>
-
-												<div class="modal-footer">
-													<p>No</p>
-													<button
-														type="button"
-														class="btn btn-danger"
-														data-bs-dismiss="modal"
-													>
-														Yes
-													</button>
-												</div>
-											</div>
+										<div className="col-md-3 text-end">
+											<button
+												type="button"
+												class="btn "
+												data-bs-toggle="modal"
+												data-bs-target="#myModalCreate"
+												className="float-right btn"
+												style={{ backgroundColor: "#981a96", color: "white" }}
+											>
+												+ Create Subject
+											</button>
 										</div>
-									</div>
-								</div>
-								<div className="d-flex flex-row">
-									<div>
-										<div>
-											<label>Show</label>
-										</div>
-										<select className="form-control">
-											<option className="form-control">1</option>
-											<option className="form-control">2</option>
-											<option className="form-control">3</option>
-											<option className="form-control">4</option>
-											<option className="form-control">5</option>
-											<option className="form-control">6</option>
-											<option className="form-control">7</option>
-											<option className="form-control">8</option>
-											<option className="form-control">9</option>
-											<option className="form-control">10</option>
-										</select>
-									</div>
-									<div className="col-9"></div>
 
-									<div className="mt-2">
-										<label>Search: </label>
-										<input type="text" className="form-control" />
-									</div>
-								</div>
-								<p>entires</p>
-								<div>
-									<table className="table table-bordered">
-										<thead>
-											<tr>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													SNO
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													NAME
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													TAG
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													CHAPTERS
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													TOTAL QUESTION
-												</th>
-												<th
-													style={{ fontSize: "14px",backgroundColor:"#333", color:"#fff" }}
-													className="text-center"
-												>
-													ACTION
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{blogslist.map((blog1, index) => (
-												<tr key={index}>
-													<td className="text-center">{index + 1}</td>
-													<td className="text-center">{blog1.name}</td>
-													<td className="text-center">{blog1.subjectTag}</td>
-													<td className="text-center">{blog1.chapter.length}</td>
-													<td className="text-center">
-														{blog1.chapter.length}
-													</td>
-													<td className="text-center">
+										<div class="modal" id="myModalCreate">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h4 class="modal-title">Create Subject</h4>
 														<button
 															type="button"
-															class="btn "
-															data-bs-toggle="modal"
-															data-bs-target="#myModalView"
-															className="float-right btn btn-danger"
-        													onClick={() => GotohandleViewClick(blog1)}
+															class="btn-close"
+															data-bs-dismiss="modal"
+														></button>
+													</div>
+													<ToastContainer
+														position="top-center"
+														autoClose={5000}
+														hideProgressBar={false}
+														newestOnTop={false}
+														closeOnClick
+														rtl={false}
+														pauseOnFocusLoss
+														draggable
+														pauseOnHover
+														theme="light"
+													/>
+													<div class="modal-body">
+														<form onSubmit={onSubmitForm}>
+															<div className="row">
+																<div className="col-lg-6 col-md-6">
+																	<div className="mb-1">
+																		<label>
+																			Name<sup className="star">*</sup>
+																		</label>
+																		<input
+																			type="text"
+																			className="form-control"
+																			placeholder="...name..."
+																			value={name}
+																			onChange={(e) => setName(e.target.value)}
+																		/>
+																	</div>
+																</div>
+																<div className="col-lg-6 col-md-6">
+																	<div className="mb-1">
+																		<label>
+																			Description<sup className="star">*</sup>
+																		</label>
+																		<input
+																			type="text"
+																			className="form-control"
+																			placeholder="...Description..."
+																			value={Description}
+																			onChange={(e) =>
+																				setDescription(e.target.value)
+																			}
+																		/>
+																	</div>
+																</div>
+																<div className="col-lg-6">
+																	<label className="my-3 ">Subject *</label>
+																	<select
+																		value={subjecttag}
+																		className="form-control mb-2"
+																		// onChange={(e) => setSubjectTag(e.target.value)}
+																		onChange={handleSubjectTagTypeSelection}
+																	>
+																		<option value="">
+																			--select subjects--
+																		</option>
+																		<option data-value="algorithms">
+																			Algorithms
+																		</option>
+																		{/* <option value="algorithms">algorithms</option> */}
+																		<option data-value="Botany">Botany</option>
+																		<option data-value="C-programming">
+																			C-programming
+																		</option>
+																		<option data-value="Chemistry">
+																			Chemistry
+																		</option>
+																		<option data-value="Communication">
+																			Communication
+																		</option>
+																		<option data-value="Data-reasoning">
+																			Data-reasoning
+																		</option>
+																		<option data-value="Data-structres">
+																			Data-structres
+																		</option>
+																		<option data-value="Dbms">Dbms</option>
+																		<option data-value="Java-programming">
+																			Java-programming
+																		</option>
+																		<option data-value="Mathematics">
+																			Mathematics
+																		</option>
+																		<option data-value="Others">Others</option>
+																		<option data-value="Physics">
+																			Physics
+																		</option>
+																		<option data-value="Programming">
+																			Programming
+																		</option>
+																		<option data-value="Programming Skills">
+																			Programming Skills
+																		</option>
+																		<option data-value="Quntative apptitude">
+																			Quntative apptitude
+																		</option>
+																	</select>
+																</div>
 
+																<div className="modal-footer">
+																	<button
+																		type="submit"
+																		className="btn btn-danger"
+																		data-bs-dismiss="modal"
+																	>
+																		Submit
+																	</button>
+																</div>
+															</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										{/* Delete */}
+
+										<div class="modal" id="myModal234567">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h4 class="modal-title">Delete Subject</h4>
+														<button
+															type="button"
+															class="btn-close"
+															data-bs-dismiss="modal"
+														></button>
+														<button
+															type="button"
+															class="btn-close"
+															data-bs-dismiss="modal"
+														></button>
+													</div>
+
+													<div class="modal-body">
+														Are Sure Delete this subject
+													</div>
+
+													<div class="modal-footer">
+														<p>No</p>
+														<button
+															type="button"
+															class="btn btn-danger"
+															data-bs-dismiss="modal"
 														>
-															<i
-																className="fa-sharp fa-solid fa-pen mx-1"
-																style={{ color: "skyblue" }}
-															
-															></i>
-															</button>
-															<div class="modal" id="myModalView">
+															Yes
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div className="d-flex flex-row">
+										<div className="mt-2">
+											<div>
+												<label>Show</label>
+											</div>
+											<select className="form-control">
+												<option className="form-control">1</option>
+												<option className="form-control">2</option>
+												<option className="form-control">3</option>
+												<option className="form-control">4</option>
+												<option className="form-control">5</option>
+												<option className="form-control">6</option>
+												<option className="form-control">7</option>
+												<option className="form-control">8</option>
+												<option className="form-control">9</option>
+												<option className="form-control">10</option>
+											</select>
+										</div>
+										<div className="col-4 col-md-7"></div>
+
+										<div className="mt-2">
+											<label>Search: </label>
+											<input type="text" className="form-control" />
+										</div>
+									</div>
+									<p className="mt-2">entires</p>
+									<div style={{ height: "auto", width: "100%" }}>
+										<DataGrid
+											rows={rows}
+											columns={headerColumns}
+											initialState={{
+												pagination: {
+													paginationModel: { page: 0, pageSize: 5 },
+												},
+											}}
+											pageSizeOptions={[5, 10]}
+										/>
+									</div>
+
+									<div
+										class="modal"
+										id="myModalView"
+										style={{ display: isUpdateModalOpen ? "block" : "none" }}
+									>
 										<div class="modal-dialog">
 											<div class="modal-content">
 												<div class="modal-header">
 													<h4 class="modal-title">Create Subject</h4>
+													<button
+														type="button"
+														class="btn-close"
+														data-bs-dismiss="modal"
+													></button>
 												</div>
 												<div class="modal-body">
 													<div className="mb-1">
-														<label style={{float:"left"}}>Name<sup className="star">*</sup></label>
+														<label style={{ float: "left" }}>
+															Name<sup className="star">*</sup>
+														</label>
 														<input
-														type="text"
-														className="form-control"
-														placeholder="Name"
-														value={name || selectedSubject?.name}
-														onChange={(e) => setName(e.target.value)}
+															type="text"
+															className="form-control"
+															placeholder="Name"
+															value={name || selectedSubject?.name}
+															onChange={(e) => setName(e.target.value)}
 														/>
 													</div>
 													<div className="mb-1">
-														<label style={{float:"left"}}>Description<sup className="star">*</sup></label>
+														<label style={{ float: "left" }}>
+															Description
+															<sup className="star">*</sup>
+														</label>
 														<input
-														type="text"
-														className="form-control"
-														placeholder="Description"
-														value={Description || selectedSubject?.Description}
-														onChange={(e) => setDescription(e.target.value)}
+															type="text"
+															className="form-control"
+															placeholder="Description"
+															value={
+																Description || selectedSubject?.Description
+															}
+															onChange={(e) => setDescription(e.target.value)}
 														/>
-													</div>													
-													<label className="mt-3 " style={{float:"left"}}>Subject *</label>
+													</div>
+													<label className="mt-3 " style={{ float: "left" }}>
+														Subject *
+													</label>
 													<select
 														type="text"
-                                                        className="form-control"
+														className="form-control"
 														placeholder="...subject tag..."
 														value={subjecttag || selectedSubject?.subjectTag}
 														onChange={handleSubjectTagSelection}
@@ -499,19 +525,37 @@ const handleSubjectTagSelection = (event) => {
 													>
 														<option data-value="algorithms">algorithms</option>
 														<option data-value="Botany">Botany</option>
-														<option data-value="C-programming">C-programming</option>
+														<option data-value="C-programming">
+															C-programming
+														</option>
 														<option data-value="Chemistry">Chemistry</option>
-														<option data-value="Communication">Communication</option>
-														<option data-value="Data-reasoning">Data-reasoning</option>
-														<option data-value="Data-structres">Data-structres</option>
+														<option data-value="Communication">
+															Communication
+														</option>
+														<option data-value="Data-reasoning">
+															Data-reasoning
+														</option>
+														<option data-value="Data-structres">
+															Data-structres
+														</option>
 														<option data-value="Dbms">Dbms</option>
-														<option data-value="java-programming">java-programming</option>
-														<option data-value="Mathematics">Mathematics</option>
+														<option data-value="java-programming">
+															java-programming
+														</option>
+														<option data-value="Mathematics">
+															Mathematics
+														</option>
 														<option data-value="others">others</option>
 														<option data-value="physics">physics</option>
-														<option data-value="programming">programming</option>
-														<option data-value="programming Skills">programming Skills</option>
-														<option data-value="Quntative apptitude">Quntative apptitude</option>
+														<option data-value="programming">
+															programming
+														</option>
+														<option data-value="programming Skills">
+															programming Skills
+														</option>
+														<option data-value="Quntative apptitude">
+															Quntative apptitude
+														</option>
 													</select>
 													<p></p>
 												</div>
@@ -521,57 +565,19 @@ const handleSubjectTagSelection = (event) => {
 														type="button"
 														class="btn btn-danger"
 														data-bs-dismiss="modal"
-														onClick={(e) => onSubmitUpdatedForm(blog1._id,e)}
+														onClick={(e) =>
+															onSubmitUpdatedForm(selectedSubject._id, e)
+														}
 													>
 														Submit
 													</button>
 												</div>
 											</div>
 										</div>
-															</div>
-														
-														<button
-															type="button"
-															className="btn btn-dark mx-2"
-															onClick={() => handleDelete(blog1._id)}
-														>
-															<i
-																className="fa-solid fa-trash-can mx-2"
-																style={{ color: "red" }}
-															></i>
-														</button>
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</div>
-								<div className="d-flex flex-row">
-									<div>
-										<p>Showing 1 to 2 of entries</p>
-									</div>
-									<div className="col-8"></div>
-									<div>
-										<p>Previous</p>
 									</div>
 								</div>
+								<></>
 							</div>
-							{/* <>           
-								<div style={{ height: 400, width: '100%' }}>
-								<DataGrid
-									rows={rows}
-									columns={columns}
-									initialState={{
-									pagination: {
-										paginationModel: { page: 0, pageSize: 5 },
-									},
-									}}
-									pageSizeOptions={[5, 10]}
-								
-								/>
-								</div>
-											
-									</> */}
 						</div>
 					</div>
 				</div>
