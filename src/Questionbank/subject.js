@@ -440,9 +440,9 @@ const handleSubjectTagSelection = (event) => {
 													<td className="text-center">{index + 1}</td>
 													<td className="text-center">{blog1.name}</td>
 													<td className="text-center">{blog1.subjectTag}</td>
-													<td className="text-center">{blog1.chapters}</td>
+													<td className="text-center">{blog1.chapter.length}</td>
 													<td className="text-center">
-														{blog1.totalQuestions}
+														{blog1.chapter.length}
 													</td>
 													<td className="text-center">
 														<button

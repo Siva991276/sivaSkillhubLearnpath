@@ -24,6 +24,7 @@ const Chapter = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setBlogslist(response.data);
+			console.log(response.data)
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
 		}
@@ -49,8 +50,8 @@ const Chapter = () => {
 				};
 
 				const response = await axios.post(
-`http://localhost:4010/v1/addchapter/${subjectId}`,
-AddChapter
+				`http://localhost:4010/v1/addchapter/${subjectId}`,
+				AddChapter
 				);
 
 				setData1(response.data);
@@ -130,6 +131,7 @@ AddChapter
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setAllSubjects(response.data);
+			console.log(response.data)
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
 		}
@@ -221,6 +223,12 @@ AddChapter
 	  )
 	);
   };
+  const [selectedChapterView, setSelectedChapterView] = useState(null);
+
+  const GotohandleViewClick =(data,id)=>{
+    setSelectedChapterView(data,id);
+};
+console.log(selectedChapterView,"sai")
 	return (
 		<div>
 			<div className="container-fluid">
@@ -275,8 +283,8 @@ AddChapter
 								</div>									
 							</div>
 							<div class=" row mt-4">
-								<div className="col-md-3 py-4 ">
-									<h6 className="">Chapters</h6>
+								<div className="col-md-3">
+									<h4 className=""><b>Chapters</b></h4>
 								</div>
 								<div className="col-md-9 text-end">
 									<button
@@ -287,7 +295,7 @@ AddChapter
 										className="float-right btn btn-danger"
 										
 									>
-										+ Create Subject
+										+ Create Chapter
 									</button>
 								</div>
 
@@ -471,7 +479,7 @@ AddChapter
 												class="btn btn-danger"
 												data-bs-dismiss="modal"
 											>
-												Submitt
+												Submit
 											</button>
 										</div>
 									</div>
@@ -541,18 +549,18 @@ AddChapter
 										subject?.chapter?.map((chapter) => (
 										<tr key={index}>
 											<td className="text-center">{index + 1}</td>
-											<td className="text-center">{chapter.Name}</td>
+											<td className="text-center">{chapter.name}</td>
 											<td className="text-center">{chapter.subject}</td>
 											{/* <td className="text-center">{blog1.chapters}</td> */}
-											<td className="text-center">{chapter.subjectTag}</td>
 											<td className="text-center">{chapter.ChapterTag}</td>
+											<td className="text-center">{chapter.MCQ.length}</td>
 											<td className="text-center">
 												<button
 													type="button"
 													className="btn"
 													data-bs-toggle="modal"
 													data-bs-target="#myModalView"
-													
+													onClick={() => GotohandleViewClick(chapter,chapter._id)}
 												>
 													<i
 														className="fa-sharp fa-solid fa-pen"
@@ -592,7 +600,7 @@ AddChapter
 														type="text"
 														placeholder="...name..."
 														onChange={(e) => setname1(e.target.value)}
-														value={name1 || chapter.Name}
+														value={name1 || selectedChapterView?.Name}
 													/>
 
 													<label style={{float:"left"}}>Description *</label>
@@ -601,7 +609,7 @@ AddChapter
 														type="text"
 														placeholder="...description..."
 														onChange={(e) => setDescription1(e.target.value)}
-														value={Description1 || chapter.Description}
+														value={Description1 || selectedChapterView?.Description}
 													/>
 													<br></br>
 													<label style={{float:"left"}}>Subjecttag *</label>
@@ -619,7 +627,7 @@ AddChapter
 																data-value={subject.subjectTag}
 																value={subjecttag1 || ""}
 															>
-																{subject.subjectTag }
+																{selectedChapterView?.subject }
 															</option>
 															</>
 														))}
@@ -631,7 +639,7 @@ AddChapter
 													<br></br>
 													<select
                                                     	className="form-control"
-														value={chaptertag || chapter.ChapterTag}
+														value={chaptertag || selectedChapterView?.ChapterTag}
 														onChange={handleChapterTagTypeSelection}
 													>
 														<option >--select subjects--</option>
@@ -669,7 +677,7 @@ AddChapter
 															type="submit"
 															className="btn btn-danger"
 															data-bs-dismiss="modal"
-															onClick={(e) => onSubmitUpdatedForm(subject._id,chapter._id,e)}
+															onClick={(e) => onSubmitUpdatedForm(subject?._id,chapter?._id,e)}
 														>
 															Submit
 														</button>
