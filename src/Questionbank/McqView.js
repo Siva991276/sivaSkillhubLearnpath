@@ -5,8 +5,10 @@ import Sidebar from "../Sidebar";
 import { Pagination } from "antd";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const McqView = () => {
+	const navigate = useNavigate();
 	const [selectQuestionType, setSelectQuestionType] = useState("");
 	const [selectedSubject, setSelectedSubject] = useState("");
 	const [selectedChapter, setSelectedChapter] = useState("");
@@ -137,6 +139,36 @@ const McqView = () => {
 			setSelectedMcqList('');
 			
 		  };
+	const gotoviewmcq =(McqId)=>{
+		navigate("/ParticularMcaView",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
+	}
+	const gotoUpdatemcq =(McqId)=>{
+		navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
+	}	
+	const GotohandleDeleteClick = (McqId) => {   
+		// const token = Cookies.get("token");
+			const api = `http://localhost:4010/v1/deleteMCQ/${selectedSubjectId}/${selectedChapterId}/${McqId}`;
+			try{
+				const response=axios.delete(api,)
+			//   console.log("Password updated successfully:", response.data);
+					toast('Deleted Institute successfully', {
+					position: "top-right",
+					autoClose: 1000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,  
+					theme:"colored",
+					className: 'custom-toast-custom'          
+					});
+					fetchsubjectsData();
+					fetchMCQs();					          
+				} catch (error) {              
+					console.error("Error Delete Institute:", error);
+				}
+				// toast.warning("Pending some fields Please check")          
+				};
 	return (
 		<div>
 			<div className="container-fluid">
@@ -372,12 +404,15 @@ const McqView = () => {
 											{selectedMcqList?.Question?.length >=1 ? (
 											<td>
 												<>
-											<i class="fa-solid fa-file file"										
+											<i class="fa-solid fa-file file"
+											onClick={()=>gotoviewmcq(selectedMcqList?._id)}										
 											></i>										
 											<i class=" fas fa-solid fa-light fa-eye"></i>
-											<i class="fa-solid fa-pencil pencile"									
+											<i  class="fa-solid fa-pencil pencile"	
+											onClick={()=>gotoUpdatemcq(selectedMcqList?._id)}								
 											></i>
-											<i class="fa-solid fa-trash delete"></i>
+											<i class="fa-solid fa-trash delete"
+											onClick={()=>GotohandleDeleteClick(selectedMcqList?._id)}></i>
 											</>																		
 											
 																						
