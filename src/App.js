@@ -46,6 +46,11 @@ import Codingview from '../src/Questionbank/codingview';
 import Upload from "./Questionbank/upload";
 import ParagEdit from "./Questionbank/paragEdit";
 import Basic from './Questionbank/BasicCoding';
+import ParticularMcaView from './Questionbank/ParticularMcaView';
+import Mcqupdate from './Questionbank/Mcqupdate';
+
+
+
 
 
 
@@ -96,6 +101,8 @@ function App() {
         <Route exact path="/upload" element={<Upload />} />
         <Route exact path="/ParagEdit" element={<ParagEdit />} />
         <Route exact path="/Basic" element={<Basic />} />        
+        <Route exact path="/ParticularMcaView" element={<ParticularMcaView />} />  
+        <Route exact path="/Mcqupdate" element={<Mcqupdate />} />        
         <Route
           exact
           path="/VideoPage/:VideofolderName"

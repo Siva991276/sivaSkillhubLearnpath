@@ -44,9 +44,10 @@ const QbSubject = () => {
 			try {
 				const AddSubject = {
 					name: name,
-					description: Description,
+					Description: Description,
 					subjectTag: subjecttag,
 				};
+				console.log(AddSubject)
 				const response = await axios.post(
 					"http://localhost:4010/v2/subject",
 					AddSubject

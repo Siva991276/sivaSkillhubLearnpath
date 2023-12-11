@@ -74,11 +74,6 @@ const Codingview = () => {
                                 </select>
                                 <p>Select Chapter</p>
                             </div>
-
-
-
-
-
                             <div className="col-1">
                                 <button style={{ backgroundColor: "blue", color: "white", border: "1px solid blue" }} className="w-100 ">Go</button>
                             </div>
@@ -86,10 +81,6 @@ const Codingview = () => {
                             <div className="col-1">
                                 <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue", width: "150px", height: "25px" }} >Clear Fillter</button>
                             </div>
-
-
-
-
                         </div>
 
                         <div className="row shadow py-5">
