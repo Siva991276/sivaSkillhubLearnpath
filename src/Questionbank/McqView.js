@@ -45,7 +45,6 @@ const McqView = () => {
 			console.error("Error fetching blogs:", error);
 		}
 	};
-	console.log(fetchMCQs);
 	useEffect(() => {
 		fetchsubjectsData();
 		fetchMCQs();
@@ -81,6 +80,63 @@ const McqView = () => {
 			)
 		  );
 		  }
+	const [selectedChapterId, setSelectedChapterId] = useState([]);
+
+		const handleChapterTagTypeSelection = (event) => {
+		setSelectedChapter(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	setSelectedChapterId(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"value"
+		)
+	);
+		}
+	const [selectedReferenceId, setSelectedReferenceId] = useState([]);
+		const handleReferenceTypeSelection = (event) => {
+			setReferencce(
+			event.target.options[event.target.selectedIndex].getAttribute(
+			"data-value"
+			)
+		);
+		setSelectedReferenceId(
+			event.target.options[event.target.selectedIndex].getAttribute(
+			"value"
+			)
+		);
+			}
+	const [selectedQuestionId, setSelectedQuestionId] = useState([]);
+	const handleQuestionTypeSelection = (event) => {
+		setQuestion(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	setSelectedQuestionId(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"value"
+		)
+	);
+		}
+	const [selectedMcqList, setSelectedMcqList] = useState([]);
+		const handleGoButtonClick = () => {
+			const filteredMCQs = allsubjectsData
+			  .filter((subject) => subject?._id === selectedSubjectId)
+			  .flatMap((subject) =>
+				subject.chapter.find((chapter) => chapter?._id === selectedChapterId)?.MCQ || []
+			  )
+			  .find((mcq) => mcq?._id === selectedQuestionId);
+		  
+			console.log(filteredMCQs);
+			setSelectedMcqList(filteredMCQs)
+		  };
+		
+		  const handleClearFilterButtonClick = () => {
+			setSelectedMcqList('');
+			
+		  };
 	return (
 		<div>
 			<div className="container-fluid">
@@ -133,21 +189,27 @@ const McqView = () => {
 										
 
 										<div className="col-6">
-											<select
-												type="text"
-												placeholder=""
-												className="form-control"
-											>
-												<option value="chapter"></option>
-
-												{ allsubjectsData?.map((blog) => (
-													<>
-													<option key={blog._id} value={blog._id}>
-														{blog._id}
-													</option>
-													</>
-												))} 
-											</select>
+										<select
+											type="text"
+											placeholder="...Select Chapter"
+											className="form-control"
+											onChange={handleChapterTagTypeSelection}
+										>
+											<option>...select Chapter...</option>
+											{allsubjectsData?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
+											<>
+															<option
+																className="name_item"
+																key={chapter._id} // Use a unique key for each option
+																data-value={chapter.ChapterTag}
+																value={chapter._id}
+															>
+																{chapter.ChapterTag }
+															</option>
+															</>
+											))))}
+										</select>
 											<p>Select Chapter</p>
 										</div>
 										<div className="col-6">
@@ -163,40 +225,56 @@ const McqView = () => {
 											<p>Diffculty</p>
 										</div>
 
-										<div className="col-6">
-											{/* <select
-												type="text"
-												placeholder=""
-												className="form-control"
-											>
-												<option></option>
-												<option value="refernce"></option>
-
-												{allsubjectsData?.map((blog) => (
-													<option key={blog.id} value={blog.refernce}>
-														{blog.refernce}
-													</option>
-												))}
-											</select> */}
-											<p>Reference</p>
+										<div className="col-6">												
+											<select
+											type="text"
+											placeholder="...Select Reference"
+											className="form-control"
+											onChange={handleReferenceTypeSelection}
+										>
+											<option>...select Chapter...</option>
+											{allsubjectsData?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
+											chapter?.MCQ?.map((each)=>(
+											<>
+															<option
+																className="name_item"
+																key={each._id} // Use a unique key for each option
+																data-value={each.Reference}
+																value={each._id}
+															>
+																{each.Reference }
+															</option>
+															</>
+											))))))}
+										</select>
+											<label>Reference</label>
 										</div>
 
-										<div className="col-6">
+										<div className="col-6">												
 											<select
-												type="text"
-												placeholder=""
-												className="form-control"
-											>
-												<option></option>
-												<option value="questiontype"></option>
-
-												{/* {allsubjectsData?.map((blog) => (
-													<option key={blog.id} value={blog.questiontype}>
-														{blog.questiontype}
-													</option>
-												))} */}
-											</select>
-											<p>Question type</p>
+											type="text"
+											placeholder="...Select Question"
+											className="form-control"
+											onChange={handleQuestionTypeSelection}
+										>
+											<option>...select Question...</option>
+											{allsubjectsData?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
+											chapter?.MCQ?.map((each)=>(
+											<>
+															<option
+																className="name_item"
+																key={each._id} // Use a unique key for each option
+																data-value={each.Question}
+																value={each._id}
+															>
+																{each.Question }
+															</option>
+															</>
+											))))))}
+										</select>
+											<label>Question</label>
 										</div>
 										<div className="row">
 											<div className="col-5"></div>
@@ -210,6 +288,7 @@ const McqView = () => {
 														padding: "6px",
 														borderRadius: "7px",
 													}}
+													onClick={handleGoButtonClick}
 												>
 													Go
 												</button>
@@ -224,6 +303,7 @@ const McqView = () => {
 														padding: "6px",
 														borderRadius: "7px",
 													}}
+													onClick={handleClearFilterButtonClick}
 												>
 													Clear Fillter
 												</button>
@@ -239,138 +319,78 @@ const McqView = () => {
 											<p>
 												<b>Question Table</b>
 											</p>
-											{/* <button style={{ width: "95px" }} cl>
-												S.No
-											</button>
-											<button style={{ width: "95px" }}>ID</button>
-											<button style={{ width: "95px" }}>Modulue</button>
-											<button style={{ width: "95px" }}>Chapter</button>
-											<button style={{ width: "95px" }}>Question</button>
-											<button style={{ width: "95px" }}>Diffculty</button>
-
-											<button style={{ width: "95px" }}>Reference</button>
-											<button style={{ width: "95px" }}>Action</button> */}
+											
 											<div style={{ width: "1200px" }}>
-												<table className="table table-bordered">
-													<thead>
-														<tr>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																S NO
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																ID
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Modulue
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Chapter
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Question
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Diffculty
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Reference
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Quation Type
-															</th>
-															<th
-																style={{
-																	fontSize: "14px",
-																	backgroundColor: "#333",
-																	color: "#fff",
-																}}
-																className="text-center"
-															>
-																Action
-															</th>
+											<table className="table table-bordered">
+								<thead>
+									<tr>
+										{/* <th
+											style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }}
+											className="text-center"
+										>
+											SNO
+										</th> */}
+										<th style={{ fontSize: "14px" , backgroundColor:"#333", color:"#fff"}} className="text-center">
+											ID
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											Modulue
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											Chapter
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											Question
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											Diffculty
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											Reference
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											QuestionType
+										</th>
+										<th style={{ fontSize: "14px", backgroundColor:"#333", color:"#fff" }} className="text-center">
+											Action
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{/* {selectedMcqList?.map((each)=>( */}
+										<>
+										<tr>
+											{/* <td className="text-center">{1}</td> */}
+											<td className="text-center">{selectedMcqList?._id}</td>
+											<td className="text-center">{selectedMcqList?.module}</td>
+											<td className="text-center">{selectedMcqList?.Chapters}</td>
+											<td className="text-center">{selectedMcqList?.Question}</td>
+											<td className="text-center">{selectedMcqList?.Difficulty}</td>
+											<td className="text-center">{selectedMcqList?.Reference}</td>
+											<td className="text-center">{selectedMcqList?.selectquestiontype}</td>
+											
+											{selectedMcqList?.Question?.length >=1 ? (
+											<td>
+												<>
+											<i class="fa-solid fa-file file"										
+											></i>										
+											<i class=" fas fa-solid fa-light fa-eye"></i>
+											<i class="fa-solid fa-pencil pencile"									
+											></i>
+											<i class="fa-solid fa-trash delete"></i>
+											</>																		
+											
+																						
+															</td>
+															) :(<td>
+																
+															</td>)}
+															
 														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td className="text-center">1</td>
-															<td className="text-center">iptalgh8</td>
-															<td className="text-center">React Js</td>
-															<td className="text-center">
-																Life cycle of component
-															</td>
-															<td className="text-center">What is React</td>
-															<td className="text-center">Easy</td>
-															<td className="text-center">
-																Multi Correct Option
-															</td>
-															<td className="text-center">Null</td>
-															<td className="text-center">
-																<i class="fa-regular fa-copy mx-1 copy"></i>
-																<i class="fa-solid fa-eye mx-1 eye"></i>
-
-																<i className="fa-sharp fa-solid fa-pen pen mx-1"></i>
-
-																<i className="fa-solid fa-trash-can trash mx-2"></i>
-															</td>
-														</tr>
-													</tbody>
-												</table>
+														</>
+													 {/* ))} */}
+												</tbody>
+											</table>
 											</div>
 										</div>
 									</div>
@@ -378,9 +398,6 @@ const McqView = () => {
 							</div>
 							Questiontype
 						</div>
-						{allMcqsList.map((blog, index) => (
-							<p key={index}>{blog.questiontype}</p>
-						))}
 					</div>
 					<div className="text-center">
 						<Pagination

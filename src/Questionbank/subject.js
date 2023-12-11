@@ -20,6 +20,7 @@ const QbSubject = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setBlogslist(response.data);
+			console.log("allsubject",response.data)
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
 		}
