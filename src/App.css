@@ -3077,7 +3077,6 @@ margin-top: 10px;
   font-size: 19px;
   color: rgb(0, 89, 255);
   font-weight: 800;
-  width: 16%;
   
 }
 
@@ -3564,6 +3563,7 @@ margin-top: 10px;
    
   background-color: rgb(244, 242, 242);
   max-height: 100vh;
+  padding: 0px;
    
 }
 
@@ -3613,6 +3613,12 @@ margin-top: 10px;
 /* view */
 .viewcardone{
   background-color: #f7f8ef;
+  border-radius: 7px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+}
+.manage{
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+  border: none;
 }
 
 .viewsection123{
@@ -3650,10 +3656,40 @@ margin-top: 10px;
 .welcometo{
    font-weight: 300;
 }
-.backgroundcolor{
- 
-  background-image: linear-gradient(to right, rgb(6, 6, 242) , black);
+.institutions_item{
+  color: #000000;
 }
+.backgroundcolor{
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+ border: none;
+ color: #000000 !important;
+  background: #D3CCE3;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #E9E4F0, #D3CCE3);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #E9E4F0, #D3CCE3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.edit_btn{
+  background-color: #004f83e7;
+  color: #fff;
+  border: none;
+  padding: 7px 20px;
+  border-radius: 6px;
+}
+.password_btn{
+  background-color: #71099ebd;
+  color: #fff;
+  border: none;
+  padding: 7px 20px;
+  border-radius: 6px;
+}
+.extend_btn{
+  background-color: #035c5d84;
+  color: #fff;
+  border: none;
+  padding: 7px 20px;
+  border-radius: 6px;
+}
+
 .secondcard{
  height: 20vh;
  background-image: linear-gradient(to right, rgb(14, 14, 201) , black);
@@ -3663,11 +3699,20 @@ margin-top: 10px;
   margin-left: 80%;
 }
 .cardassessment{
-  height: 49vh;
+  height: auto;
+  border: none !important;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
 }
 .cardassessment1{
   height: 49vh;
+  border: none;
+  border-radius: 8px !important;
   background-image: linear-gradient(to right, rgb(237, 237, 157), white);
+}
+.subject_item{
+  border-bottom: 1px solid rgba(128, 128, 128, 0.552);
+  padding: 15px 10px;
+  font-weight: 600;
 }
 .cardassessment11{
  
@@ -3675,12 +3720,17 @@ margin-top: 10px;
 }
 .cardassessment12{
   height: 49vh;
+  border: none;
+  border-radius: 8px !important;
   background-image: linear-gradient(to right, rgb(170, 177, 233), white);
 }
 
 .adduserdata{
   background-color: #a5059d;
   color: white;
+  border:none; 
+  border-radius: 7px;
+  padding: 6px 20px;
 }
 
 
@@ -3777,7 +3827,7 @@ margin-top: 10px;
 }
 
 .sidebar.open {
-  width: 247px;
+  width: 340px;
   height: 100vh;
 }
 
@@ -3926,7 +3976,7 @@ margin-top: 10px;
   width: 105%;
   height: 100%;
   transform: scaleX(0);
-  background-color: var(--color-white);
+  /* background-color: var(--color-white); */
   border-radius: 5px;
   transition: transform 0.3s ease-in-out;
   transform-origin: left;
@@ -3968,11 +4018,9 @@ margin-top: 10px;
 }
 
 .sidebar li.profile{
-  position: fixed;
   height: 60px;
-  width: 90px;
   left: 0;
-  bottom:-8px;
+  bottom:-200px;
   padding:10px 14px;
   overflow: hidden;
   opacity: 1;
@@ -3980,7 +4028,8 @@ margin-top: 10px;
 }
 
 .sidebar.open li.profile{
-  width: 230px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .sidebar .profile .profile_details{
@@ -4026,6 +4075,9 @@ margin-top: 10px;
 .sidebar.open .profile #log_out{
   width: 50px;
   background: none;
+  position: relative;
+    left: 185px;
+    font-size: 25px;
 }
 
 .home-section{
@@ -4254,6 +4306,7 @@ margin-top: 10px;
 
 .skill_img {
   height: 50px;
+  border-radius: 7px;
 }
 /* .bars {
   font-size: 30px;
@@ -4262,6 +4315,7 @@ margin-top: 10px;
 .card-item {
   box-shadow: 0px 5px 10px rgba(10, 99, 169, 0.16),
     1px 1px 5px rgba(255, 255, 255, 0.70);
+    border-radius: 10px;
 }
 /* .sidebar.open {
   width: 340px;
@@ -4321,4 +4375,158 @@ margin-top: 10px;
 a{
   color: #fff;
   text-decoration: none;
+}
+@media (max-width: 1360px)  {
+  .sidebar.open {
+    width: 300px;
+  }
+  .login_profile{
+    width: 300px !important;
+  }
+  .icons_items{
+    padding-left: 20px !important;
+  }
+  .sidebar.open .profile #log_out{
+   
+    position: relative;
+      left: 150px;
+      
+  }
+}
+@media (max-width: 1230px)  {
+  .sidebar.open {
+    width: 270px;
+  }
+  .login_profile{
+    width: 270px !important;
+  }
+  .icons_items{
+    padding-left: 20px !important;
+  }
+  .sidebar.open .profile #log_out{
+   
+    position: relative;
+      left: 140px;
+      
+  }
+}
+@media (max-width: 1050px)  {
+  .sidebar.open {
+    width: 250px;
+  }
+  .login_profile{
+    width: 250px !important;
+  }
+  .icons_items{
+    padding-left: 20px !important;
+  }
+  .sidebar.open .profile #log_out{
+   
+    position: relative;
+      left: 130px;
+      
+  }
+}
+
+@media (max-width: 1040px)  {
+  .sidebar.open {
+    width: 240px;
+  }
+  .login_profile{
+    width: 240px !important;
+  }
+  .icons_items{
+    padding-left: 15px !important;
+  }
+  .sidebar.open .profile #log_out{
+   
+    position: relative;
+      left: 110px;
+      
+  }
+}
+@media (max-width: 991px)  {
+  .sectioncard121{
+    padding: 0px;
+  }
+  .icons_items{
+    padding-left: 20px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .font_item{
+    font-size: 12px;
+  }
+  .skill_img{
+    height: 40px;
+  }
+  .container-fluid{
+    padding: 0px 12px;
+  }
+  .css-1bw0nnu-MuiStep-root{
+    padding: 0px !important;
+  }
+  .css-1hv8oq8-MuiStepLabel-label.Mui-completed {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+  }
+  .sectioncard121{
+    padding: 0px;
+  }
+  .go_item{
+    font-size: 12px;
+    padding: 3px;
+  }
+}
+
+
+.add_btn{
+  background-color: #8e0287;
+  border: none;
+}
+/* Add this CSS in your stylesheet or inline styles */
+.custom-header .MuiDataGrid-colHeaderWrapper {
+  background-color: #000000; /* Replace with your preferred color */
+}
+.icons{
+  font-size: 12px !important;
+}
+.icons_items{
+  padding-left: 30px !important;
+}
+.btn_pencile{
+  background-color: #044672eb;
+  border: none;
+  padding: 7px;
+  border-radius: 7px;
+  color: #fff;
+  margin-right: 10px;
+}
+.btn_trash{
+  background-color: #d6360a;
+  border: none;
+  padding: 7px;
+  border-radius: 7px;
+  color: #fff;
+}
+.box_item{
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+}
+.btn_submit{
+  border: none;
+  background-color: #910a8f;
+  color: #fff;
+  padding: 7px 20px;
+  border-radius: 7px;
+}
+.logout_button{
+  background-color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 20px;
+}
+.login_profile{
+  background-color:rgb(12, 26, 46);
+  width: 340px;
 }

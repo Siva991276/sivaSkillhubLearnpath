@@ -442,7 +442,7 @@ const UsersDetails = () => {
 
   return (
     <div>
-      <div className="container-fluid p-0">
+      <div className="container-fluid ">
         <div className="row">
           <div className="">
             <div className="row">
@@ -492,11 +492,11 @@ const UsersDetails = () => {
 
                           <div class="modal" id="myModal23">
                             <div class="modal-dialog ">
-                              <div class="modal-content">
+                              <div class="modal-content text-start">
                                 {/* <!-- Modal Header --> */}
                                 <div class="modal-header">
                                   <div className="d-flex flex-row">
-                                    <button
+                                    <button style={{border:"none", borderRadius:"6px"}}
                                       className={`p-1 m-2 ${
                                         showSingleUserForm ? "bg-primary" : ""
                                       }`}
@@ -504,7 +504,7 @@ const UsersDetails = () => {
                                     >
                                       Single User
                                     </button>
-                                    <button
+                                    <button style={{border:"none", borderRadius:"6px"}}
                                       className={`p-1 m-2 ${
                                         showMultipleUserForm ? "bg-primary" : ""
                                       }`}
@@ -559,7 +559,7 @@ const UsersDetails = () => {
                                             <select
                                               name=""
                                               id=""
-                                              className="p-2"
+                                              className="p-2 form-control"
                                               onChange={(e) =>
                                                 setInstituteType(e.target.value)
                                               }
@@ -591,7 +591,7 @@ const UsersDetails = () => {
                                             <select
                                               name=""
                                               id=""
-                                              className=" p-2"
+                                              className=" p-2 form-control"
                                               onChange={(e) =>
                                                 setBatchYear(e.target.value)
                                               }
@@ -621,7 +621,7 @@ const UsersDetails = () => {
                                             <select
                                               name=""
                                               id=""
-                                              className="p-2"
+                                              className="p-2 form-control"
                                               onChange={(e) =>
                                                 setSelectBatch(e.target.value)
                                               }
@@ -655,7 +655,7 @@ const UsersDetails = () => {
                                           <br />
                                           <input
                                             type="text"
-                                            className="etotal"
+                                            className="etotal form-control p-2"
                                             style={{
                                               border: "1px solid black",
                                             }}
@@ -673,7 +673,7 @@ const UsersDetails = () => {
                                           <br />
                                           <input
                                             type="text"
-                                            className="etotal"
+                                            className="etotal form-control p-2"
                                             style={{
                                               border: "1px solid black",
                                             }}
@@ -686,14 +686,14 @@ const UsersDetails = () => {
                                         </div>
                                       </div>
                                       <br />
-                                      <div className="col-12 col-md-12 m-2">
+                                      <div className="col-12 col-md-12">
                                         <label className="headingAdd">
                                           Email :
                                         </label>
                                         <br />
                                         <input
                                           type="text"
-                                          className="etotal "
+                                          className="etotal form-control p-2 "
                                           style={{ border: "1px solid black" }}
                                           placeholder="Enter Email"
                                           onChange={(e) =>
@@ -712,7 +712,7 @@ const UsersDetails = () => {
                                           <br />
                                           <input
                                             type="text"
-                                            className="etotal"
+                                            className="etotal form-control p-2"
                                             style={{
                                               border: "1px solid black",
                                             }}
@@ -730,7 +730,7 @@ const UsersDetails = () => {
                                           <br />
                                           <input
                                             type="text"
-                                            className="etotal"
+                                            className="etotal form-control p-2"
                                             style={{
                                               border: "1px solid black",
                                             }}
@@ -744,7 +744,7 @@ const UsersDetails = () => {
                                       </div>
                                       <br />
 
-                                      <div className="d-flex flex-row">
+                                      <div className="row">
                                         <div className="col-12 col-md-6 ">
                                           <label className="headingAdd">
                                             Password :
@@ -752,7 +752,7 @@ const UsersDetails = () => {
                                           <br />
                                           <input
                                             type="text"
-                                            className="etotal"
+                                            className="etotal form-control p-2"
                                             style={{
                                               border: "1px solid black",
                                             }}
@@ -763,7 +763,7 @@ const UsersDetails = () => {
                                             value={Password}
                                           />
                                         </div>
-                                        <div className="col-12 col-md-6  mx-2">
+                                        <div className="col-12 col-md-6 ">
                                           <label className="headingAdd">
                                             Access Period :
                                           </label>
@@ -776,7 +776,7 @@ const UsersDetails = () => {
                                               setAxiosPlans(e.target.value)
                                             }
                                             value={AxiosPlans}
-                                            className="Typesection p-2 w-100"
+                                            className="Typesection p-2 w-100 form-control"
                                           >
                                             <option value="3 Months">
                                               -- Select Access Period --
@@ -816,14 +816,14 @@ const UsersDetails = () => {
                                           </select>
                                         </div>
                                       </div>
-                                      <div className="col-12 col-md-6 m-2">
-                                        <label className="headingAdd">
+                                      <div className="col-12 col-md-6">
+                                        <label className="headingAdd mt-3">
                                           Expired Date :
                                         </label>
                                         <br />
                                         <input
                                           type="Date"
-                                          className="etotal p-2"
+                                          className="etotal p-2 form-control"
                                           style={{ border: "1px solid black" }}
                                           placeholder="Enter Expired Date"
                                           onChange={(e) =>
@@ -848,12 +848,12 @@ const UsersDetails = () => {
 
                                 {showMultipleUserForm && (
                                   <div class="modal-body">
-                                    <div className="d-flex flex-row mb-5">
+                                    <div className="d-flex justify-content-between">
                                       <h5>Upload Users</h5>
-                                      <div className="col-12 col-md-7 "></div>
-
+                                      <div className=" text-end">
                                       <button
-                                        className="bg-warning p-1 w-25 text-white"
+                                        className="bg-warning  text-white"
+                                        style={{border:"none", borderRadius:"6px", padding:"7px 20px"}}
                                         onClick={handleDownloadFormat}
                                       >
                                         <i
@@ -862,6 +862,7 @@ const UsersDetails = () => {
                                         ></i>{" "}
                                         Download Format
                                       </button>
+                                      </div>
                                     </div>
                                     <form action="" onSubmit={onSubmitForm}>
                                       <div className="row">
@@ -874,7 +875,7 @@ const UsersDetails = () => {
                                             <select
                                               name=""
                                               id=""
-                                              className="p-2"
+                                              className="p-2 form-control"
                                               onChange={(e) =>
                                                 setInstituteType(e.target.value)
                                               }
@@ -906,7 +907,7 @@ const UsersDetails = () => {
                                             <select
                                               name=""
                                               id=""
-                                              className=" p-2"
+                                              className=" p-2 form-control"
                                               onChange={(e) =>
                                                 setBatchYear(e.target.value)
                                               }
@@ -936,7 +937,7 @@ const UsersDetails = () => {
                                             <select
                                               name=""
                                               id=""
-                                              className="p-2"
+                                              className="p-2 form-control"
                                               onChange={(e) =>
                                                 setSelectBatch(e.target.value)
                                               }
@@ -961,8 +962,8 @@ const UsersDetails = () => {
                                         </div>
                                       </div>
                                       <br />
-                                      <div className="d-flex flex-row">
-                                        <div className="col-12 col-md-6  mx-2">
+                                      <div className="row">
+                                        <div className="col-12 col-md-6 mt-2">
                                           <label className="headingAdd">
                                             Access Period :
                                           </label>
@@ -975,7 +976,7 @@ const UsersDetails = () => {
                                               setAxiosPlans(e.target.value)
                                             }
                                             value={AxiosPlans}
-                                            className="Typesection p-2 w-100"
+                                            className="Typesection form-control p-2 "
                                           >
                                             <option value="3 Months">
                                               -- Select Access Period --
@@ -1014,15 +1015,14 @@ const UsersDetails = () => {
                                             </option>
                                           </select>
                                         </div>
-                                        <div className="col-12 col-md-1"></div>
-                                        <div className="col-12 col-md-4">
+                                        <div className="col-12 col-md-6 mt-2">
                                           <label className="headingAdd">
                                             Users File:
                                           </label>
                                           <br />
                                           <input
                                             type="file"
-                                            className="etotal p-2"
+                                            className="etotal p-2 form-control"
                                             style={{
                                               border: "1px solid black",
                                             }}
@@ -1070,7 +1070,7 @@ const UsersDetails = () => {
                               {/* <!-- Modal Header --> */}
                               <div class="modal-header">
                                 <div className="d-flex flex-row">
-                                  <button
+                                  <button style={{border:"none", borderRadius:"6px"}}
                                     className={`p-1 m-2 ${
                                       showSingleUserForm ? "bg-primary" : ""
                                     }`}
@@ -1078,7 +1078,7 @@ const UsersDetails = () => {
                                   >
                                     By Batch
                                   </button>
-                                  <button
+                                  <button style={{border:"none", borderRadius:"6px"}}
                                     className={`p-1 m-2 ${
                                       showMultipleUserForm ? "bg-primary" : ""
                                     }`}
@@ -1095,7 +1095,7 @@ const UsersDetails = () => {
                               </div>
 
                               {showSingleUserForm && (
-                                <div class="modal-body">
+                                <div class="modal-body text-start">
                                   <form action="" onSubmit={onSubmitForm1}>
                                     <div className="row">
                                       <div className="col-12 col-md-4 ">
@@ -1107,7 +1107,7 @@ const UsersDetails = () => {
                                           <select
                                             name=""
                                             id=""
-                                            className="p-2"
+                                            className="p-2 form-control"
                                             onChange={(e) =>
                                               setInstituteType(e.target.value)
                                             }
@@ -1139,7 +1139,7 @@ const UsersDetails = () => {
                                           <select
                                             name=""
                                             id=""
-                                            className=" p-2"
+                                            className=" p-2 form-control"
                                             onChange={(e) =>
                                               setBatchYear(e.target.value)
                                             }
@@ -1169,7 +1169,7 @@ const UsersDetails = () => {
                                           <select
                                             name=""
                                             id=""
-                                            className="p-2"
+                                            className="p-2 form-control"
                                             onChange={(e) =>
                                               setSelectBatch(e.target.value)
                                             }
@@ -1193,7 +1193,7 @@ const UsersDetails = () => {
                                     </div>
                                     <br />
 
-                                    <div className="col-12 col-md-6  mx-2">
+                                    <div className="col-12 col-md-6  ">
                                       <label className="headingAdd">
                                         Access Period :
                                       </label>
@@ -1206,7 +1206,7 @@ const UsersDetails = () => {
                                           setAxiosPlans(e.target.value)
                                         }
                                         value={AxiosPlans}
-                                        className="Typesection p-2 w-100"
+                                        className="Typesection form-control p-2 "
                                       >
                                         <option value="Exam Practice">
                                           -- Select Access Period --
@@ -1252,7 +1252,7 @@ const UsersDetails = () => {
                                       >
                                         <button
                                           type="submit"
-                                          class="btn adduserdata"
+                                          class=" adduserdata"
                                           data-bs-dismiss="modal"
                                         >
                                           Extend Users
@@ -1260,8 +1260,9 @@ const UsersDetails = () => {
                                         <p
                                           className=" mt-2"
                                           style={{
-                                            color: "red",
-                                            fontWeight: "bold",
+                                            color: "orange",
+                                            fontWeight: "500",
+                                            fontSize:"12px"
                                           }}
                                         >
                                           Note:Extending Users Access is a
@@ -1275,10 +1276,10 @@ const UsersDetails = () => {
                               )}
 
                               {showMultipleUserForm && (
-                                <div class="modal-body">
+                                <div class="modal-body text-start">
                                   <form action="" onSubmit={onSubmitForm2}>
                                     <div className="row">
-                                      <div className="col-12 col-md-4 ">
+                                      <div className="col-12 col-md-6 ">
                                         <label className="headingAdd">
                                           Institution :
                                         </label>
@@ -1287,7 +1288,7 @@ const UsersDetails = () => {
                                           <select
                                             name=""
                                             id=""
-                                            className="p-2"
+                                            className="p-2 form-control"
                                             onChange={(e) =>
                                               setInstituteType(e.target.value)
                                             }
@@ -1311,7 +1312,7 @@ const UsersDetails = () => {
                                         </div>
                                       </div>
 
-                                      <div className="col-12 col-md-4  mx-2">
+                                      <div className="col-12 col-md-6 ">
                                         <label className="headingAdd">
                                           Access Period :
                                         </label>
@@ -1324,7 +1325,7 @@ const UsersDetails = () => {
                                             setAxiosPlans(e.target.value)
                                           }
                                           value={AxiosPlans}
-                                          className="Typesection p-2 w-100"
+                                          className=" p-2 form-control "
                                         >
                                           <option value="Exam Practice">
                                             -- Select Access Period --
@@ -1371,10 +1372,9 @@ const UsersDetails = () => {
                                       </label>
                                       <br />
                                       <textarea
-                                        className="px-3 pt-3"
+                                        className="form-control p-3"
                                         name=""
                                         id=""
-                                        cols="90"
                                         rows="5"
                                         placeholder="Please all users seperated with :"
                                         onChange={(e) =>
@@ -1389,8 +1389,8 @@ const UsersDetails = () => {
                                         is the above data :
                                       </label>
                                       <br />
-                                      <div className="d-flex flex-row">
-                                        <div>
+                                      <div className="row">
+                                        <div className="col-md-6">
                                           <input
                                             type="radio"
                                             id="html"
@@ -1410,8 +1410,7 @@ const UsersDetails = () => {
                                           </label>
                                           <br />
                                         </div>
-                                        <div className="col-12 col-md-3"></div>
-                                        <div>
+                                        <div className="col-md-6">
                                           <input
                                             type="radio"
                                             id="html"
@@ -1426,11 +1425,11 @@ const UsersDetails = () => {
                                             value="Hallticket/Regd,Numbers,"
                                             for="html"
                                           >
-                                            Hallticket/Regd,
+                                            Hallticket/Regd, Numbers
                                           </label>
-                                          <p for="html" className="mx-5">
+                                          {/* <p for="html" className="mx-5">
                                             Numbers,
-                                          </p>
+                                          </p> */}
                                           <br />
                                         </div>
                                       </div>
@@ -1443,7 +1442,7 @@ const UsersDetails = () => {
                                       >
                                         <button
                                           type="submit"
-                                          class="btn adduserdata"
+                                          class=" adduserdata"
                                           data-bs-dismiss="modal"
                                         >
                                           Extend Users
@@ -1611,10 +1610,12 @@ const UsersDetails = () => {
                                       >
                                         <Link to={`/ShowData/${blog._id}`}>
                                           <span
-                                            className="material-symbols-outlined w-75"
+                                            className="material-symbols-outlined "
                                             style={{
-                                              color: "black",
-                                              backgroundColor: "#f3ab05",
+                                              backgroundColor: "#04386b",
+                                              padding:"3px",
+                                              borderRadius:"5px",
+                                              color:"#fff"
                                             }}
                                           >
                                             visibility

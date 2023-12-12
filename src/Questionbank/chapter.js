@@ -230,7 +230,7 @@ const Chapter = () => {
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
-	const columns: GridColDef[] = [
+	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 170 },
 		{ field: "NAME", headerName: "NAME", width: 170 },
 		{ field: "TAG", headerName: "TAG", width: 170 },
@@ -316,11 +316,11 @@ const Chapter = () => {
 								className="fa-solid fa-bars bars d-lg-block d-none"
 								onClick={toggleSidebar}
 							></i>
-							<div className="card-item p-2 mt-2">
+							<div className="  ">
 								<div className="">
-									<div className="mt-4 card-item p-2">
+									<div className="mt-4 card-item p-3">
 										<div class=" row ">
-											<div className="col-md-4">
+											<div className="col-md-4 mt-2">
 												<select
 													style={{ padding: "5px" }}
 													className="w-100 select_item form-control"
@@ -343,25 +343,25 @@ const Chapter = () => {
 													))}
 												</select>
 											</div>
-											<div className="col-md-2">
+											<div className="col-md-2 col-2 mt-2">
 												<button
-													className="btn btn-secondary"
+													className="btn btn-secondary go_item"
 													onClick={() => filterChapters(selectedSubjectId)}
 												>
 													Go
 												</button>
 											</div>
-											<div className="col-md-3">
+											<div className="col-md-3 col-4 mt-2">
 												<button
-													className="btn btn-secondary"
+													className="btn btn-secondary go_item"
 													onClick={clearFilter}
 												>
 													Clear Filter
 												</button>
 											</div>
-											<div className="col-md-3">
+											<div className="col-md-3 col-6 mt-2">
 												<button
-													className="btn btn-secondary"
+													className="btn btn-secondary go_item"
 													onClick={() => getAllChapters(allSubjects._id)}
 												>
 													Get All Chapters
