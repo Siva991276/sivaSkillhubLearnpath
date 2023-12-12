@@ -181,9 +181,9 @@ const McqView = () => {
 		{ field: "Modulue", headerName: "Modulue", width: 120 },
 		{ field: "Chapter", headerName: "Chapter", width: 120 },
 		{ field: "Question", headerName: "Question", width: 120 },
-		{ field: "Diffculty", headerName: "Diffculty", width: 120 },
+		{ field: "Difficulty", headerName: "Difficulty", width: 120 },
 		{ field: "Reference", headerName: "Reference", width: 120 },
-		{ field: "Question Type", headerName: "Question Type", width: 120 },
+		{ field: "QuestionType", headerName: "Question Type", width: 120 },
 		{
 			field: "ACTION",
 			headerName: "Action",
@@ -248,11 +248,12 @@ const McqView = () => {
 		[{
 			SNO: 1,
 			id: selectedMcqList?._id,
-			Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
-			Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
+			Modulue: 1, // Assuming "Name" is the property name for the chapter name
+			Chapter: selectedMcqList?.Chapters, // Assuming "subjectTag" is the property name for the subject tag
 			Question: selectedMcqList?.Question, // Assuming "totalqustions" is the property name for the total questions
-			Diffculty: selectedMcqList?.Diffculty,
+			Difficulty: selectedMcqList?.Difficulty,
 			Reference:selectedMcqList?.Reference,
+			QuestionType:selectedMcqList?.selectquestiontype,
 			ACTION: renderActionButtons(selectedMcqList?._id),
 		}];
 	}else var rows = [];
