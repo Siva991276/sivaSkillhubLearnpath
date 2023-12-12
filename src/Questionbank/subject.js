@@ -333,45 +333,25 @@ const QbSubject = () => {
 																		<option value="">
 																			--select subjects--
 																		</option>
-																		<option data-value="algorithms">
-																			Algorithms
-																		</option>
-																		{/* <option value="algorithms">algorithms</option> */}
-																		<option data-value="Botany">Botany</option>
 																		<option data-value="C-programming">
 																			C-programming
-																		</option>
-																		<option data-value="Chemistry">
-																			Chemistry
 																		</option>
 																		<option data-value="Communication">
 																			Communication
 																		</option>
-																		<option data-value="Data-reasoning">
-																			Data-reasoning
-																		</option>
 																		<option data-value="Data-structres">
-																			Data-structres
+																			Data-structures
 																		</option>
 																		<option data-value="Dbms">Dbms</option>
-																		<option data-value="Java-programming">
-																			Java-programming
+																		<option data-value="java-programming">
+																			java-programming
 																		</option>
-																		<option data-value="Mathematics">
-																			Mathematics
+																		<option data-value="others">others</option>
+																		<option data-value="programming">
+																			programming
 																		</option>
-																		<option data-value="Others">Others</option>
-																		<option data-value="Physics">
-																			Physics
-																		</option>
-																		<option data-value="Programming">
-																			Programming
-																		</option>
-																		<option data-value="Programming Skills">
-																			Programming Skills
-																		</option>
-																		<option data-value="Quntative apptitude">
-																			Quntative apptitude
+																		<option data-value="programming Skills">
+																			programming Skills
 																		</option>
 																	</select>
 																</div>
@@ -523,38 +503,25 @@ const QbSubject = () => {
 
 														// onChange={}
 													>
-														<option data-value="algorithms">algorithms</option>
-														<option data-value="Botany">Botany</option>
 														<option data-value="C-programming">
 															C-programming
 														</option>
-														<option data-value="Chemistry">Chemistry</option>
 														<option data-value="Communication">
 															Communication
 														</option>
-														<option data-value="Data-reasoning">
-															Data-reasoning
-														</option>
 														<option data-value="Data-structres">
-															Data-structres
+															Data-structures
 														</option>
 														<option data-value="Dbms">Dbms</option>
 														<option data-value="java-programming">
 															java-programming
 														</option>
-														<option data-value="Mathematics">
-															Mathematics
-														</option>
 														<option data-value="others">others</option>
-														<option data-value="physics">physics</option>
 														<option data-value="programming">
 															programming
 														</option>
 														<option data-value="programming Skills">
 															programming Skills
-														</option>
-														<option data-value="Quntative apptitude">
-															Quntative apptitude
 														</option>
 													</select>
 													<p></p>

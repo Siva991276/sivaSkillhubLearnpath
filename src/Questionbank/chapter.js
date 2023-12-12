@@ -189,11 +189,7 @@ const Chapter = () => {
 	};
 
 	const clearFilter = () => {
-		const clearfilteredChapters = allSubjects?.filter(
-			(chapter) => chapter._id == !selectedSubjectId
-		);
-		console.log("Filtered Data:", clearfilteredChapters);
-		setAllChapters(clearfilteredChapters);
+		setAllChapters('')
 		// Reset to the original list of chapters
 	};
 
@@ -235,7 +231,7 @@ const Chapter = () => {
 		{ field: "NAME", headerName: "NAME", width: 170 },
 		{ field: "TAG", headerName: "TAG", width: 170 },
 		{ field: "CHAPTERS", headerName: "CHAPTERS", width: 170 },
-		{ field: "TOTAL QUESTION", headerName: "TOTAL QUESTION", width: 250 },
+		{ field: "TOTALQUESTION", headerName: "TOTAL QUESTION", width: 250 },
 		{
 			field: "ACTION",
 			headerName: "ACTION",
@@ -286,17 +282,18 @@ const Chapter = () => {
 			</button>
 		</div>
 	);
-
-	const rows = allSubjects.map((blog, index) => ({
+	if(Object.keys(allChapters)?.length)
+	{
+	var rows = allChapters.map((blog, index) => ({
 		id: index + 1,
 		SNO: index + 1,
 		NAME: blog.name, // Assuming "Name" is the property name for the chapter name
 		TAG: blog.subjectTag, // Assuming "subjectTag" is the property name for the subject tag
-		CHAPTERS: blog.totalqustions, // Assuming "totalqustions" is the property name for the total questions
-		TOTALQUESTION: ``,
+		CHAPTERS: blog.chapter.length, // Assuming "totalqustions" is the property name for the total questions
+		TOTALQUESTION: blog.chapter?.map((each)=>each.MCQ.length + each.codingbasic.length + each.paragMCQ.length)[0],
 		ACTION: renderActionButtons(blog),
 	}));
-
+}else var rows = [];
 	return (
 		<div>
 			<div className="container-fluid ">
@@ -380,7 +377,7 @@ const Chapter = () => {
 													data-bs-target="#myModal234565"
 													className="float-right btn btn-danger"
 												>
-													+ Create Subject
+													+ Create Chapter
 												</button>
 											</div>
 
