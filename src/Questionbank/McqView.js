@@ -6,7 +6,7 @@ import { Pagination } from "antd";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 
 
 
@@ -69,7 +69,8 @@ const McqView = () => {
 		}
 	};
 	const [selectedSubjectId, setSelectedSubjectId] = useState([]);
-
+	const [filteredSubjectIdArray, setFilteredSubjectIdArray] = useState({});
+	console.log(filteredSubjectIdArray)
 	const handleSubjectTagTypeSelection = (event) => {
 		setSelectedSubject(
 			event.target.options[event.target.selectedIndex].getAttribute(
@@ -79,6 +80,11 @@ const McqView = () => {
 		setSelectedSubjectId(
 			event.target.options[event.target.selectedIndex].getAttribute("value")
 		);
+		const subjectfilterId = event.target.options[event.target.selectedIndex].getAttribute("value")
+
+		const result = allsubjectsData?.filter(item => item._id === subjectfilterId);
+		console.log("Filtered Data:", result);
+		setFilteredSubjectIdArray(result.map((each)=>each.chapter))
 	};
 	const [selectedChapterId, setSelectedChapterId] = useState([]);
 
@@ -132,11 +138,10 @@ const McqView = () => {
 			console.log(filteredMCQs);
 			setSelectedMcqList(filteredMCQs)
 		  };
-		  console.log(selectedMcqList)
+		  console.log("selectedMcqList",selectedMcqList)
 		
 		  const handleClearFilterButtonClick = () => {
 			setSelectedMcqList('');
-			
 		  };
 	const gotoviewmcq =(McqId)=>{
 		navigate("/ParticularMcaView",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
@@ -168,8 +173,9 @@ const McqView = () => {
 				}
 				// toast.warning("Pending some fields Please check")          
 				};
-
-	const columns: GridColDef[] = [
+	
+	// const columns: GridColDef[] = [
+	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 100 },
 		{ field: "ID", headerName: "ID", width: 100 },
 		{ field: "Modulue", headerName: "Modulue", width: 120 },
@@ -193,17 +199,12 @@ const McqView = () => {
 		renderCell: col.renderCell,
 	}));
 
-	const renderActionButtons = (blog) => (
+	const renderActionButtons = (McqId) => (
 		<div>
 			<button
 				type="button"
 				className="btn"
-				data-bs-toggle="modal"
-				data-bs-target="#myModalView"
-				// onClick={() => {
-				// 	setIsModalOpen(true);
-				// 	// Additional logic if needed
-				// }}
+				onClick={()=>navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId.id}})}
 			>
 				<i
 					className="fa-sharp fa-solid fa-pen"
@@ -240,17 +241,21 @@ const McqView = () => {
 	// 	Reference:``,
 	// 	ACTION: renderActionButtons(blog),
 	// }));
-	const rows = {
-		SNO: 1,
-		id: selectedMcqList?._id,
-		Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
-		Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
-		Question: selectedMcqList?.Question, // Assuming "totalqustions" is the property name for the total questions
-		Diffculty: selectedMcqList?.Diffculty,
-		Reference:selectedMcqList?.Reference,
-		ACTION: renderActionButtons(selectedMcqList),
-	};
-
+	if(Object.keys(selectedMcqList)?.length)
+	{
+		console.log("Data");
+		var rows =
+		[{
+			SNO: 1,
+			id: selectedMcqList?._id,
+			Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
+			Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
+			Question: selectedMcqList?.Question, // Assuming "totalqustions" is the property name for the total questions
+			Diffculty: selectedMcqList?.Diffculty,
+			Reference:selectedMcqList?.Reference,
+			ACTION: renderActionButtons(selectedMcqList?._id),
+		}];
+	}else var rows = [];
 	return (
 		<div>
 			<div className="container-fluid ">
@@ -303,7 +308,7 @@ const McqView = () => {
 										</div>
 
 										<div className="col-6">
-											<select
+										<select
 											type="text"
 											placeholder="...Select Chapter"
 											className="form-control"

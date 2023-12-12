@@ -19,19 +19,21 @@ const Mcqupdate = () => {
 	const [mcqLisChangedData, setMcqListChangedData] = useState({});
 
 	// Function to handle input change during chapter edit
-	const handleEditInputChange = (e) => {
-		setMcqListChangedData((prevFormData) => ({
-		  ...prevFormData,
-		  [e.target?.name]: e.target?.value,
-		}));
+	const handleEditInputChange = (value,name) => {
+		// console.log(e.target?.value);
+		console.log(value,name);
+		setMcqListChangedData({
+		  ...mcqLisChangedData,
+		  [name]: value,
+		});
 	};
-	const handleSelectQuestionType = (event) => {
+	// console.log(mcqLisChangedData)
+	const handleSelectQuestionType = (event) =>
 		setSelectQuestionType(
 		  event.target.options[event.target.selectedIndex].getAttribute(
 			"data-value"
 		  )
 		);
-	  }; 
       const fetchMcqListData = async () => {
 		const api = `http://localhost:4010/v1/getMCQById/${subjectId}/${chapterId}/${McqId}`
         //http://localhost:4010/v1/getMCQs/6571ad89cf0acc567c548296/6571ae96cf0acc567c54829c";
@@ -95,25 +97,8 @@ const Mcqupdate = () => {
 	
 	const onSubmitUpdateForm = async () => {
 		// const token = Cookies.get("token");  
+		console.log(mcqLisChangedData);
 			try {
-				const QuestionData ={
-					selectquestiontype:selectQuestionType,
-					Subjects:selectedSubject,
-					Chapters:selectedChapter,
-					Difficulty:selectedDifficulty,
-					Reference:reference,
-					Question:question,
-					// questionImage:'',
-					Option1:option1,
-					Option2:option2,
-					Option3:option3,
-					correctAnswer:correctAnswer
-					// Explanation:'',
-				}
-				console.log(QuestionData)
-                const nonemptyuserData = Object.fromEntries(
-                    Object.entries(QuestionData).filter(([key, value]) => value !== '')
-                  );
 		 const response= await axios.put(`http://localhost:4010/v1/updateMCQ/${subjectId}/${chapterId}/${McqId}`, mcqLisChangedData)
 			//   headers: {
 			// 	token: token,
@@ -121,7 +106,7 @@ const Mcqupdate = () => {
 				setallquestionData(response.data);
 				console.log(response.data);
 			  if (response.status === 200) {
-				toast.success("Question Added", {
+				toast.success("Question Updated", {
 				  position: "top-right",
 				  autoClose: 1000,
 				  hideProgressBar: false,
@@ -154,6 +139,7 @@ const Mcqupdate = () => {
 			  "value"
 			)
 		  );
+		
 		  }
   const [selectedChapterId, setSelectedChapterId] = useState([]);
 	const handleChapterTagTypeSelection = (event) => {
@@ -167,19 +153,16 @@ const Mcqupdate = () => {
 		  "value"
 		)
 	  );
+	 
 	};
 	
-	const handleDifficultyChange = (event) => {
-		setSelectedDifficulty(event.target.value);
-	  };
 	const handleCorrectAnswerSelection = (event) => {
-	setCorrectAnswer(
+		handleEditInputChange(
 		event.target.options[event.target.selectedIndex].getAttribute(
 		"data-value"
-		)
-	);
-	};
-	  
+		),"correctAnswer"
+	)};
+	
 	return (
 		<div>
 			<div className="container ">
@@ -203,89 +186,37 @@ const Mcqupdate = () => {
 								<label>
 									<b>Question Type * </b>
 								</label>
-								<select
-									onChange={handleSelectQuestionType}
+								<input
 									type="text"
 									placeholder="...select Question Type..."
 									className="form-control"
                                     value={selectQuestionType || mcqListData?.selectquestiontype}
-								>
-									<option >{mcqListData?.selectquestiontype}</option>
-									<option data-value="Single Correct Option">Single Correct Option</option>
-									<option data-value="Multi Correct Option">Multi Correct Option</option>
-									<option data-value="Multi Correct Option With Partial Marketing">
-										Multi Correct Option With Partial Marketing
-									</option>
-									<option data-value="Fill in the Blanks">Fill in the Blanks</option>
-									<option data-value="True Or False">True Or False</option>
-									<option data-value="Writing">Writing</option>
-									<option data-value="Speaking">Speaking</option>
-								</select>
-								<span style={{ fontSize: "13px" }}>Option Question</span>
-								<div className="my-2">
-									<p style={{ fontSize: "14px", color: "orange" }}>
-										<span style={{ color: "black", fontSize: "16px" }}>
-											Note:
-										</span>
-										<b> {selectQuestionType}</b> Will have a minimum of 3
-										options and a maximum of 5 options. One of the option will
-										be the correct answer for this type of question.{" "}
-									</p>
-								</div>
+								/>							
 								<div className="row">
 		<div className="col-md-6">
 			<label style={{ fontSize: "15px" }}>
 				<b>Subjects *</b>
 			</label>
-			<select
+			<input
+					type="text"
 					style={{padding:"5px"}}
+					placeholder="...Select Subject"
 					className="form-control"
-						onChange={handleSubjectTagTypeSelection}
-						
-					>
-						 <option className="hidden" value="">
-                                        {mcqListData?.Subjects}
-                                    </option>
-						{allsubjectsData?.map((subject) => (
-							<>
-							<option
-								className="name_item"
-								key={subject._id} // Use a unique key for each option
-								data-value={subject.subjectTag}
-								value={subject._id}
-							>
-								{subject.subjectTag }
-							</option>
-							</>
-						))}
-					</select>
+						value={selectedSubject || mcqListData?.Subjects}
+					/>
 		</div>
 									<div className="col-md-6">
 										<label style={{ fontSize: "15px" }}>
 											<b>Chapter *</b>
 										</label>
-										<select
+										<input
 											type="text"
 											placeholder="...Select Chapter"
 											className="form-control"
-											onChange={handleChapterTagTypeSelection}
-										>
-											<option>{mcqListData?.Chapters}</option>
-											{allsubjectsData?.map((subject,index) => (
-										subject?.chapter?.map((chapter) => (
-											<>
-															<option
-																className="name_item"
-																key={chapter._id} // Use a unique key for each option
-																data-value={chapter.ChapterTag}
-																value={chapter._id}
-															>
-																{chapter.ChapterTag }
-															</option>
-															</>
-											))))}
-										</select>
-									</div>
+											value={selectedChapter || mcqListData?.Chapters}
+
+										/>
+										</div>
 								</div>
 
 								<div className="my-3">
@@ -297,10 +228,10 @@ const Mcqupdate = () => {
 										<div>
 											<input
 											type="radio"
-											name="difficulty"
+											name="Difficulty"
 											value="Difficult"
-											onChange={handleDifficultyChange}
-											checked={selectedDifficulty === "Difficult"}
+											onChange={e => handleEditInputChange(e.target.value,"Difficulty")}
+											checked={mcqLisChangedData?.Difficulty === "Difficult" || ''}
 											/>
 										</div>
 										<div className="px-2">Difficult</div>
@@ -309,10 +240,10 @@ const Mcqupdate = () => {
 										<div>
 											<input
 											type="radio"
-											name="difficulty"
+											name="Difficulty"
 											value="Easy"
-											onChange={handleDifficultyChange}
-											checked={selectedDifficulty === "Easy"}
+											onChange={e => handleEditInputChange(e.target.value,"Difficulty")}
+											checked={ mcqLisChangedData?.Difficulty === "Easy" || ''}
 											/>
 										</div>
 										<div className="mx-2">Easy</div>
@@ -321,10 +252,10 @@ const Mcqupdate = () => {
 										<div>
 											<input
 											type="radio"
-											name="difficulty"
+											name="Difficulty"
 											value="Medium"
-											onChange={handleDifficultyChange}
-											checked={selectedDifficulty === "Medium"}
+											onChange={e => handleEditInputChange(e.target.value,"Difficulty")}
+											checked={mcqLisChangedData?.Difficulty === "Medium" || ''}
 											/>
 										</div>
 										<div className="mx-2">Medium</div>
@@ -339,10 +270,11 @@ const Mcqupdate = () => {
 								</label>
 								<input
 									type="text"
+									name="Reference"
 									placeholder="Reference"
 									className="form-control "
-									onChange={handleEditInputChange}
-                                    value={mcqListData?.Reference}
+									onChange={e => handleEditInputChange(e.target.value,"Reference")}
+                                    value={mcqLisChangedData?.Reference || ''}
 								/>
 									{/* <option>Reference</option> */}
 
@@ -352,9 +284,11 @@ const Mcqupdate = () => {
 								</h6>
 								<JoditEditor
 									ref={editor}
-									value={question}
+									name="Question"
+									value={mcqLisChangedData?.Question || ''}
 									tabIndex={1} // tabIndex of textarea
-									onBlur={(newContent) => setQuestion(newContent)} // preferred to use only this option to update the content for performance reasons
+									onBlur={newContent => handleEditInputChange(newContent,"Question")} // preferred to use only this option to update the content for performance reasons
+									// onChange={handleEditInputChange()}
 								/>
 
 								<label htmlFor="myfile">
@@ -406,9 +340,10 @@ const Mcqupdate = () => {
 								</h6>
 								<JoditEditor
 									ref={editor}
-									value={option1}
+									name="Option1"
+									value={mcqLisChangedData?.Option1 || ''}
 									tabIndex={1} // tabIndex of textarea
-									onBlur={(newContent) => setOption1(newContent)} // preferred to use only this option to update the content for performance reasons
+									onBlur={newContent => handleEditInputChange(newContent,"Option1")} // preferred to use only this option to update the content for performance reasons
 								/>
 								</div>
 								<div className="my-1">
@@ -470,10 +405,12 @@ const Mcqupdate = () => {
 								</h6>
 								<JoditEditor
 									ref={editor}
-									value={option2}
+									name="Option2"
+									value={mcqLisChangedData?.Option2 || ''}
 									tabIndex={1} // tabIndex of textarea
-									onBlur={(newContent) => setOption2(newContent)} // preferred to use only this option to update the content for performance reasons
-								/>								
+									onBlur={newContent => handleEditInputChange(newContent,"Option2")}  // preferred to use only this option to update the content for performance reasons
+								/>
+														
 								</div>								
 								<div className="my-1">
 									<p>Option2 Image</p>
@@ -532,9 +469,10 @@ const Mcqupdate = () => {
 								</h6>
 								<JoditEditor
 									ref={editor}
-									value={option3}
+									name="Option3"
+									value={mcqLisChangedData?.Option3 || ''}
 									tabIndex={1} // tabIndex of textarea
-									onBlur={(newContent) => setOption3(newContent)} // preferred to use only this option to update the content for performance reasons
+									onBlur={newContent => handleEditInputChange(newContent,"Option3")} // preferred to use only this option to update the content for performance reasons
 								/>								
 								</div>								
 								<div className="my-1">
@@ -594,11 +532,12 @@ const Mcqupdate = () => {
                                     <label style={{ fontSize: "15px" }}>Correct Answer *</label>
 								<select
 									type="text"
+									name ="correctAnswer"
 									placeholder="....Select Correct Answer ..."
 									className="form-control"
 									onChange={handleCorrectAnswerSelection}
 								>
-									<option>{mcqListData?.correctAnswer}</option>
+									<option>{mcqLisChangedData?.correctAnswer || ''}</option>
 									<option data-value="option1">option1</option>
 									<option data-value="option2">option2</option>
 									<option data-value="option3">option3</option>
@@ -612,7 +551,7 @@ const Mcqupdate = () => {
 								</label>
 								
 								<div className="text-center mb-3">
-									<button
+									<button type="button"
 										style={{
 											width: "fit-content",
 											backgroundColor: "#8c018a",
