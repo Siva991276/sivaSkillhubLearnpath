@@ -48,7 +48,7 @@ import ParagEdit from "./Questionbank/paragEdit";
 import Basic from './Questionbank/BasicCoding';
 import ParticularMcaView from './Questionbank/ParticularMcaView';
 import Mcqupdate from './Questionbank/Mcqupdate';
-
+import AssignQB from "./Questionbank/AssignQB";
 
 
 
@@ -102,7 +102,8 @@ function App() {
         <Route exact path="/ParagEdit" element={<ParagEdit />} />
         <Route exact path="/Basic" element={<Basic />} />        
         <Route exact path="/ParticularMcaView" element={<ParticularMcaView />} />  
-        <Route exact path="/Mcqupdate" element={<Mcqupdate />} />        
+        <Route exact path="/Mcqupdate" element={<Mcqupdate />} /> 
+				<Route exact path="/AssignQB" element={<AssignQB />} />
         <Route
           exact
           path="/VideoPage/:VideofolderName"

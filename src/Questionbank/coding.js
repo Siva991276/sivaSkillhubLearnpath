@@ -194,25 +194,25 @@ const Coding = () => {
 
 
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="row">
-        {isOpen && (
-          <div className=" col-12 col-md-2 sectioncard121">
-          <Sidebar/>
-          </div>
-        )}
+      {isOpen && (
+						<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+							<Sidebar />
+						</div>
+					)}
         <div
-          className={`my-3 col-12 col-md-${isOpen ? 10 : 12} col-lg-${
-            isOpen ? 10 : 12
-          }`}
-        >
-          <div className="ml-5 d-lg-block d-none">
-            <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-            <div class="mx-5">
+						className={`my-3  col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+							isOpen ? 9 : 12
+						}`}
+					>
+          <div className="">
+            <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
+            <div className="box_item p-3">
               <Container>
                 <Box
-                  sx={{ width: "790px", bgcolor: "#dfe7ee" }}
-                  style={{ padding: "30px 30px 30px 30px" }}
+                 
+                  // style={{border:"1px solid red" , padding:"15px"}}
                 >
                   <Stepper activeStep={activeStep}>
                     {steps.map((label, index) => {
