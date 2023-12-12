@@ -1,27 +1,39 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import Sidebar from "../Sidebar";
 import Cookies from "js-cookie";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import axios from 'axios';
 import { useLocation } from "react-router-dom";
+import JoditEditor from "jodit-react";
 
 
 const Mcqupdate = () => {
     let navigate = useNavigate();
+	const editor = useRef(null);
     const { state } = useLocation();
 	const { subjectId,chapterId,McqId} = state || {}; 
-	const [mcqListData, setMcqListData] = useState([]);
+	const [mcqListData, setMcqListData] = useState({});
+	const [mcqLisChangedData, setMcqListChangedData] = useState({});
 
-	const handleSelectQuestionType = (event) => {
+	// Function to handle input change during chapter edit
+	const handleEditInputChange = (value,name) => {
+		// console.log(e.target?.value);
+		console.log(value,name);
+		setMcqListChangedData({
+		  ...mcqLisChangedData,
+		  [name]: value,
+		});
+	};
+	// console.log(mcqLisChangedData)
+	const handleSelectQuestionType = (event) =>
 		setSelectQuestionType(
 		  event.target.options[event.target.selectedIndex].getAttribute(
 			"data-value"
 		  )
 		);
-	  }; 
       const fetchMcqListData = async () => {
 		const api = `http://localhost:4010/v1/getMCQById/${subjectId}/${chapterId}/${McqId}`
         //http://localhost:4010/v1/getMCQs/6571ad89cf0acc567c548296/6571ae96cf0acc567c54829c";
@@ -29,6 +41,7 @@ const Mcqupdate = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setMcqListData(response.data.mcq);
+			setMcqListChangedData(response.data.mcq);
             console.log(response.data.mcq)
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
@@ -84,33 +97,16 @@ const Mcqupdate = () => {
 	
 	const onSubmitUpdateForm = async () => {
 		// const token = Cookies.get("token");  
+		console.log(mcqLisChangedData);
 			try {
-				const QuestionData ={
-					selectquestiontype:selectQuestionType,
-					Subjects:selectedSubject,
-					Chapters:selectedChapter,
-					Difficulty:selectedDifficulty,
-					Reference:reference,
-					Question:question,
-					// questionImage:'',
-					Option1:option1,
-					Option2:option2,
-					Option3:option3,
-					correctAnswer:correctAnswer
-					// Explanation:'',
-				}
-				console.log(QuestionData)
-                const nonemptyuserData = Object.fromEntries(
-                    Object.entries(QuestionData).filter(([key, value]) => value !== '')
-                  );
-		 const response= await axios.put(`http://localhost:4010/v1/updateMCQ/${subjectId}/${chapterId}/${McqId}`, nonemptyuserData)
+		 const response= await axios.put(`http://localhost:4010/v1/updateMCQ/${subjectId}/${chapterId}/${McqId}`, mcqLisChangedData)
 			//   headers: {
 			// 	token: token,
 			//   },
 				setallquestionData(response.data);
 				console.log(response.data);
 			  if (response.status === 200) {
-				toast.success("Question Added", {
+				toast.success("Question Updated", {
 				  position: "top-right",
 				  autoClose: 1000,
 				  hideProgressBar: false,
@@ -137,11 +133,13 @@ const Mcqupdate = () => {
 			"data-value"
 		  )
 		);
+		// setFormData({ ...mcqLisChangedData, name: e.target.value })
 		setSelectedSubjectId(
 			event.target.options[event.target.selectedIndex].getAttribute(
 			  "value"
 			)
 		  );
+		
 		  }
   const [selectedChapterId, setSelectedChapterId] = useState([]);
 	const handleChapterTagTypeSelection = (event) => {
@@ -155,19 +153,16 @@ const Mcqupdate = () => {
 		  "value"
 		)
 	  );
+	 
 	};
 	
-	const handleDifficultyChange = (event) => {
-		setSelectedDifficulty(event.target.value);
-	  };
 	const handleCorrectAnswerSelection = (event) => {
-	setCorrectAnswer(
+		handleEditInputChange(
 		event.target.options[event.target.selectedIndex].getAttribute(
 		"data-value"
-		)
-	);
-	};
-	  
+		),"correctAnswer"
+	)};
+	
 	return (
 		<div>
 			<div className="container ">
@@ -191,89 +186,37 @@ const Mcqupdate = () => {
 								<label>
 									<b>Question Type * </b>
 								</label>
-								<select
-									onChange={handleSelectQuestionType}
+								<input
 									type="text"
 									placeholder="...select Question Type..."
 									className="form-control"
                                     value={selectQuestionType || mcqListData?.selectquestiontype}
-								>
-									<option >{mcqListData?.selectquestiontype}</option>
-									<option data-value="Single Correct Option">Single Correct Option</option>
-									<option data-value="Multi Correct Option">Multi Correct Option</option>
-									<option data-value="Multi Correct Option With Partial Marketing">
-										Multi Correct Option With Partial Marketing
-									</option>
-									<option data-value="Fill in the Blanks">Fill in the Blanks</option>
-									<option data-value="True Or False">True Or False</option>
-									<option data-value="Writing">Writing</option>
-									<option data-value="Speaking">Speaking</option>
-								</select>
-								<span style={{ fontSize: "13px" }}>Option Question</span>
-								<div className="my-2">
-									<p style={{ fontSize: "14px", color: "orange" }}>
-										<span style={{ color: "black", fontSize: "16px" }}>
-											Note:
-										</span>
-										<b> {selectQuestionType}</b> Will have a minimum of 3
-										options and a maximum of 5 options. One of the option will
-										be the correct answer for this type of question.{" "}
-									</p>
-								</div>
+								/>							
 								<div className="row">
 		<div className="col-md-6">
 			<label style={{ fontSize: "15px" }}>
 				<b>Subjects *</b>
 			</label>
-			<select
+			<input
+					type="text"
 					style={{padding:"5px"}}
+					placeholder="...Select Subject"
 					className="form-control"
-						onChange={handleSubjectTagTypeSelection}
-						
-					>
-						 <option className="hidden" value="">
-                                        {mcqListData?.Subjects}
-                                    </option>
-						{allsubjectsData?.map((subject) => (
-							<>
-							<option
-								className="name_item"
-								key={subject._id} // Use a unique key for each option
-								data-value={subject.subjectTag}
-								value={subject._id}
-							>
-								{subject.subjectTag }
-							</option>
-							</>
-						))}
-					</select>
+						value={selectedSubject || mcqListData?.Subjects}
+					/>
 		</div>
 									<div className="col-md-6">
 										<label style={{ fontSize: "15px" }}>
 											<b>Chapter *</b>
 										</label>
-										<select
+										<input
 											type="text"
 											placeholder="...Select Chapter"
 											className="form-control"
-											onChange={handleChapterTagTypeSelection}
-										>
-											<option>{mcqListData?.Chapters}</option>
-											{allsubjectsData?.map((subject,index) => (
-										subject?.chapter?.map((chapter) => (
-											<>
-															<option
-																className="name_item"
-																key={chapter._id} // Use a unique key for each option
-																data-value={chapter.ChapterTag}
-																value={chapter._id}
-															>
-																{chapter.ChapterTag }
-															</option>
-															</>
-											))))}
-										</select>
-									</div>
+											value={selectedChapter || mcqListData?.Chapters}
+
+										/>
+										</div>
 								</div>
 
 								<div className="my-3">
@@ -285,10 +228,10 @@ const Mcqupdate = () => {
 										<div>
 											<input
 											type="radio"
-											name="difficulty"
+											name="Difficulty"
 											value="Difficult"
-											onChange={handleDifficultyChange}
-											checked={selectedDifficulty === "Difficult"}
+											onChange={e => handleEditInputChange(e.target.value,"Difficulty")}
+											checked={mcqLisChangedData?.Difficulty === "Difficult" || ''}
 											/>
 										</div>
 										<div className="px-2">Difficult</div>
@@ -297,10 +240,10 @@ const Mcqupdate = () => {
 										<div>
 											<input
 											type="radio"
-											name="difficulty"
+											name="Difficulty"
 											value="Easy"
-											onChange={handleDifficultyChange}
-											checked={selectedDifficulty === "Easy"}
+											onChange={e => handleEditInputChange(e.target.value,"Difficulty")}
+											checked={ mcqLisChangedData?.Difficulty === "Easy" || ''}
 											/>
 										</div>
 										<div className="mx-2">Easy</div>
@@ -309,10 +252,10 @@ const Mcqupdate = () => {
 										<div>
 											<input
 											type="radio"
-											name="difficulty"
+											name="Difficulty"
 											value="Medium"
-											onChange={handleDifficultyChange}
-											checked={selectedDifficulty === "Medium"}
+											onChange={e => handleEditInputChange(e.target.value,"Difficulty")}
+											checked={mcqLisChangedData?.Difficulty === "Medium" || ''}
 											/>
 										</div>
 										<div className="mx-2">Medium</div>
@@ -327,71 +270,32 @@ const Mcqupdate = () => {
 								</label>
 								<input
 									type="text"
+									name="Reference"
 									placeholder="Reference"
 									className="form-control "
-									onChange={(e)=>setReferencce(e.target.value)}
-                                    value={reference || mcqListData?.Reference}
+									onChange={e => handleEditInputChange(e.target.value,"Reference")}
+                                    value={mcqLisChangedData?.Reference || ''}
 								/>
 									{/* <option>Reference</option> */}
 
-								<p className="my-2">
-									<b>Question*</b>
-								</p>
-								<div className="row card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">Edit</div>
-										<div className="col-1 ">view</div>
+									<div className="description">
+								<h6 className="headingBasic"><b>Question</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									name="Question"
+									value={mcqLisChangedData?.Question || ''}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={newContent => handleEditInputChange(newContent,"Question")} // preferred to use only this option to update the content for performance reasons
+									// onChange={handleEditInputChange()}
+								/>
 
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
+								<label htmlFor="myfile">
+									<h6 className="my-2 mx-2">Description Image</h6>
+								</label>
+								<input type="file" id="myfile" name="myfile" />
 								</div>
-								<div className="card mx-1">
-									<div className="d-flex flex-row  p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setQuestion(e.target.value)} className="mx-1 form-control p-2" rows={4}
-                                value={mcqListData?.Question} />
-								<div className="card p-2 mx-1">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
 								<div className="my-2">
 									<span>
 										<b>Question Image</b>
@@ -430,66 +334,18 @@ const Mcqupdate = () => {
 
 								{/* option 1 */}
 
-								<div className="my-2">
-									<span>
-										<b>Option 1</b>
-									</span>
+								<div className="description">
+								<h6 className="headingBasic"><b>Option 1</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									name="Option1"
+									value={mcqLisChangedData?.Option1 || ''}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={newContent => handleEditInputChange(newContent,"Option1")} // preferred to use only this option to update the content for performance reasons
+								/>
 								</div>
-								<div className="row card mx-1 ">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1">Edit</div>
-										<div className="col-1 ">view</div>
-
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
-								</div>
-
-								<div className="card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setOption1(e.target.value)} className="form-control mx-1 p-2" rows={4} value={mcqListData?.Option1} />
-								<div className="card mx-1 p-2">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
 								<div className="my-1">
 									<p>Option1 Image</p>
 								</div>
@@ -509,9 +365,11 @@ const Mcqupdate = () => {
 												Choose Image
 											</button>
 										</div>
-										<div className="col-4"></div>
+										<div className="col-4">
+											
+										</div>
 
-										<div className="col-4 text-end">
+										<div className="col-4 text-end mt-1">
 											<button
 												style={{
 													backgroundColor: "red",
@@ -524,89 +382,36 @@ const Mcqupdate = () => {
 												Delete option
 											</button>
 										</div>
+										</div>
 									</div>
-								</div>
-
-								<div className="my-3">
+										<div className="my-3">
 									<button
 										style={{
 											width: "fit-content",
 											backgroundColor: "#333",
 											color: "white",
 											border: "none",
-											borderRadius: "6px",
 											padding: "7px 20px",
+											borderRadius: "6px",
 										}}
 									>
 										Insert Image
 									</button>
 								</div>
-
-								{/* option1 */}
-
-								{/* option2 */}
-
-								<div className="my-2">
-									<span>
-										<b>Option 2</b>
-									</span>
-								</div>
-								<div className="row card mx-1 ">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1">Edit</div>
-										<div className="col-1 ">view</div>
-
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
-								</div>
-
-								<div className="card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setOption2(e.target.value)} className="form-control mx-1 p-2" rows={4} 
-                                value={mcqListData?.Option2}/>
-								<div className="card mx-1 p-2">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
+										
+								<div className="description">
+								<h6 className="headingBasic"><b>Option 2</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									name="Option2"
+									value={mcqLisChangedData?.Option2 || ''}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={newContent => handleEditInputChange(newContent,"Option2")}  // preferred to use only this option to update the content for performance reasons
+								/>
+														
+								</div>								
 								<div className="my-1">
 									<p>Option2 Image</p>
 								</div>
@@ -644,7 +449,6 @@ const Mcqupdate = () => {
 										</div>
 									</div>
 								</div>
-
 								<div className="my-3">
 									<button
 										style={{
@@ -659,71 +463,18 @@ const Mcqupdate = () => {
 										Insert Image
 									</button>
 								</div>
-
-								{/* option2 */}
-
-								{/* option 3 */}
-
-								<div>
-									<p>
-										<b>Option 3</b>
-									</p>
-								</div>
-								<div className="row card mx-1 ">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1">Edit</div>
-										<div className="col-1 ">view</div>
-
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
-								</div>
-
-								<div className="card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setOption3(e.target.value)} className="form-control mx-1 p-2" rows={4} value={mcqListData?.Option3}/>
-								<div className="card mx-1 p-2">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
+								<div className="description">
+								<h6 className="headingBasic"><b>Option 3</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									name="Option3"
+									value={mcqLisChangedData?.Option3 || ''}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={newContent => handleEditInputChange(newContent,"Option3")} // preferred to use only this option to update the content for performance reasons
+								/>								
+								</div>								
 								<div className="my-1">
 									<p>Option3 Image</p>
 								</div>
@@ -736,24 +487,24 @@ const Mcqupdate = () => {
 													backgroundColor: "white",
 													color: "black",
 													border: "1px solid black",
-													padding: "7px 20px",
 													borderRadius: "6px",
+													padding: "7px 20px",
 												}}
 											>
 												Choose Image
 											</button>
 										</div>
-										<div className="col-2"></div>
+										<div className="col-4"></div>
 
-										<div className="col-4 text-end w-50">
+										<div className="col-4 text-end">
 											<button
 												style={{
-													width: "fit-content",
-													padding: "7px 20px",
-													borderRadius: "6px",
 													backgroundColor: "red",
 													color: "white",
 													border: "1px solid red",
+													width: "fit-content",
+													padding: "7px 20px",
+													borderRadius: "6px",
 												}}
 											>
 												Delete option
@@ -761,47 +512,32 @@ const Mcqupdate = () => {
 										</div>
 									</div>
 								</div>
-
 								<div className="my-3">
 									<button
 										style={{
 											width: "fit-content",
-											padding: "7px 20px",
-											borderRadius: "6px",
 											backgroundColor: "#333",
 											color: "white",
 											border: "none",
+											padding: "7px 20px",
+											borderRadius: "6px",
 										}}
 									>
 										Insert Image
 									</button>
 								</div>
 
-								{/* option 3 */}
-                                        <div className="text-center">
-                                        <button
-									style={{
-										backgroundColor: "#fff",
-										color: "#8c018a",
-                                        padding:"7px 20px",
-                                        borderRadius:"6px",
-                                        width:"fit-content",
-										border: "1px solid #8c018a",
-									}}
-								>
-									 Add Option
-								</button>
-                                        </div>
 								
                                     <div>
                                     <label style={{ fontSize: "15px" }}>Correct Answer *</label>
 								<select
 									type="text"
+									name ="correctAnswer"
 									placeholder="....Select Correct Answer ..."
 									className="form-control"
 									onChange={handleCorrectAnswerSelection}
 								>
-									<option>{mcqListData?.correctAnswer}</option>
+									<option>{mcqLisChangedData?.correctAnswer || ''}</option>
 									<option data-value="option1">option1</option>
 									<option data-value="option2">option2</option>
 									<option data-value="option3">option3</option>
@@ -815,7 +551,7 @@ const Mcqupdate = () => {
 								</label>
 								
 								<div className="text-center mb-3">
-									<button
+									<button type="button"
 										style={{
 											width: "fit-content",
 											backgroundColor: "#8c018a",

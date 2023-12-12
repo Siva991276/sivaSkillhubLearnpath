@@ -6,9 +6,12 @@ import { Pagination } from "antd";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { json, useNavigate } from "react-router-dom";
+
 
 
 const McqView = () => {
+	const navigate = useNavigate();
 	const [selectQuestionType, setSelectQuestionType] = useState("");
 	const [selectedSubject, setSelectedSubject] = useState("");
 	const [selectedChapter, setSelectedChapter] = useState("");
@@ -33,7 +36,6 @@ const McqView = () => {
 			console.error("Error fetch blogs:", error);
 		}
 	};
-	console.log("allsubjectsData", typeof allsubjectsData, allsubjectsData);
 
 	const fetchMCQs = async () => {
 		const api = "http://localhost:4010/v1/getMCQs/subjectId/chapterId";
@@ -45,7 +47,6 @@ const McqView = () => {
 			console.error("Error fetching blogs:", error);
 		}
 	};
-	console.log(fetchMCQs);
 	useEffect(() => {
 		fetchsubjectsData();
 		fetchMCQs();
@@ -68,7 +69,8 @@ const McqView = () => {
 		}
 	};
 	const [selectedSubjectId, setSelectedSubjectId] = useState([]);
-
+	const [filteredSubjectIdArray, setFilteredSubjectIdArray] = useState({});
+	console.log(filteredSubjectIdArray)
 	const handleSubjectTagTypeSelection = (event) => {
 		setSelectedSubject(
 			event.target.options[event.target.selectedIndex].getAttribute(
@@ -78,9 +80,102 @@ const McqView = () => {
 		setSelectedSubjectId(
 			event.target.options[event.target.selectedIndex].getAttribute("value")
 		);
-	};
+		const subjectfilterId = event.target.options[event.target.selectedIndex].getAttribute("value")
 
-	const columns: GridColDef[] = [
+		const result = allsubjectsData?.filter(item => item._id === subjectfilterId);
+		console.log("Filtered Data:", result);
+		setFilteredSubjectIdArray(result.map((each)=>each.chapter))
+	};
+	const [selectedChapterId, setSelectedChapterId] = useState([]);
+
+		const handleChapterTagTypeSelection = (event) => {
+		setSelectedChapter(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	setSelectedChapterId(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"value"
+		)
+	);
+		}
+	const [selectedReferenceId, setSelectedReferenceId] = useState([]);
+		const handleReferenceTypeSelection = (event) => {
+			setReferencce(
+			event.target.options[event.target.selectedIndex].getAttribute(
+			"data-value"
+			)
+		);
+		setSelectedReferenceId(
+			event.target.options[event.target.selectedIndex].getAttribute(
+			"value"
+			)
+		);
+			}
+	const [selectedQuestionId, setSelectedQuestionId] = useState([]);
+	const handleQuestionTypeSelection = (event) => {
+		setQuestion(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"data-value"
+		)
+	);
+	setSelectedQuestionId(
+		event.target.options[event.target.selectedIndex].getAttribute(
+		"value"
+		)
+	);
+		}
+	const [selectedMcqList, setSelectedMcqList] = useState({});
+		const handleGoButtonClick = () => {
+			const filteredMCQs = allsubjectsData
+			  .filter((subject) => subject?._id === selectedSubjectId)
+			  .flatMap((subject) =>
+				subject.chapter.find((chapter) => chapter?._id === selectedChapterId)?.MCQ || []
+			  )
+			  .find((mcq) => mcq?._id === selectedQuestionId);
+		  
+			console.log(filteredMCQs);
+			setSelectedMcqList(filteredMCQs)
+		  };
+		  console.log("selectedMcqList",selectedMcqList)
+		
+		  const handleClearFilterButtonClick = () => {
+			setSelectedMcqList('');
+		  };
+	const gotoviewmcq =(McqId)=>{
+		navigate("/ParticularMcaView",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
+	}
+	const gotoUpdatemcq =(McqId)=>{
+		navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
+	}	
+	const GotohandleDeleteClick = (McqId) => {   
+		// const token = Cookies.get("token");
+			const api = `http://localhost:4010/v1/deleteMCQ/${selectedSubjectId}/${selectedChapterId}/${McqId}`;
+			try{
+				const response=axios.delete(api,)
+			//   console.log("Password updated successfully:", response.data);
+					toast('Deleted Institute successfully', {
+					position: "top-right",
+					autoClose: 1000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,  
+					theme:"colored",
+					className: 'custom-toast-custom'          
+					});
+					fetchsubjectsData();
+					fetchMCQs();					          
+				} catch (error) {              
+					console.error("Error Delete Institute:", error);
+				}
+				// toast.warning("Pending some fields Please check")          
+				};
+	
+	// const columns: GridColDef[] = [
+	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 100 },
 		{ field: "ID", headerName: "ID", width: 100 },
 		{ field: "Modulue", headerName: "Modulue", width: 120 },
@@ -104,17 +199,12 @@ const McqView = () => {
 		renderCell: col.renderCell,
 	}));
 
-	const renderActionButtons = (blog) => (
+	const renderActionButtons = (McqId) => (
 		<div>
 			<button
 				type="button"
 				className="btn"
-				data-bs-toggle="modal"
-				data-bs-target="#myModalView"
-				// onClick={() => {
-				// 	setIsModalOpen(true);
-				// 	// Additional logic if needed
-				// }}
+				onClick={()=>navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId.id}})}
 			>
 				<i
 					className="fa-sharp fa-solid fa-pen"
@@ -140,18 +230,32 @@ const McqView = () => {
 		</div>
 	);
 
-	const rows = allMcqsList.map((blog, index) => ({
+	// const rows = selectedMcqList.map((blog, index) => ({
 		
-		SNO: 1,
-		id: 7654345678,
-		Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
-		Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
-		Question: `kjhgfgh`, // Assuming "totalqustions" is the property name for the total questions
-		Diffculty: ``,
-		Reference:``,
-		ACTION: renderActionButtons(blog),
-	}));
-
+	// 	SNO: index+1,
+	// 	id: blog._id,
+	// 	Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
+	// 	Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
+	// 	Question: blog.Question, // Assuming "totalqustions" is the property name for the total questions
+	// 	Diffculty: ``,
+	// 	Reference:``,
+	// 	ACTION: renderActionButtons(blog),
+	// }));
+	if(Object.keys(selectedMcqList)?.length)
+	{
+		console.log("Data");
+		var rows =
+		[{
+			SNO: 1,
+			id: selectedMcqList?._id,
+			Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
+			Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
+			Question: selectedMcqList?.Question, // Assuming "totalqustions" is the property name for the total questions
+			Diffculty: selectedMcqList?.Diffculty,
+			Reference:selectedMcqList?.Reference,
+			ACTION: renderActionButtons(selectedMcqList?._id),
+		}];
+	}else var rows = [];
 	return (
 		<div>
 			<div className="container-fluid ">
@@ -204,21 +308,27 @@ const McqView = () => {
 										</div>
 
 										<div className="col-6">
-											<select
-												type="text"
-												placeholder=""
-												className="form-control"
-											>
-												<option value="chapter"></option>
-
-												{allsubjectsData?.map((blog) => (
-													<>
-														<option key={blog._id} value={blog._id}>
-															{blog._id}
-														</option>
-													</>
-												))}
-											</select>
+										<select
+											type="text"
+											placeholder="...Select Chapter"
+											className="form-control"
+											onChange={handleChapterTagTypeSelection}
+										>
+											<option>...select Chapter...</option>
+											{allsubjectsData?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
+											<>
+															<option
+																className="name_item"
+																key={chapter._id} // Use a unique key for each option
+																data-value={chapter.ChapterTag}
+																value={chapter._id}
+															>
+																{chapter.ChapterTag }
+															</option>
+															</>
+											))))}
+										</select>
 											<p>Select Chapter</p>
 										</div>
 										<div className="col-6">
@@ -234,39 +344,55 @@ const McqView = () => {
 											<p>Diffculty</p>
 										</div>
 
-										<div className="col-6">
-											{/* <select
-												type="text"
-												placeholder=""
-												className="form-control"
-											>
-												<option></option>
-												<option value="refernce"></option>
-
-												{allsubjectsData?.map((blog) => (
-													<option key={blog.id} value={blog.refernce}>
-														{blog.refernce}
-													</option>
-												))}
-											</select> */}
-											<p>Reference</p>
+										<div className="col-6">												
+											<select
+											type="text"
+											placeholder="...Select Reference"
+											className="form-control"
+											onChange={handleReferenceTypeSelection}
+										>
+											<option>...select Chapter...</option>
+											{allsubjectsData?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
+											chapter?.MCQ?.map((each)=>(
+											<>
+															<option
+																className="name_item"
+																key={each._id} // Use a unique key for each option
+																data-value={each.Reference}
+																value={each._id}
+															>
+																{each.Reference }
+															</option>
+															</>
+											))))))}
+										</select>
+											<label>Reference</label>
 										</div>
 
 										<div className="col-6">
 											<select
-												type="text"
-												placeholder=""
-												className="form-control"
-											>
-												<option></option>
-												<option value="questiontype"></option>
-
-												{/* {allsubjectsData?.map((blog) => (
-													<option key={blog.id} value={blog.questiontype}>
-														{blog.questiontype}
-													</option>
-												))} */}
-											</select>
+											type="text"
+											placeholder="...Select Question"
+											className="form-control"
+											onChange={handleQuestionTypeSelection}
+										>
+											<option>...select Question...</option>
+											{allsubjectsData?.map((subject,index) => (
+										subject?.chapter?.map((chapter) => (
+											chapter?.MCQ?.map((each)=>(
+											<>
+															<option
+																className="name_item"
+																key={each._id} // Use a unique key for each option
+																data-value={each.Question}
+																value={each._id}
+															>
+																{each.Question }
+															</option>
+															</>
+											))))))}
+										</select>
 											<p>Question type</p>
 										</div>
 										<div className="row">
@@ -281,6 +407,7 @@ const McqView = () => {
 														padding: "6px",
 														borderRadius: "7px",
 													}}
+													onClick={handleGoButtonClick}
 												>
 													Go
 												</button>

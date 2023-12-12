@@ -1,15 +1,18 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState,useEffect ,useRef} from "react";
 import Sidebar from "../Sidebar";
 import Cookies from "js-cookie";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
-import axios from 'axios'
+import axios from 'axios';
+import JoditEditor from "jodit-react";
 
 
 const CreateQuestion = () => {
     let navigate = useNavigate();
+	const editor = useRef(null);
+	const [content, setContent] = useState("");
 	const handleSelectQuestionType = (event) => {
 		setSelectQuestionType(
 		  event.target.options[event.target.selectedIndex].getAttribute(
@@ -314,63 +317,23 @@ const CreateQuestion = () => {
 								/>
 									{/* <option>Reference</option> */}
 
-								<p className="my-2">
-									<b>Question*</b>
-								</p>
-								<div className="row card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">Edit</div>
-										<div className="col-1 ">view</div>
+								
+								<div className="description">
+								<h6 className="headingBasic"><b>Question</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									value={question}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={(newContent) => setQuestion(newContent)} // preferred to use only this option to update the content for performance reasons
+								/>
 
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
+								<label htmlFor="myfile">
+									<h6 className="my-2 mx-2">Description Image</h6>
+								</label>
+								<input type="file" id="myfile" name="myfile" />
 								</div>
-								<div className="card mx-1">
-									<div className="d-flex flex-row  p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setQuestion(e.target.value)} className="mx-1 form-control p-2" rows={4} />
-								<div className="card p-2 mx-1">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
 								<div className="my-2">
 									<span>
 										<b>Question Image</b>
@@ -409,66 +372,17 @@ const CreateQuestion = () => {
 
 								{/* option 1 */}
 
-								<div className="my-2">
-									<span>
-										<b>Option 1</b>
-									</span>
+								<div className="description">
+								<h6 className="headingBasic"><b>Option 1</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									value={option1}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={(newContent) => setOption1(newContent)} // preferred to use only this option to update the content for performance reasons
+								/>
 								</div>
-								<div className="row card mx-1 ">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1">Edit</div>
-										<div className="col-1 ">view</div>
-
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
-								</div>
-
-								<div className="card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setOption1(e.target.value)} className="form-control mx-1 p-2" rows={4} />
-								<div className="card mx-1 p-2">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
 								<div className="my-1">
 									<p>Option1 Image</p>
 								</div>
@@ -488,9 +402,11 @@ const CreateQuestion = () => {
 												Choose Image
 											</button>
 										</div>
-										<div className="col-4"></div>
+										<div className="col-4">
+											
+										</div>
 
-										<div className="col-4 text-end">
+										<div className="col-4 text-end mt-1">
 											<button
 												style={{
 													backgroundColor: "red",
@@ -503,88 +419,34 @@ const CreateQuestion = () => {
 												Delete option
 											</button>
 										</div>
+										</div>
 									</div>
-								</div>
-
-								<div className="my-3">
+										<div className="my-3">
 									<button
 										style={{
 											width: "fit-content",
 											backgroundColor: "#333",
 											color: "white",
 											border: "none",
-											borderRadius: "6px",
 											padding: "7px 20px",
+											borderRadius: "6px",
 										}}
 									>
 										Insert Image
 									</button>
 								</div>
-
-								{/* option1 */}
-
-								{/* option2 */}
-
-								<div className="my-2">
-									<span>
-										<b>Option 2</b>
-									</span>
-								</div>
-								<div className="row card mx-1 ">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1">Edit</div>
-										<div className="col-1 ">view</div>
-
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
-								</div>
-
-								<div className="card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setOption2(e.target.value)} className="form-control mx-1 p-2" rows={4} />
-								<div className="card mx-1 p-2">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
+										
+								<div className="description">
+								<h6 className="headingBasic"><b>Option 2</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									value={option2}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={(newContent) => setOption2(newContent)} // preferred to use only this option to update the content for performance reasons
+								/>								
+								</div>								
 								<div className="my-1">
 									<p>Option2 Image</p>
 								</div>
@@ -622,7 +484,6 @@ const CreateQuestion = () => {
 										</div>
 									</div>
 								</div>
-
 								<div className="my-3">
 									<button
 										style={{
@@ -637,71 +498,17 @@ const CreateQuestion = () => {
 										Insert Image
 									</button>
 								</div>
-
-								{/* option2 */}
-
-								{/* option 3 */}
-
-								<div>
-									<p>
-										<b>Option 3</b>
-									</p>
-								</div>
-								<div className="row card mx-1 ">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1">Edit</div>
-										<div className="col-1 ">view</div>
-
-										<div className="col-1">Insert</div>
-										<div className="col-1">Format</div>
-										<div className="col-1">Table</div>
-									</div>
-								</div>
-
-								<div className="card mx-1">
-									<div className="d-flex flex-row p-2">
-										<div className="col-1 ">
-											<i class="fa-solid fa-share"></i>
-										</div>
-										<div className="col-2  ">paragraph</div>
-
-										<div className="col-1">
-											<i class="fa-sharp fa-solid fa-b"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-sharp fa-regular fa-i"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-sliders"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-solid fa-list"></i>
-										</div>
-										<div className="col-1">
-											<i class="fa-regular fa-circle-question"></i>
-										</div>
-									</div>
-								</div>
-
-								<textarea onChange={(e)=>setOption3(e.target.value)} className="form-control mx-1 p-2" rows={4} />
-								<div className="card mx-1 p-2">
-									<div className="row">
-										<div className="col-1">
-											<span>p</span>
-										</div>
-										<div className="col-1"></div>
-										<div className="col-10 text-end">
-											<span>0 words powderd by tinny</span>
-										</div>
-									</div>
-								</div>
-
+								<div className="description">
+								<h6 className="headingBasic"><b>Option 3</b>
+								<span className="bcolor">*</span>
+								</h6>
+								<JoditEditor
+									ref={editor}
+									value={option3}
+									tabIndex={1} // tabIndex of textarea
+									onBlur={(newContent) => setOption3(newContent)} // preferred to use only this option to update the content for performance reasons
+								/>								
+								</div>								
 								<div className="my-1">
 									<p>Option3 Image</p>
 								</div>
@@ -714,24 +521,24 @@ const CreateQuestion = () => {
 													backgroundColor: "white",
 													color: "black",
 													border: "1px solid black",
-													padding: "7px 20px",
 													borderRadius: "6px",
+													padding: "7px 20px",
 												}}
 											>
 												Choose Image
 											</button>
 										</div>
-										<div className="col-2"></div>
+										<div className="col-4"></div>
 
-										<div className="col-4 text-end w-50">
+										<div className="col-4 text-end">
 											<button
 												style={{
-													width: "fit-content",
-													padding: "7px 20px",
-													borderRadius: "6px",
 													backgroundColor: "red",
 													color: "white",
 													border: "1px solid red",
+													width: "fit-content",
+													padding: "7px 20px",
+													borderRadius: "6px",
 												}}
 											>
 												Delete option
@@ -739,38 +546,22 @@ const CreateQuestion = () => {
 										</div>
 									</div>
 								</div>
-
 								<div className="my-3">
 									<button
 										style={{
 											width: "fit-content",
-											padding: "7px 20px",
-											borderRadius: "6px",
 											backgroundColor: "#333",
 											color: "white",
 											border: "none",
+											padding: "7px 20px",
+											borderRadius: "6px",
 										}}
 									>
 										Insert Image
 									</button>
 								</div>
 
-								{/* option 3 */}
-                                        <div className="text-center">
-                                        <button
-									style={{
-										backgroundColor: "#fff",
-										color: "#8c018a",
-                                        padding:"7px 20px",
-                                        borderRadius:"6px",
-                                        width:"fit-content",
-										border: "1px solid #8c018a",
-									}}
-								>
-									 Add Option
-								</button>
-                                        </div>
-								
+															
                                     <div>
                                     <label style={{ fontSize: "15px" }}>Correct Answer *</label>
 								<select

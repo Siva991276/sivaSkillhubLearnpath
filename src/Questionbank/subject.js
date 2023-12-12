@@ -156,12 +156,12 @@ const QbSubject = () => {
 		}
 	};
 
-	const columns: GridColDef[] = [
+	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 170 },
 		{ field: "NAME", headerName: "NAME", width: 170 },
 		{ field: "TAG", headerName: "TAG", width: 170 },
 		{ field: "CHAPTERS", headerName: "CHAPTERS", width: 170 },
-		{ field: "TOTAL QUESTION", headerName: "TOTAL QUESTION", width: 250 },
+		{ field: "TOTALQUESTION", headerName: "TOTAL QUESTION", width: 250 },
 		{
 			field: "ACTION",
 			headerName: "ACTION",
@@ -177,14 +177,14 @@ const QbSubject = () => {
 		renderCell: col.renderCell,
 	}));
 
-	const renderActionButtons = (blogId) => (
+	const renderActionButtons = (blog) => (
 		<div>
 			<button
 				type="button"
 				className="btn btn-danger mx-1"
 				data-bs-toggle="modal"
 				data-bs-target="#myModalView"
-				onClick={() => GotohandleViewClick(blogId)}
+				onClick={() => GotohandleViewClick(blog)}
 			>
 				<i
 					className="fas fa-pencil-alt"
@@ -196,7 +196,7 @@ const QbSubject = () => {
 			<button
 				type="button"
 				className="btn btn-dark mx-1"
-				onClick={() => handleDelete(blogId)}
+				onClick={() => handleDelete(blog)}
 			>
 				<i className="fas fa-trash" style={{ color: "white" }}></i>
 			</button>
@@ -208,9 +208,9 @@ const QbSubject = () => {
 		SNO: index + 1,
 		NAME: blog.name,
 		TAG: blog.subjectTag,
-		CHAPTERS: blog.totalqustions,
-		TOTALQUESTION: ``,
-		ACTION: renderActionButtons(blog._id),
+		CHAPTERS: blog.chapter.length,
+		TOTALQUESTION: blog.chapter?.map((each)=>each.MCQ.length + each.codingbasic.length + each.paragMCQ.length)[0],
+		ACTION: renderActionButtons(blog),
 	}));
 
 	const [selectedSubject, setSelectedSubject] = useState(null);
@@ -492,7 +492,7 @@ const QbSubject = () => {
 															type="text"
 															className="form-control"
 															placeholder="Name"
-															value={name || selectedSubject?.name}
+															value={name || selectedSubject?.NAME}
 															onChange={(e) => setName(e.target.value)}
 														/>
 													</div>
@@ -506,7 +506,7 @@ const QbSubject = () => {
 															className="form-control"
 															placeholder="Description"
 															value={
-																Description || selectedSubject?.Description
+																Description || selectedSubject?.DESCRIPTION
 															}
 															onChange={(e) => setDescription(e.target.value)}
 														/>
