@@ -403,7 +403,7 @@ function InstituteLogin() {
                 <div class="col-12 col-md-6 mt-5">
                   <div class="card shadow logincard1 ">
                     <div class="loginheader">
-                      <Link to="/">
+                      <Link to="/UserLogin">
                         <img
                           src={sideimage}
                           alt={sideimage}
