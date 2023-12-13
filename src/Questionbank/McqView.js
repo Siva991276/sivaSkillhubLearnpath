@@ -136,7 +136,7 @@ const McqView = () => {
 			  .find((mcq) => mcq?._id === selectedQuestionId);
 		  
 			console.log(filteredMCQs);
-			setSelectedMcqList(filteredMCQs)
+			setSelectedMcqList(filteredMCQs ||"")
 		  };
 		  console.log("selectedMcqList",selectedMcqList)
 		
