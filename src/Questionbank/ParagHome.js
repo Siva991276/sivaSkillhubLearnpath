@@ -1,16 +1,120 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import "./parag.css";
 import { Editor } from "@tinymce/tinymce-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const ParagHome = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedChapter, setSelectedChapter] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  const [reference, setReferencce] = useState("");
+  const [question, setQuestion] = useState("");
+  const [allquestionData, setallquestionData] = useState("");
+  const [questionImage, setQuestionImage] = useState("");
+
+  let navigate = useNavigate();
+
+  const onSubmitForm = async (e) => {
+    e.preventDefault();
+    // const token = Cookies.get("token");
+    if (
+      selectedSubject &&
+      selectedChapter &&
+      selectedDifficulty &&
+      reference &&
+      question !== ""
+    ) {
+      try {
+        const QuestionData = {
+          Subjects: selectedSubject,
+          Chapters: selectedChapter,
+          Difficulty: selectedDifficulty,
+          Reference: reference,
+          Question: question,
+        };
+        console.log(QuestionData);
+        const response = await axios.post(
+          `http://localhost:4010/v2/addparaMcq/${selectedSubjectId}/${selectedChapterId}`,
+          QuestionData
+        );
+
+        setallquestionData(response.data);
+        console.log(response.data);
+        if (response.status === 200) {
+          toast.success("Paragraph Added", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            className: "custom-toast-custom",
+          });
+        }
+      } catch (error) {
+        console.log(error.response.data);
+        toast.error("Question already added");
+      }
+    } else {
+      toast.warning("Enter Required details");
+    }
+  };
+  const [selectedSubjectId, setSelectedSubjectId] = useState([]);
+  const handleSubjectTagTypeSelection = (event) => {
+    setSelectedSubject(
+      event.target.options[event.target.selectedIndex].getAttribute(
+        "data-value"
+      )
+    );
+    setSelectedSubjectId(
+      event.target.options[event.target.selectedIndex].getAttribute("value")
+    );
+  };
+  const [selectedChapterId, setSelectedChapterId] = useState([]);
+
+  const handleChapterTagTypeSelection = (event) => {
+    setSelectedChapter(
+      event.target.options[event.target.selectedIndex].getAttribute(
+        "data-value"
+      )
+    );
+    setSelectedChapterId(
+      event.target.options[event.target.selectedIndex].getAttribute("value")
+    );
+  };
+
+  const handleDifficultyChange = (event) => {
+    setSelectedDifficulty(event.target.value);
+  };
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
     menuBtnChange();
   };
+  const [allsubjectsData, setAllsubjectsData] = useState([]);
+  const fetchsubjectsData = async () => {
+    const api = "http://localhost:4010/v2/subjects";
+    try {
+      const response = await axios.get(api, {});
+      const data = response.data;
+      setAllsubjectsData(response.data);
+    } catch (error) {
+      console.error("Error fetch blogs:", error);
+    }
+  };
+  useEffect(() => {
+    fetchsubjectsData();
+  }, []);
 
+  const handleEditorChange = (content, editor) => {
+    setQuestion(content); // Update the state with the new content
+  };
   const menuBtnChange = () => {
     const sidebar = document.querySelector(".sidebar");
     const closeBtn = document.querySelector("#btn");
@@ -29,6 +133,18 @@ const ParagHome = () => {
           {isOpen && (
             <div className=" col-12 col-md-2 sectioncard121">
               <Sidebar />
+              <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
             </div>
           )}
           <div
@@ -49,16 +165,53 @@ const ParagHome = () => {
                         Subjects <span>*</span>
                       </b>
                     </label>
-                    <select>
-                      <option>React</option>
+                    <select
+                      style={{ padding: "5px" }}
+                      className="form-control"
+                      onChange={handleSubjectTagTypeSelection}
+                    >
+                      <option className="hidden" value="">
+                        Select Subject
+                      </option>
+                      {allsubjectsData?.map((subject) => (
+                        <>
+                          <option
+                            className="name_item"
+                            key={subject._id} // Use a unique key for each option
+                            data-value={subject.subjectTag}
+                            value={subject._id}
+                          >
+                            {subject.subjectTag}
+                          </option>
+                        </>
+                      ))}
                     </select>
                   </div>
                   <div className="paragChapter">
                     <label>
                       <b>Chapters *</b>
                     </label>
-                    <select>
-                      <option>...select Subject..</option>
+                    <select
+                      type="text"
+                      placeholder="...Select Chapter"
+                      className="form-control"
+                      onChange={handleChapterTagTypeSelection}
+                    >
+                      <option>...select Chapter...</option>
+                      {allsubjectsData?.map((subject, index) =>
+                        subject?.chapter?.map((chapter) => (
+                          <>
+                            <option
+                              className="name_item"
+                              key={chapter._id} // Use a unique key for each option
+                              data-value={chapter.ChapterTag}
+                              value={chapter._id}
+                            >
+                              {chapter.ChapterTag}
+                            </option>
+                          </>
+                        ))
+                      )}
                     </select>
                   </div>
                   <p className="my-3">
@@ -67,29 +220,51 @@ const ParagHome = () => {
                   <div className="row">
                     <div className="d-flex flex-row col-4">
                       <div>
-                        <input type="radio" />
+                        <input
+                          type="radio"
+                          name="diffculty"
+                          value="easy"
+                          onChange={handleDifficultyChange}
+                          checked={selectedDifficulty === "easy"}
+                        />
                       </div>
-                      <div className="px-2">Diffcult</div>
+                      <div className="px-2">Easy</div>
                     </div>
                     <div className="d-flex flex-row col-4">
                       <div>
-                        <input type="radio" />
+                        <input
+                          type="radio"
+                          name="diffculty"
+                          value="Medium"
+                          onChange={handleDifficultyChange}
+                          checked={selectedDifficulty === "Medium"}
+                        />
                       </div>
-                      <div className="mx-2">Easy</div>
+                      <div className="mx-2">Medium</div>
                     </div>
 
                     <div className="d-flex flex-row col-4">
                       <div>
-                        <input type="radio" />
+                        <input
+                          type="radio"
+                          name="diffculty"
+                          value="Hard"
+                          onChange={handleDifficultyChange}
+                          checked={selectedDifficulty === "Hard"}
+                        />
                       </div>
-                      <div className="mx-2">Medium</div>
+                      <div className="mx-2">Hard</div>
                     </div>
                   </div>
                   <div className="paragRef">
                     <label>
                       <b>Reference *</b>
                     </label>
-                    <input></input>
+                    <input
+                      type="text"
+                      placeholder="Reference"
+                      onChange={(e) => setReferencce(e.target.value)}
+                    ></input>
                   </div>
                   <p className="my-2">
                     <b>Question*</b>
@@ -114,6 +289,8 @@ const ParagHome = () => {
                           ),
                       }}
                       initialValue=""
+                      value={question}
+                      onEditorChange={handleEditorChange}
                     />
                   </div>
                   <div className="my-1">
@@ -122,13 +299,21 @@ const ParagHome = () => {
                     </p>
                   </div>
                   <div className="my-1">
-                    <button className="paragImg">Choose Image</button>
+                    <button type="button" className="paragImg">
+                      Choose Image
+                    </button>
                   </div>
                   <div className="my-3">
-                    <button className="paragInsert">Insert Image</button>
+                    <button type="button" className="paragInsert">
+                      Insert Image
+                    </button>
                   </div>
                   <div className="my-3">
-                    <button type="submit" className="paragbtn">
+                    <button
+                      type="submit"
+                      className="paragbtn"
+                      onClick={(e) => onSubmitForm(e)}
+                    >
                       Create
                     </button>
                   </div>
@@ -141,4 +326,5 @@ const ParagHome = () => {
     </div>
   );
 };
+
 export default ParagHome;

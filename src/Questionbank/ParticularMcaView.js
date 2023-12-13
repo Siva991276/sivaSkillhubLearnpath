@@ -53,18 +53,18 @@ const ParticularMcaView = () => {
 			<div className="container-fluid">
 				<div className="row">
 					{isOpen && (
-						<div className=" col-12 col-md-3 sectioncard121">
+						<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
 							<Sidebar />
 							<ToastContainer/>
 						</div>
 					)}
 					<div
-						className={`my-3 col-12 col-md-${isOpen ? 9 : 12} col-lg-${
+						className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}
 					>
-						<div className=" d-lg-block d-none">
-							<i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
+						<div className=" ">
+							<i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
 							<div className=" row card p-3 m-2">
                                 <div className="col-md-12">
                                     <div className="row">
@@ -74,7 +74,7 @@ const ParticularMcaView = () => {
                                         <div className="col-md-5">
                                             <p>Chapter : {mcqListData?.Chapters}</p>
                                         </div>
-                                        <div className="col-md-4 float-right" style={{float:"right"}}>
+                                        <div className="col-md-4 float-right mb-2" style={{float:"right"}}>
                                             <button className="btn btn-dark"><i class="fa-solid fa-pencil pencile"									
 											></i>Edit Question</button>
                                         </div>

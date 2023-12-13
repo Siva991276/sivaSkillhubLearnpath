@@ -45,9 +45,10 @@ const QbSubject = () => {
 			try {
 				const AddSubject = {
 					name: name,
-					description: Description,
+					Description: Description,
 					subjectTag: subjecttag,
 				};
+				console.log(AddSubject)
 				const response = await axios.post(
 					"http://localhost:4010/v2/subject",
 					AddSubject
@@ -55,14 +56,24 @@ const QbSubject = () => {
 				setData1(response.data);
 				console.log(response.data);
 				if (response.status === 200) {
-					window.alert("Success");
+					toast("Subject Added Successfully", {
+						position: "top-center",
+						autoClose: 1000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						className: "custom-toast-custom",
+					});
 					fetchblogs1();
 				}
 			} catch (error) {
 				console.log(error);
 			}
 		} else {
-			window.alert("Error: Please fill in all fields");
+			toast.warning("Please fill in all fields");
 		}
 	};
 	console.log("data1");
@@ -78,8 +89,8 @@ const QbSubject = () => {
 				`http://localhost:4010/v2/subjet/${id}`
 			);
 			if (response.status === 200) {
-				window.alert("Deleted Successfully", {
-					position: "top-right",
+				toast("Subject Delete Successfully", {
+					position: "top-center",
 					autoClose: 1000,
 					hideProgressBar: false,
 					closeOnClick: true,
@@ -87,11 +98,10 @@ const QbSubject = () => {
 					draggable: true,
 					progress: undefined,
 					theme: "colored",
+					className: "custom-toast-custom",
 				});
-
 				fetchblogs1();
 			} else {
-				alert("Error:" + response.data);
 				setError("An error occured while deleting subject.");
 			}
 		} catch (error) {
@@ -116,7 +126,7 @@ const QbSubject = () => {
 			.put(`http://localhost:4010/v2/subject/${_id}`, nonemptyuserData)
 			.then((response) => {
 				if (response.status === 200) {
-					toast("Institute Updated successfully", {
+					toast("Subject Updated successfully", {
 						position: "top-center",
 						autoClose: 1000,
 						hideProgressBar: false,
@@ -196,7 +206,7 @@ const QbSubject = () => {
 			<button
 				type="button"
 				className="btn btn-dark mx-1"
-				onClick={() => handleDelete(blog)}
+				onClick={() => handleDelete(blog._id)}
 			>
 				<i className="fas fa-trash" style={{ color: "white" }}></i>
 			</button>
@@ -209,6 +219,8 @@ const QbSubject = () => {
 		NAME: blog.name,
 		TAG: blog.subjectTag,
 		CHAPTERS: blog.chapter.length,
+		description:blog.Description,
+		_id:blog._id,
 		TOTALQUESTION: blog.chapter?.map((each)=>each.MCQ.length + each.codingbasic.length + each.paragMCQ.length)[0],
 		ACTION: renderActionButtons(blog),
 	}));
@@ -235,6 +247,7 @@ const QbSubject = () => {
 					{isOpen && (
 						<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
 							<Sidebar />
+							<ToastContainer/>
 						</div>
 					)}
 					<div
@@ -290,7 +303,7 @@ const QbSubject = () => {
 														theme="light"
 													/>
 													<div class="modal-body">
-														<form onSubmit={onSubmitForm}>
+														<form onSubmit={(e)=>onSubmitForm(e)}>
 															<div className="row">
 																<div className="col-lg-6 col-md-6">
 																	<div className="mb-1">
@@ -360,7 +373,6 @@ const QbSubject = () => {
 																	<button
 																		type="submit"
 																		className="btn btn-danger"
-																		data-bs-dismiss="modal"
 																	>
 																		Submit
 																	</button>
@@ -486,7 +498,7 @@ const QbSubject = () => {
 															className="form-control"
 															placeholder="Description"
 															value={
-																Description || selectedSubject?.DESCRIPTION
+																Description || selectedSubject?.description
 															}
 															onChange={(e) => setDescription(e.target.value)}
 														/>
@@ -498,7 +510,7 @@ const QbSubject = () => {
 														type="text"
 														className="form-control"
 														placeholder="...subject tag..."
-														value={subjecttag || selectedSubject?.subjectTag}
+														value={subjecttag || selectedSubject?.TAG}
 														onChange={handleSubjectTagSelection}
 
 														// onChange={}
@@ -531,9 +543,8 @@ const QbSubject = () => {
 													<button
 														type="button"
 														class="btn btn-danger"
-														data-bs-dismiss="modal"
 														onClick={(e) =>
-															onSubmitUpdatedForm(selectedSubject._id, e)
+															onSubmitUpdatedForm(selectedSubject?._id, e)
 														}
 													>
 														Submit

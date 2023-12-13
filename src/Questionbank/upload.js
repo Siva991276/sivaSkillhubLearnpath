@@ -1,37 +1,76 @@
 import React, { useState } from "react";
 import Sidebar from "../Sidebar";
-
+import { useEffect } from "react";
+import axios from "axios";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 const Upload = () => {
 	const [isOpen, setIsOpen] = useState(true);
+	const [allsubjectsData, setAllsubjectsData] = useState([]);
+	const [allMcqsList, setallMCqsList] = useState([]);
+	const [selectedSubject, setSelectedSubject] = useState("");
+	const [selectedChapter, setSelectedChapter] = useState("");
 
-	const [selectedFile, setSelectedFile] = useState(null);
+	useEffect(() => {
+		fetchblogs();
+	});
 
-	const handleFileChange = (e) => {
-		const file = e.target.files[0];
-		setSelectedFile(file);
-	};
-
-	const handleDownloadFormat = () => {
-		// Check if a file is selected
-		if (selectedFile) {
-			// Implement your file download logic here
-			// For example, you can create a download link and trigger a click event
-			const downloadLink = document.createElement("a");
-			downloadLink.href = URL.createObjectURL(selectedFile);
-			downloadLink.download = "Upload.xlsx"; // Specify the desired file name
-			downloadLink.click();
-		} else {
-			alert("Please select a file before downloading the format.");
+	const fetchblogs = async () => {
+		const api = "http://localhost:4010/v2/subjects";
+		try {
+			const response = await axios.get(api);
+			setAllsubjectsData(response.data);
+		} catch (error) {
+			console.error("Error fetching blogs:", error);
 		}
 	};
 
+	const [selectedSubjectId, setSelectedSubjectId] = useState([]);
+	const handleSubjectTagTypeSelection = (event) => {
+		setSelectedSubject(
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			)
+		);
+		setSelectedSubjectId(
+			event.target.options[event.target.selectedIndex].getAttribute("value")
+		);
+	};
+	const [selectedChapterId, setSelectedChapterId] = useState([]);
+
+	const handleChapterTagTypeSelection = (event) => {
+		setSelectedChapter(
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			)
+		);
+		setSelectedChapterId(
+			event.target.options[event.target.selectedIndex].getAttribute("value")
+		);
+	};
+	console.log(selectedSubjectId);
+	console.log(selectedChapterId);
+	const exportToExcel = () => {
+		const dataToExport = allsubjectsData;
+		const fileType =
+			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+		const fileExtension = ".xlsx";
+
+		const ws = XLSX.utils.json_to_sheet(dataToExport);
+		const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+		const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+		const data = new Blob([excelBuffer], { type: fileType });
+		FileSaver.saveAs(data, "praticipation_data" + fileExtension);
+	};
+
+
+
 	const toggleSidebar = () => {
 		setIsOpen(!isOpen);
-        menuBtnChange();
-
+		menuBtnChange();
 	};
-    
-    const menuBtnChange = () => {
+
+	const menuBtnChange = () => {
 		const sidebar = document.querySelector(".sidebar");
 		const closeBtn = document.querySelector("#btn");
 		const searchBtn = document.querySelector(".bx-search");
@@ -41,6 +80,21 @@ const Upload = () => {
 		} else {
 			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
 		}
+	};
+	const [isInstitutionsOpen, setIsInstitutionsOpen] = useState(false);
+
+	const toggleInstitutions = () => {
+		setIsInstitutionsOpen(!isInstitutionsOpen);
+	};
+	const [isInstitutionsOpen1, setIsInstitutionsOpen1] = useState(true);
+
+	const toggleInstitutions1 = () => {
+		setIsInstitutionsOpen1(!isInstitutionsOpen1);
+	};
+	const [isInstitutionsOpen2, setIsInstitutionsOpen2] = useState(true);
+
+	const toggleInstitutions2 = () => {
+		setIsInstitutionsOpen2(!isInstitutionsOpen2);
 	};
 
 	return (
@@ -56,70 +110,91 @@ const Upload = () => {
 						className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}
+						style={{ height: "100vh", overflowY: "scroll" }}
 					>
-						{" "}
-                        <i
-								className="fa-solid fa-bars bars d-lg-block d-none"
+						<i
+								className="fa-solid fa-bars bars  d-lg-block d-none"
 								onClick={toggleSidebar}
 							></i>
-						<div className="card shadow">
-							<div className="row ">
-								<div className=" col-lg-4 col-md-6 my-auto col-12 p-3">
-									<h5>
+						{" "}
+						<div className="card shadow p-3">
+							<div className="row">
+								<div className="col-12 col-md-6 my-auto">
+									<p className="">
 										<b>Upload Questions</b>
-									</h5>
+									</p>
 								</div>
-                                <div className="col-lg-2 d-lg-block  d-none"></div>
 								<div
-									className=" col-lg-4 col-md-6 col-12 my-4 mx-3 text-end"
+									className="col-12 col-md-6 my-4"
 									style={{
-										backgroundColor: "orange",
+										backgroundColor: "#a5059d",
 										color: "white",
-										border: "1px solid orange",
-                                        width:"fit-content",
-                                        borderRadius:"7px"
+										border: "none",
+										width:"fit-content",
+										padding:"6px 20px",
+										borderRadius:"7px"
 									}}
 								>
-									<div className="text-end p-2" onClick={handleDownloadFormat}>
-										<span className="" >
+									<div className="" onClick={exportToExcel}>
 											{" "}
 											<i class="fa-solid fa-download"></i> Download Format
-										</span>
+										
 									</div>
 								</div>
 							</div>
-							<div className="row mx-1">
+							<div className="row ">
 								<div className="col-6">
-									<label>Subject</label>
 									<br></br>
-									<input
-										type="text"
-										placeholder="...Select Subject..."
-										className=" form-control"
-									/>
+									<select onChange={handleSubjectTagTypeSelection} className="form-control">
+										<option>...select Subject...</option>
+										{allsubjectsData?.map((subject) => (
+											<option
+												className="name_item"
+												key={subject._id}
+												data-value={subject.subjectTag}
+												value={subject._id}
+											>
+												{subject.subjectTag}
+											</option>
+										))}
+									</select>
 								</div>
 								<div className="col-6">
-									<label>Chapter</label>
 									<br></br>
-									<input
+									<select
 										type="text"
-										placeholder="...Select Chapter..."
+										placeholder="...Select Chapter"
 										className="form-control"
-									/>
+										onChange={handleChapterTagTypeSelection}
+									>
+										<option>...select Chapter...</option>
+										{allsubjectsData?.map((subject, index) =>
+											subject?.chapter?.map((chapter) => (
+												<>
+													<option
+														className="name_item"
+														key={chapter._id} // Use a unique key for each option
+														data-value={chapter.ChapterTag}
+														value={chapter._id}
+													>
+														{chapter.ChapterTag}
+													</option>
+												</>
+											))
+										)}
+									</select>
 								</div>
 							</div>
-							<div className="row my-3 mx-1">
-								<div className="col-6">
-									<label>Question File</label>
+							<div className="row my-3 ">
+								<div className="col-12 col-md-12 col-lg-6">
 									<br></br>
 									{/* <input type="text" className="w-100" /> */}
-									<div className="mt-3">
+									<div className="">
 										{/* inpu className="w-100 text-start ">No file choosen</button> */}
 										<label>Add File</label>
 										<input
 											type="file"
-											className="w-100 text-start form-control"
-											onChange={handleFileChange}
+											className=" text-start form-control"
 											accept=".xls, .xlsx"
 										/>
 									</div>
@@ -129,12 +204,13 @@ const Upload = () => {
 								<button
 									type=""
 									style={{
-										backgroundColor: "#910a8f",
+										backgroundColor: "#333",
 										color: "white",
 										border: "none",
-                                        borderRadius:"7px"
+										padding:"7px 20px",
+										borderRadius:"7px",
 									}}
-									className="p-2"
+									className="py-2"
 								>
 									Upload Question
 								</button>

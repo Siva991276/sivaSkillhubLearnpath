@@ -143,15 +143,10 @@ const McqView = () => {
 		  const handleClearFilterButtonClick = () => {
 			setSelectedMcqList('');
 		  };
-	const gotoviewmcq =(McqId)=>{
-		navigate("/ParticularMcaView",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
-	}
-	const gotoUpdatemcq =(McqId)=>{
-		navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId}})
-	}	
-	const GotohandleDeleteClick = (McqId) => {   
+	
+	const GotohandleDeleteClick = (subjectId,chapterId,McqId) => {   
 		// const token = Cookies.get("token");
-			const api = `http://localhost:4010/v1/deleteMCQ/${selectedSubjectId}/${selectedChapterId}/${McqId}`;
+			const api = `http://localhost:4010/v1/deleteMCQ/${subjectId}/${chapterId}/${McqId}`;
 			try{
 				const response=axios.delete(api,)
 			//   console.log("Password updated successfully:", response.data);
@@ -178,16 +173,16 @@ const McqView = () => {
 	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 100 },
 		{ field: "ID", headerName: "ID", width: 100 },
-		{ field: "Modulue", headerName: "Modulue", width: 120 },
-		{ field: "Chapter", headerName: "Chapter", width: 120 },
-		{ field: "Question", headerName: "Question", width: 120 },
-		{ field: "Difficulty", headerName: "Difficulty", width: 120 },
-		{ field: "Reference", headerName: "Reference", width: 120 },
-		{ field: "QuestionType", headerName: "Question Type", width: 120 },
+		{ field: "Modulue", headerName: "Modulue", width: 130 },
+		{ field: "Chapter", headerName: "Chapter", width: 130 },
+		{ field: "Question", headerName: "Question", width: 130 },
+		{ field: "Difficulty", headerName: "Difficulty", width: 130 },
+		{ field: "Reference", headerName: "Reference", width: 130 },
+		{ field: "QuestionType", headerName: "Question Type", width: 130 },
 		{
 			field: "ACTION",
 			headerName: "Action",
-			width: 120,
+			width: 180,
 			renderCell: (params) => renderActionButtons(params.row),
 		},
 	];
@@ -204,6 +199,20 @@ const McqView = () => {
 			<button
 				type="button"
 				className="btn"
+				onClick={()=>navigate("/ParticularMcaView",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId.id}})}
+			>
+				<i className="fa-regular fa-eye " style={{color:"salmon"}}></i>
+			</button>
+			<button
+				type="button"
+				className="btn"
+				// onClick={()=>navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId.id}})}
+			>
+				<i className="fa-regular fa-file "></i>
+			</button>
+			<button
+				type="button"
+				className="btn"
 				onClick={()=>navigate("/Mcqupdate",{state :{subjectId:selectedSubjectId,chapterId:selectedChapterId,McqId:McqId.id}})}
 			>
 				<i
@@ -216,7 +225,7 @@ const McqView = () => {
 				className="btn"
 				data-bs-toggle="modal"
 				data-bs-target="#myModal"
-				// onClick={() => handleDelete(allSubjects._id, allChapters._id)}
+				onClick={() => GotohandleDeleteClick(selectedSubjectId, selectedChapterId,McqId)}
 			>
 				<i
 					className="fa-solid fa-trash-can "
@@ -241,22 +250,26 @@ const McqView = () => {
 	// 	Reference:``,
 	// 	ACTION: renderActionButtons(blog),
 	// }));
-	if(Object.keys(selectedMcqList)?.length)
-	{
+	if (Object.keys(selectedMcqList)?.length) {
+		// If selectedMcqList has keys
 		console.log("Data");
-		var rows =
-		[{
+	
+		// Create an array with a single object containing specific properties
+		var rows = [{
 			SNO: 1,
 			id: selectedMcqList?._id,
 			Modulue: 1, // Assuming "Name" is the property name for the chapter name
 			Chapter: selectedMcqList?.Chapters, // Assuming "subjectTag" is the property name for the subject tag
-			Question: selectedMcqList?.Question, // Assuming "totalqustions" is the property name for the total questions
+			Question: selectedMcqList?.Question, // Assuming "totalquestions" is the property name for the total questions
 			Difficulty: selectedMcqList?.Difficulty,
-			Reference:selectedMcqList?.Reference,
-			QuestionType:selectedMcqList?.selectquestiontype,
+			Reference: selectedMcqList?.Reference,
+			QuestionType: selectedMcqList?.selectquestiontype,
 			ACTION: renderActionButtons(selectedMcqList?._id),
 		}];
-	}else var rows = [];
+	} else {
+		// If selectedMcqList has no keys, initialize an empty array
+		var rows = [];
+	}
 	return (
 		<div>
 			<div className="container-fluid ">

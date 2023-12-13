@@ -126,27 +126,30 @@ const ShowData1 = () => {
   };
   return (
     <div>
-      <div className="container1">
+      <div className="container-fluid">
         <div className="row">
-          <div className=" mt-1">
+          <div className=" ">
             <div className="row">
             {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
-              <Sidebar/>
-              </div>
-					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
+								<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+									<Sidebar />
+									<ToastContainer />
+								</div>
+							)}						
+            <div className={`my-3 col-12  col-md-${isOpen ? 12 : 9} col-lg-${
+									isOpen ? 9 : 12
+								}`}>
+                <div className="ml-5 ">
+                <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
+                <div class="">
 
               {loading ? (
                 <p>Loading...</p>
               ) : individualInstitute ? (
-                <div className="col-12 col-md-12 card">
+                <div className=" ">
                   <div className="row">
-                    <div className="col-12 col-md-6 vh-100 viewcardone mx-2">
-                      <div className="card mb-3 mt-2 p-1">
+                    <div className="col-12 col-md-6  ">
+                      <div className="card my-3 p-3">
                         <h4 className="mt-3"> Management</h4>
                         <p>{individualInstitute.InstituteName}</p>
                         <hr />
@@ -164,7 +167,7 @@ const ShowData1 = () => {
                         </div>
                       </div>
 
-                      <div className="card p-1">
+                      <div className="card p-3">
                         <h4
                           style={{ textDecorationLine: "underline" }}
                           className=" "
@@ -174,7 +177,7 @@ const ShowData1 = () => {
 
                         <div>
                           <ToastContainer
-                            position="top-right"
+                            position="top-center"
                             autoClose={5000}
                             hideProgressBar={false}
                             newestOnTop={false}
@@ -188,22 +191,24 @@ const ShowData1 = () => {
                           {/* Same as */}
                           <ToastContainer />
                           <form action="" onSubmit={onSubmitForm}>
-                            <h6 className="">Password</h6>
+                            <h6 className="my-2">Password</h6>
                             <input
                               type="text"
-                              style={{ border: "2px solid black" }}
-                              className=""
+                              style={{ border: "1px solid black" }}
+                              className="form-control"
                               placeholder="Password"
                               value={individualInstitute.Password}
                               onChange={onChangeInstituteName}
                             />{" "}
                             <br />
                             <button
-                              className="mt-2 p-1"
+                              className="mt-2 p-2"
                               style={{
                                 fontSize: "20px",
-                                backgroundColor: "green",
+                                backgroundColor: "#910a8f",
                                 borderRadius: "10px",
+                                border:"none",
+                                color:"#fff"
                               }}
                             >
                               Reset
@@ -212,8 +217,8 @@ const ShowData1 = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mx-1 col-12 col-md-5 viewcardone">
-                      <h4 style={{ textDecorationLine: "underline" }}>
+                    <div className=" col-12 col-md-5 viewcardone p-3">
+                      <h4 >
                         Profile Information
                       </h4>
                       <div className="d-flex flex-row">

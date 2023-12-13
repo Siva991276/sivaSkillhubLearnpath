@@ -49,6 +49,7 @@ import Basic from './Questionbank/BasicCoding';
 import ParticularMcaView from './Questionbank/ParticularMcaView';
 import Mcqupdate from './Questionbank/Mcqupdate';
 import AssignQB from "./Questionbank/AssignQB";
+import Codingupdate from "./Questionbank/codingupdate";
 
 
 
@@ -104,6 +105,7 @@ function App() {
         <Route exact path="/ParticularMcaView" element={<ParticularMcaView />} />  
         <Route exact path="/Mcqupdate" element={<Mcqupdate />} /> 
 				<Route exact path="/AssignQB" element={<AssignQB />} />
+				<Route exact path="/codingupdate" element={<Codingupdate />} />
         <Route
           exact
           path="/VideoPage/:VideofolderName"

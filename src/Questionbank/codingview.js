@@ -2,155 +2,241 @@ import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
+import "./Basic.css";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+function Codingview() {
+	const [blogslist, setblogslist] = useState([]);
+	const [filteredBlogs, setFilteredBlogs] = useState([]);
+	const [isOpen, setIsOpen] = useState(true);
 
-const Codingview = () => {
+	const toggleSidebar = () => {
+		setIsOpen(!isOpen);
+		menuBtnChange();
+	};
+	const menuBtnChange = () => {
+		const sidebar = document.querySelector(".sidebar");
+		const closeBtn = document.querySelector("#btn");
+		const searchBtn = document.querySelector(".bx-search");
 
-    const [blogslist, setBlogslist] = useState([]);
+		if (sidebar?.classList.contains("open")) {
+			closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
+		} else {
+			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
+		}
+	};
 
-    useEffect(() => {
-        fetchBlogs2();
-    }, []);
+	useEffect(() => {
+		fetchblogs();
+	}, []);
+	const fetchblogs = async () => {
+		const api = "http://localhost:4010/v2/subjects";
+		try {
+			const response = await axios.get(api, {});
+			setblogslist(response.data);
+			console.log(response.data);
+		} catch (error) {
+			console.error("Error fetching blogs:", error);
+		}
+	};
+	const [selectedSubject, setSelectedSubject] = useState("");
+	const [selectedChapter, setSelectedChapter] = useState("");
 
-    const fetchBlogs2 = async () => {
-        const api = "http://localhost:3051/allperfexData";
+	const handleGoButtonClick = () => {
+		const filteredData = blogslist.filter((blog) =>
+			blog.chapter.some((chapter) =>
+				chapter.codingbasic.some(
+					(coding) =>
+						(!selectedSubject || coding.Subjects === selectedSubject) &&
+						(!selectedChapter || coding.Chapters === selectedChapter)
+				)
+			)
+		);
+		setFilteredBlogs(filteredData);
+	};
 
-        try {
-            const response = await axios.get(api);
-            setBlogslist(response.data);
-        } catch (error) {
-            console.error("Error fetching blogs:", error);
-        }
-    };
-    const [isOpen, setIsOpen] = useState(true);
+	const handleDelete = async (subjectId, chapterId, codingBasicId) => {
+		try {
+			const response = await axios.delete(
+				`http://localhost:4010/deletebasic/${subjectId}/${chapterId}/${codingBasicId}`
+			);
 
-    const toggleSidebar = () => {
-      setIsOpen(!isOpen);
-      menuBtnChange();
-    };
-  
-    const menuBtnChange = () => {
-      const sidebar = document.querySelector(".sidebar");
-      const closeBtn = document.querySelector("#btn");
-      const searchBtn = document.querySelector(".bx-search");
-  
-      if (sidebar?.classList.contains("open")) {
-        closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
-      } else {
-        closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
-      }
-    };
-    return (
-        <div>
-            <div className="container ">
-                <div className="row">
-                {isOpen && (
-              <div className=" col-12 col-md-2 sectioncard121">
-              <Sidebar/>
-              </div>
-					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 10: 12} col-lg-${isOpen ? 10 : 12}`}>
-                <div className="ml-5 d-lg-block d-none">
-                <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-                <div class="mx-5">
-                    <div>
-                        <p><b>Fillter Coding Question</b> :</p>
-                        <div className="row shadow py-4 ">
-                            <div className="col-2 mx-4" >
-                                <select type="text" placeholder="....Select Subject ..." className="card">
-                                    <option></option>
-                                    <option>Front end</option>
+			if (response.data.status === "success") {
+				toast.success("Successfully delete !", {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+				});
+				fetchblogs();
+			} else {
+				toast.error(response.data.msg);
+			}
+		} catch (error) {
+			console.error("Error deleting coding basic:", error);
+			toast.error("Error deleting coding basic");
+		}
+	};
 
-                                </select>
-                                <p>Select subject</p>
-                            </div>
+	return (
+		<div>
+			<div className="container-fluid ">
+				<div className="row">
+					{isOpen && (
+						<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+							<Sidebar />
+							<ToastContainer />
+						</div>
+					)}
+					<div
+						className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+							isOpen ? 9 : 12
+						}`}
+						style={{ height: "100vh", overflowY: "scroll" }}
+					>
+						<div className=" ">
+							<i
+								className="fa-solid fa-bars bars d-lg-block d-none"
+								onClick={toggleSidebar}
+							></i>
+							<div class=" row ">
+								<div className="col-lg-11 col-md-12 py-3  ">
+									<div className="row  p-2">
+										<div className="col-12 col-md-6">
+											<select
+												onChange={(e) => setSelectedSubject(e.target.value)}
+												className="form-control"
+											>
+												<option value="">All Subjects</option>
+												{blogslist.map((blog, blogIndex) =>
+													blog.chapter.map((chapter, chapterIndex) =>
+														chapter.codingbasic.map((coding, codingIndex) => (
+															<option
+																key={`${blogIndex}-${chapterIndex}-${codingIndex}`}
+															>
+																{coding.Subjects}
+															</option>
+														))
+													)
+												)}
+											</select>
+										</div>
 
-                            <div className="col-2">
-                                <select type="text" placeholder="frontend" className="w-100">
-                                    {blogslist.map((blog, index) => (
-                                        <option key={index} value={blog.chapter2}>
-                                            {blog.chapter2}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p>Select Chapter</p>
-                            </div>
-                            <div className="col-1">
-                                <button style={{ backgroundColor: "blue", color: "white", border: "1px solid blue" }} className="w-100 ">Go</button>
-                            </div>
+										<div className="col-12 col-md-6">
+											<select
+												onChange={(e) => setSelectedChapter(e.target.value)}
+												className="form-control"
+											>
+												<option value="">All Chapters</option>
+												{blogslist.map((blog, blogIndex) =>
+													blog.chapter.map((chapter, chapterIndex) =>
+														chapter.codingbasic.map((coding, codingIndex) => (
+															<option
+																key={`${blogIndex}-${chapterIndex}-${codingIndex}`}
+															>
+																{coding.Chapters}
+															</option>
+														))
+													)
+												)}
+											</select>
+										</div>
+									</div>
+									<div className="text-center">
+										<button
+											className="my-2"
+											style={{
+												backgroundColor: "black",
+												color: "white",
+												border: "none",
+												padding: "6px",
+												borderRadius: "7px",
+											}}
+											onClick={handleGoButtonClick}
+										>
+											Go
+										</button>
+									</div>
 
-                            <div className="col-1">
-                                <button style={{ backgroundColor: "white", color: "blue", border: "1px solid blue", width: "150px", height: "25px" }} >Clear Fillter</button>
-                            </div>
-                        </div>
-
-                        <div className="row shadow py-5">
-
-                            <p>Serach Coding Question</p>
-                            <div className="col-6">
-                                {/* <input type="text" placeholder="Search coding question" className="w-75" /> */}
-                                <select type="text" placeholder="" className="card w-75">
-                                    <option></option>
-                                    <option>C</option>
-                                    <option>Python</option>
-                                    <option>Java</option>
-                                    <option>CPP</option>
-                                    <option>JavaScript</option>
-                                    <option>React</option>
-
-                                </select>
-                            </div>
-
-                            <div className="col-1">
-                                <butoon className="w-15 py-1 mx-2" style={{ backgroundColor: "blue", color: "white" }}>Search</butoon>
-                            </div>
-
-                        </div>
-
-                        <div className="row">
-
-                            <div className="col-12 my-5 shadow py-4">
-                                <p><b>Coding Question Table:</b></p>
-                                <button style={{ width: "95px", }} cl >S.No</button>
-                                <button style={{ width: "95px" }}>ID</button>
-                                <button style={{ width: "95px" }}>Modulue</button>
-                                <button style={{ width: "95px" }}>Chapter</button>
-                                <button style={{ width: "95px" }}>Tittle</button>
-                                <button style={{ width: "95px" }}>Validate</button>
-                                <button style={{ width: "120px" }}>Action</button>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                </div>
-
-
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
-        </div>
-        </div>
-        </div>
-    )
+									<div
+										className="row card-item  mt-3 pt-3 p-2"
+										style={{ overflowX: "scroll" }}
+									>
+										<div className="col-12 ">
+											<table className="table text-center table-bordered">
+												<thead>
+													<tr>
+														<th> ID</th>
+														<th>Module</th>
+														<th>Chapters </th>
+														<th>Title</th>
+														<th>ACTIONS</th>
+													</tr>
+												</thead>
+												<tbody>
+													{filteredBlogs.length > 0 ? (
+														filteredBlogs.map((blog, index) =>
+															blog.chapter.map((chapters, chapterIndex) =>
+																chapters.codingbasic.map(
+																	(coding, codingIndex) => (
+																		<tr key={coding.id}>
+																			<td>{coding._id}</td>
+																			<td>{coding.Subjects}</td>
+																			<td>{coding.Chapters}</td>
+																			<td>{coding.Title}</td>
+																				<td>
+																					<div className="A">
+																						<Link
+																							to="/codingupdate"
+																							style={{ color: "#a5059d" }}
+																						>
+																							<span className="material-symbols-outlined ">
+																								edit_square
+																							</span>
+																						</Link>
+																						<span
+																							className="material-symbols-outlined "
+                                                                                            style={{color:"red"}}
+																							onClick={() =>
+																								handleDelete(
+																									blog._id,
+																									chapters._id,
+																									coding._id
+																								)
+																							}
+																						>
+																							delete
+																						</span>
+																					</div>
+																				</td>
+																			
+																		</tr>
+																	)
+																)
+															)
+														)
+													) : (
+														<tr className="text-start">
+															<td colSpan="5">No data available</td>
+														</tr>
+													)}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
+
 export default Codingview;

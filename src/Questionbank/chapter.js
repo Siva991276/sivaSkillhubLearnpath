@@ -36,7 +36,14 @@ const Chapter = () => {
 	const [chaptertag, setchaptertag] = useState("");
 	const [data1, setData1] = useState("");
 	const [subjectId, setSubjectId] = useState([]);
-
+	const [chapterListUpdate, setChapterListUpdate] = useState({});
+	const handleEditInputChange = (value,name) => {
+		console.log(value,name);
+		setChapterListUpdate({
+		  ...chapterListUpdate,
+		  [name]: value,
+		});
+	};
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
 
@@ -48,7 +55,7 @@ const Chapter = () => {
 					subject: subjecttag1,
 					ChapterTag: chaptertag,
 				};
-
+console.log(AddChapter)
 				const response = await axios.post(
 					`http://localhost:4010/v1/addchapter/${subjectId}`,
 					AddChapter
@@ -73,16 +80,12 @@ const Chapter = () => {
 
 	const handleDelete = async (subjectid, chapterid) => {
 		try {
-			// if (subjectid && chapterid !== "") {
-			// 	setError("Invalid ID provided for delete");
-			// 	return;
-			// }
 			console.log("Deleting subject with ID", subjectid, chapterid);
 			const response = await axios.delete(
 				`http://localhost:4010/v1/deleteChapter/${subjectid}/${chapterid}`
 			);
 			if (response.status === 200) {
-				window.alert("Chapter deleted Successful", {
+				toast("Chapter Delete Successfully", {
 					position: "top-center",
 					autoClose: 1000,
 					hideProgressBar: false,
@@ -91,6 +94,7 @@ const Chapter = () => {
 					draggable: true,
 					progress: undefined,
 					theme: "colored",
+					className: "custom-toast-custom",
 				});
 				fetchSubjects();
 				fetchblogs1();
@@ -135,22 +139,13 @@ const Chapter = () => {
 			console.error("Error fetch blogs:", error);
 		}
 	};
-	const onSubmitUpdatedForm = (subjectId, chapterId, e) => {
+	const onSubmitUpdatedForm = (subid,chapid,e) => {
 		e.preventDefault();
-		const AddChapter = {
-			Name: name1,
-			Description: Description1,
-			subject: subjecttag1,
-			ChapterTag: chaptertag,
-		};
-		const nonemptyuserData = Object.fromEntries(
-			Object.entries(AddChapter).filter(([key, value]) => value !== "")
-		);
-
+		console.log(chapterListUpdate)
 		axios
 			.put(
-				`http://localhost:4010/v1/updateChapter/${subjectId}/${chapterId}`,
-				nonemptyuserData
+				`http://localhost:4010/v1/updateChapter/${subid}/${chapid}`,
+				chapterListUpdate
 			)
 			.then((response) => {
 				if (response.status === 200) {
@@ -168,10 +163,13 @@ const Chapter = () => {
 					setname1("");
 					setDescription1("");
 					setChapters("");
+					fetchblogs1();
+					fetchSubjects();
+
 				}
 			})
 			.catch((error) => {
-				console.log(error.response.data);
+				console.log(error);
 				toast.error("Institute already Updated");
 			});
 	};
@@ -182,7 +180,7 @@ const Chapter = () => {
 
 	const filterChapters = (selectedSubjectId) => {
 		const filteredChapters = allSubjects?.filter(
-			(chapter) => chapter._id === selectedSubjectId
+			(subject) => subject._id === selectedSubjectId
 		);
 		console.log("Filtered Data:", filteredChapters);
 		setAllChapters(filteredChapters);
@@ -199,38 +197,56 @@ const Chapter = () => {
 		setAllChapters(allSubjects);
 	};
 	const [selectedSubjectId, setSelectedSubjectId] = useState([]);
+	const [selectedChapterId, setSelectedChapterId] = useState([]);
 
-	const handleSubjectSelection = (e) => {
-		const subjectId = e.target.value;
-		setSelectedSubjectId(subjectId);
-		// Other logic...
-	};
-
+	
 	const handleSubjectTagTypeSelection = (event) => {
 		setsubjecttag1(
 			event.target.options[event.target.selectedIndex].getAttribute(
 				"data-value"
 			)
 		);
-		// setSubjectId(event.target.options[event.target.selectedIndex].getAttribute(
-		// 	"value"
-		//   ))
+		setSelectedSubjectId(event.target.options[event.target.selectedIndex].getAttribute(
+			"value"
+		  ))
+		  handleEditInputChange(
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			),"subjectTag"
+		);
 	};
 	const handleChapterTagTypeSelection = (event) => {
+		handleEditInputChange(
+			event.target.options[event.target.selectedIndex].getAttribute(
+				"data-value"
+			),"ChapterTag"
+		);
 		setchaptertag(
 			event.target.options[event.target.selectedIndex].getAttribute(
 				"data-value"
 			)
 		);
+		setSelectedChapterId(event.target.options[event.target.selectedIndex].getAttribute(
+			"value"
+		  ))
 	};
+	const [selectedChapterData, setSelectedChapterData] = useState(null);
 
+	const GotohandleViewClick = (data) => {
+		let Updatedfields = {Name:data.CHAPTERNAME,Description:data.description,subject:data.SUBJECTNAME,ChapterTag:data.TAG,subjectid:data.subjectid,chapterid:data.chapterid}
+		setSelectedChapterData(data);
+		delete data['ACTION'];
+		setChapterListUpdate(Updatedfields)
+		// setUpdateModalOpen(true);
+	};
+console.log("selectedChapterData",selectedChapterData)
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 170 },
-		{ field: "NAME", headerName: "NAME", width: 170 },
+		{ field: "SUBJECTNAME", headerName: "SUBJECTNAME", width: 170 },
 		{ field: "TAG", headerName: "TAG", width: 170 },
-		{ field: "CHAPTERS", headerName: "CHAPTERS", width: 170 },
+		{ field: "CHAPTERNAME", headerName: "CHAPTERNAME", width: 170 },
 		{ field: "TOTALQUESTION", headerName: "TOTAL QUESTION", width: 250 },
 		{
 			field: "ACTION",
@@ -256,7 +272,7 @@ const Chapter = () => {
 				data-bs-target="#myModalView"
 				onClick={() => {
 					setIsModalOpen(true);
-					// Additional logic if needed
+					GotohandleViewClick(blog)
 				}}
 			>
 				<i
@@ -267,9 +283,7 @@ const Chapter = () => {
 			<button
 				type="button"
 				className="btn"
-				data-bs-toggle="modal"
-				data-bs-target="#myModal"
-				onClick={() => handleDelete(allSubjects._id, allChapters._id)}
+				onClick={() => handleDelete(blog.subjectid, blog.chapterid)}
 			>
 				<i
 					className="fa-solid fa-trash-can "
@@ -282,18 +296,27 @@ const Chapter = () => {
 			</button>
 		</div>
 	);
-	if(Object.keys(allChapters)?.length)
-	{
-	var rows = allChapters.map((blog, index) => ({
-		id: index + 1,
-		SNO: index + 1,
-		NAME: blog.name, // Assuming "Name" is the property name for the chapter name
-		TAG: blog.subjectTag, // Assuming "subjectTag" is the property name for the subject tag
-		CHAPTERS: blog.chapter.length, // Assuming "totalqustions" is the property name for the total questions
-		TOTALQUESTION: blog.chapter?.map((each)=>each.MCQ.length + each.codingbasic.length + each.paragMCQ.length)[0],
-		ACTION: renderActionButtons(blog),
-	}));
-}else var rows = [];
+let rows = [];
+var cnt = 0;
+if (allChapters && allChapters.length) {
+  rows = allChapters.flatMap((blog) => (
+    (blog?.chapter || []).map((each,index) => ({
+      id: ++cnt,
+      SNO: cnt,
+      SUBJECTNAME: blog.name || '',
+      TAG: blog.subjectTag || '',
+      CHAPTERNAME: each.ChapterTag || '',
+      TOTALQUESTION:
+        (each.MCQ || []).length +
+        (each.codingbasic || []).length +
+        (each.paragMCQ || []).length,
+      ACTION: renderActionButtons(blog),
+	  subjectid:blog._id,
+	  chapterid:each._id,
+	  description:blog.Description,
+    }))
+  ));
+}
 	return (
 		<div>
 			<div className="container-fluid ">
@@ -301,6 +324,7 @@ const Chapter = () => {
 					{isOpen && (
 						<div className=" col-12 col-lg-3 col-md-12 sectioncard121">
 							<Sidebar />
+							<ToastContainer/>
 						</div>
 					)}
 					<div
@@ -321,7 +345,7 @@ const Chapter = () => {
 												<select
 													style={{ padding: "5px" }}
 													className="w-100 select_item form-control"
-													onChange={(e) => handleSubjectSelection(e)}
+													onChange={handleSubjectTagTypeSelection}
 												>
 													<option className="hidden" value="">
 														Select Subject Name
@@ -366,7 +390,7 @@ const Chapter = () => {
 											</div>
 										</div>
 										<div class=" row mt-4">
-											<div className="col-md-3 py-4 ">
+											<div className="col-md-3">
 												<h6 className="">Chapters</h6>
 											</div>
 											<div className="col-md-9 text-end">
@@ -393,19 +417,6 @@ const Chapter = () => {
 																data-bs-dismiss="modal"
 															></button>
 														</div>
-
-														<ToastContainer
-															position="top-center"
-															autoClose={5000}
-															hideProgressBar={false}
-															newestOnTop={false}
-															closeOnClick
-															rtl={false}
-															pauseOnFocusLoss
-															draggable
-															pauseOnHover
-															theme="light"
-														/>
 														<div class="modal-body">
 															<form onSubmit={onSubmitForm}>
 																<p>Name *</p>
@@ -453,7 +464,7 @@ const Chapter = () => {
 
 																<br></br>
 
-																<label className="my-3 ">Chapter *</label>
+																<label className="my-3">Chapter *</label>
 																<br></br>
 																<select
 																	className="form-control"
@@ -487,28 +498,16 @@ const Chapter = () => {
 																	<option data-value="Java-programming">
 																		Java-programming
 																	</option>
-																	<option data-value="Mathematics">
-																		Mathematics
-																	</option>
 																	<option data-value="Others">Others</option>
-																	<option data-value="Physics">Physics</option>
 																	<option data-value="Programming">
 																		Programming
 																	</option>
-																	<option data-value="Programming Skills">
-																		Programming Skills
-																	</option>
-																	<option data-value="Quntative apptitude">
-																		Quntative apptitude
-																	</option>
-																	{/* Add other options similarly */}
 																</select>
 
 																<div className="modal-footer">
 																	<button
 																		type="submit"
 																		className="btn btn-danger"
-																		data-bs-dismiss="modal"
 																	>
 																		Submit
 																	</button>
@@ -641,19 +640,6 @@ const Chapter = () => {
 															data-bs-dismiss="modal"
 														></button>
 													</div>
-
-													<ToastContainer
-														position="top-right"
-														autoClose={5000}
-														hideProgressBar={false}
-														newestOnTop={false}
-														closeOnClick
-														rtl={false}
-														pauseOnFocusLoss
-														draggable
-														pauseOnHover
-														theme="light"
-													/>
 													<div class="modal-body">
 														<form>
 															<label style={{ float: "left" }}>Name *</label>
@@ -661,8 +647,9 @@ const Chapter = () => {
 																className="form-control"
 																type="text"
 																placeholder="...name..."
-																onChange={(e) => setname1(e.target.value)}
-																value={name1 || allChapters.Name}
+																name="CHAPTERNAME"
+																onChange={handleEditInputChange}
+																value={name1 || chapterListUpdate?.Name}
 															/>
 
 															<label style={{ float: "left" }}>
@@ -671,31 +658,32 @@ const Chapter = () => {
 															<input
 																className="form-control"
 																type="text"
+																name="Description"
 																placeholder="...description..."
-																onChange={(e) =>
-																	setDescription1(e.target.value)
-																}
-																value={Description1 || allChapters.Description}
+																onChange={e=>handleEditInputChange(e.target.value,"description")}
+																value={chapterListUpdate?.Description || ''}
 															/>
+															
 															<br></br>
 															<label style={{ float: "left" }}>
 																Subjecttag *
 															</label>
 															<select
 																style={{ padding: "5px" }}
+																name="SubjectTag"
+																value={chapterListUpdate.Tag || ''}
 																className="form-control"
 																onChange={handleSubjectTagTypeSelection}
 															>
 																{allSubjects?.map((subject) => (
 																	<>
-																		<option
-																			className="name_item"
+																		{/* <option>
+																			{subject?.subjectTag}
+																		</option> */}
+																		<option className="name_item"
 																			key={subject._id} // Use a unique key for each option
 																			data-value={subject.subjectTag}
-																			value={subjecttag1 || ""}
-																		>
-																			{subject.subjectTag}
-																		</option>
+																			value={subject?.subjectTag || ""}>{subject?.subjectTag}</option>
 																	</>
 																))}
 															</select>
@@ -711,7 +699,7 @@ const Chapter = () => {
 															<br></br>
 															<select
 																className="form-control"
-																value={chaptertag || allChapters.ChapterTag}
+																name="ChapterTag"														value={chapterListUpdate?.ChapterTag ||""}
 																onChange={handleChapterTagTypeSelection}
 															>
 																<option>--select subjects--</option>
@@ -744,15 +732,11 @@ const Chapter = () => {
 
 															<div className="modal-footer">
 																<button
-																	type="submit"
+																	type="button"
 																	className="btn btn-danger"
 																	data-bs-dismiss="modal"
 																	onClick={(e) =>
-																		onSubmitUpdatedForm(
-																			allSubjects._id,
-																			allChapters._id,
-																			e
-																		)
+																		onSubmitUpdatedForm(chapterListUpdate?.subjectid,chapterListUpdate?.chapterid,e)
 																	}
 																>
 																	Submit

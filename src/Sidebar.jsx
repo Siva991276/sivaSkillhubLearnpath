@@ -191,7 +191,7 @@ function Sidebar() {
 							{/* <span class="tooltip">Dashboard</span> */}
 						</li>
 						<li>
-							<a href="#">
+							<a href="/PerfexHome">
 								<i class="fa-solid fa-house "></i>
 
 								<span class="link_name">HomePage</span>
@@ -390,7 +390,7 @@ function Sidebar() {
 										<li>
 											<a href="#">
 												<i class="fa-solid fa-video icons"></i>
-												<Link to="#">
+												<Link to="/Codingview">
 													<span className="link_name">View</span>
 												</Link>
 											</a>
@@ -534,7 +534,7 @@ function Sidebar() {
 								{/* <span class="tooltip">Dashboard</span> */}
 							</li>
 							<li className="mt-2">
-								<a href="#" style={{fontSize:"15px"}}>
+								<a href="/PerfexHome" style={{fontSize:"15px"}}>
 									<i class="fa-solid fa-house "></i>
 
 									<span class="link_name"  style={{paddingLeft:"10px"}}>HomePage</span>
@@ -733,7 +733,7 @@ function Sidebar() {
 											<li className="mt-2">
 												<a href="#" style={{fontSize:"15px"}}>
 													<i class="fa-solid fa-video icons"></i>
-													<Link to="#">
+													<Link to="/Codingview">
 														<span className="link_name"  style={{paddingLeft:"10px"}}>View</span>
 													</Link>
 												</a>

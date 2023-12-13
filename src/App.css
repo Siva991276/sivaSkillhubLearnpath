@@ -3085,11 +3085,16 @@ margin-top: 10px;
   border-radius: 10px;
   border: none;
   font-size: 17px;
-  color: rgb(0, 89, 255);
-  font-weight: 800;
+  /* color: rgb(0, 89, 255); */
+  /* font-weight: 800; */
    background-color: white;
-   text-decoration: underline;
+   /* text-decoration: underline; */
   
+}
+.buttons212:hover{
+  color: rgb(0, 89, 255);
+  text-decoration: underline;
+
 }
 .buttons2121 {
  
@@ -3097,10 +3102,14 @@ margin-top: 10px;
   border: none;
   font-size: 17px;
  
-  font-weight: 500;
+  /* font-weight: 500; */
    background-color: white;
   
   
+}
+.buttons2121:hover{
+  color: rgb(0, 89, 255);
+  text-decoration: underline;
 }
  
 
@@ -3612,7 +3621,7 @@ margin-top: 10px;
 }
 /* view */
 .viewcardone{
-  background-color: #f7f8ef;
+  background-color: #fefefe;
   border-radius: 7px;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
 }
@@ -4430,6 +4439,9 @@ a{
 
 @media (max-width: 1040px)  {
   .sidebar.open {
+    width: 240px !important;
+  }
+  .logo_name{
     width: 240px;
   }
   .login_profile{
@@ -4449,6 +4461,7 @@ a{
   .sectioncard121{
     padding: 0px;
   }
+  
   .icons_items{
     padding-left: 20px !important;
   }
@@ -4477,6 +4490,9 @@ a{
   .go_item{
     font-size: 12px;
     padding: 3px;
+  }
+  .image{
+    text-align: center;
   }
 }
 
@@ -4529,4 +4545,12 @@ a{
 .login_profile{
   background-color:rgb(12, 26, 46);
   width: 340px;
+}
+.card_item{
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+  width: fit-content;
+  padding: 10px;
+  height: fit-content;
+  border-radius: 10px;
+
 }
