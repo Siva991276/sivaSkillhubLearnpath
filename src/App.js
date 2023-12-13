@@ -35,12 +35,27 @@ import Learning from "./LearnData/Learning";
 import Topic from "./LearnData/topic";
 import Content from "./LearnData/content";
 import TextContent from "./LearnData/textcontent";
+import QbSubject from "../src/Questionbank/subject";
+import Chapter from "../src/Questionbank/chapter";
+import CreateQuestion from "../src/Questionbank/CreateQuestion";
+import McqView from "../src/Questionbank/McqView";
+import ParagHome from "../src/Questionbank/ParagHome";
+import ParagView from "../src/Questionbank/paragview";
+import Coding from "../src/Questionbank/coding";
+import Codingview from "../src/Questionbank/codingview";
+import Upload from "./Questionbank/upload";
+import ParagEdit from "./Questionbank/paragEdit";
+import Basic from "./Questionbank/BasicCoding";
+import ParticularMcaView from "./Questionbank/ParticularMcaView";
+import Mcqupdate from "./Questionbank/Mcqupdate";
+import AssignQB from "./Questionbank/AssignQB";
 
 function App() {
   return (
     <div>
       <Routes>
-        <Route exact path="/" element={<UserLogin />} />
+        <Route exact path="/" element={<InstituteLogin />} />
+        <Route exact path="/UserLogin" element={<UserLogin />} />
         <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
         <Route exact path="/PerfexHome" element={<PerfexHome />} />
         <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
@@ -65,13 +80,31 @@ function App() {
         <Route exact path="/Practice" element={<Practice />} />
         <Route exact path="/Blogs" element={<Blogs />} />
         <Route exact path="/JavaProgramming" element={<JavaProgramming />} />
-        <Route exact path="/InstituteLogin" element={<InstituteLogin />} />
+
         <Route exact path="/LearnPath" element={<LearnPath />} />
         <Route exact path="/Learn" element={<Learn />} />
         <Route exact path="/Learning" element={<Learning />} />
         <Route exact path="/topic" element={<Topic />} />
         <Route exact path="/content" element={<Content />} />
         <Route exact path="/textcontent" element={<TextContent />} />
+        <Route exact path="/QbSubject" element={<QbSubject />} />
+        <Route exact path="/Chapter" element={<Chapter />} />
+        <Route exact path="/CreateQuestion" element={<CreateQuestion />} />
+        <Route exact path="/McqView" element={<McqView />} />
+        <Route exact path="/ParagHome" element={<ParagHome />} />
+        <Route exact path="/ParagView" element={<ParagView />} />
+        <Route exact path="/Coding" element={<Coding />} />
+        <Route exact path="/Codingview" element={<Codingview />} />
+        <Route exact path="/upload" element={<Upload />} />
+        <Route exact path="/ParagEdit" element={<ParagEdit />} />
+        <Route exact path="/Basic" element={<Basic />} />
+        <Route
+          exact
+          path="/ParticularMcaView"
+          element={<ParticularMcaView />}
+        />
+        <Route exact path="/Mcqupdate" element={<Mcqupdate />} />
+        <Route exact path="/AssignQB" element={<AssignQB />} />
         <Route
           exact
           path="/VideoPage/:VideofolderName"

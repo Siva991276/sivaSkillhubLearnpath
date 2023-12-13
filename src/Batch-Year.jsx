@@ -9,6 +9,8 @@ import sideimage from "./All Images/Logo133.jpeg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
+import Sidebar from "./Sidebar";
+
 
 const BatchYear = () => {
   const token = localStorage.getItem("token");
@@ -134,10 +136,10 @@ const BatchYear = () => {
     const closeBtn = document.querySelector("#btn");
     const searchBtn = document.querySelector(".bx-search");
 
-    if (sidebar.classList.contains("open")) {
-      closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+    if (sidebar?.classList.contains("open")) {
+      closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
     } else {
-      closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+      closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
     }
   };
   const [isInstitutionsOpen, setIsInstitutionsOpen] = useState(true);
@@ -196,187 +198,22 @@ const BatchYear = () => {
   };
   return (
     <div>
-      <div className="container1">
-        <div className="row">
-          <div className=" mt-1">
+      <div className="container-fluid p-0">
             <div className="row">
-              <div className=" col-12 col-md-2 ">
-                <div className={`sidebar ${isOpen ? "open" : ""}`}>
-                  <div class="logo_details">
-                    <div class="logo_name">
-                      {" "}
-                      <img src={sideimage} alt="logo" width="125px" />
-                    </div>
-                    <i
-                      id="btn"
-                      onClick={toggleSidebar}
-                      className={`bx bx-menu ${
-                        isOpen ? "bx-menu-alt-right" : "bx-menu"
-                      }`}
-                    ></i>
-                  </div>
-                  <ul class="nav-list">
-                    <li>
-                      <span class="tooltip">Dashboard</span>
-                    </li>
-                    <li>
-                      <a href="/PerfexHome">
-                        <i class="bx bx-grid-alt"></i>
-                        <span class="link_name">Dashboard</span>
-                      </a>
-                      <span class="tooltip">Dashboard</span>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <i class="fa-solid fa-house "></i>
-
-                        <span class="link_name">HomePage</span>
-                      </a>
-                      <span class="tooltip">HomePage</span>
-                    </li>
-                    <li onClick={toggleInstitutions}>
-                      <a href="#">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                        <span className="link_name ">
-                          Institutions{" "}
-                          <i className="fa-solid fa-chevron-down"></i>
-                        </span>
-                      </a>
-                      <span className="tooltip">Institutions</span>
-                    </li>
-                    {isInstitutionsOpen && (
-                      <div>
-                        <li className="">
-                          <a href="/AdminDashboard">
-                            <i className="fa-solid fa-building-columns"></i>{" "}
-                            <span className="link_name">institutions</span>
-                          </a>
-                          <span className="tooltip">institutions</span>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i class="fa-solid fa-calendar-days"></i>
-                            <span
-                              className="link_name"
-                              style={{ color: "#06f9f9" }}
-                            >
-                              Batch Years
-                            </span>
-                          </a>
-                          <span className="tooltip">Batch Years</span>
-                        </li>
-                        <li>
-                          <a href="/Batches">
-                            <i className="fa-solid fa-building-columns"></i>
-                            <span className="link_name">Batches</span>
-                          </a>
-                          <span className="tooltip">Batches</span>
-                        </li>
-                        <li>
-                          <a href="/UsersDetails">
-                            <i className="fa-solid fa-user"></i>
-                            <span className="link_name">Users</span>
-                          </a>
-                          <span className="tooltip">Users</span>
-                        </li>
-                        <li>
-                          <a href="/SearchOption">
-                            <i className="fa-brands fa-searchengin"></i>
-                            <span className="link_name">Search Users</span>
-                          </a>
-                          <span className="tooltip">Search Users</span>
-                        </li>
-                      </div>
-                    )}
-                    <li onClick={toggleInstitutions1}>
-                      <a href="#">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                        <span className="link_name ">
-                          LEARNING PATH{" "}
-                          <i className="fa-solid fa-chevron-down"></i>
-                        </span>
-                      </a>
-                      <span className="tooltip">Learning Path</span>
-                    </li>
-                    {isInstitutionsOpen1 && (
-                      <div>
-                        <li onClick={toggleInstitutions2}>
-                          <a href="#">
-                            <i class="fa-solid fa-school"></i>
-
-                            <span className="link_name">Learning Path</span>
-                            <i className="fa-solid fa-chevron-down"></i>
-                          </a>
-                          <span className="tooltip">Learning Path</span>
-                        </li>
-                        {isInstitutionsOpen2 && (
-                          <div>
-                            <li>
-                              <a href="#">
-                                <i class="fa-solid fa-chalkboard"></i>
-                                <Link to="/Learn">
-                                  <span className="link_name">
-                                    Learning Path
-                                  </span>
-                                </Link>
-                              </a>
-                              <span className="tooltip">Learning Path</span>
-                            </li>
-                            <li>
-                              <a href="#">
-                                <i class="fa-solid fa-video"></i>
-                                <Link to="/LearnPath">
-                                  <span className="link_name">
-                                    Video Folders
-                                  </span>
-                                </Link>
-                              </a>
-                              <span className="tooltip">Video Folders</span>
-                            </li>
-                            <li>
-                              <a href="#">
-                                <i class="fa-solid fa-record-vinyl"></i>
-                                <span className="link_name">Reports</span>
-                              </a>
-                              <span className="tooltip">Reports</span>
-                            </li>
-                          </div>
-                        )}
-
-                        <li>
-                          <a href="#">
-                            <i class="fa-brands fa-accessible-icon"></i>
-                            <span className="link_name">Access</span>
-                          </a>
-                          <span className="tooltip">Access</span>
-                        </li>
-                      </div>
-                    )}
-                    <li class="profile">
-                      <div class="profile_details">
-                        <img src={siva} alt="profile image" />
-                        <div class="profile_content">
-                          <div class="name">Siva</div>
-                          <div class="designation">Admin</div>
-                        </div>
-                      </div>
-                      <i
-                        class="bx bx-log-out"
-                        id="log_out"
-                        onClick={handleLogout}
-                      ></i>
-                    </li>
-                  </ul>
-                </div>
+            {isOpen && (
+              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+              <Sidebar/>
               </div>
-              <div className="col-12 col-md-10">
+					  )}						
+            <div className={`my-3 col-12 col-md-${isOpen ? 12: 9} col-lg-${isOpen ? 9 : 12}`}>
+                <div className=" d-lg-block">
+                <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
                 <div class="">
-                  <div className="card section-31 shadow">
-                    <div className="d-flex flex-row">
-                      <div>
-                        <h4 className=" mx-4 mt-3">Filter Batch Years :</h4>
+                  <div className="card section-31 shadow p-2 mb-3">
+                    <div className="row">
+                      <div className="col-md-4">
+                        <h4 className=" ">Filter Batch Years :</h4>
                       </div>
-                      <div className="col-12 col-md-6"></div>
 
                       {/* <div style={{ marginLeft: "auto" }} class="m-2">
                         <div>
@@ -940,18 +777,21 @@ const BatchYear = () => {
                           </div>
                         </div>
                       </div> */}
-                      <button className="extends12 p-1 mt-3">
+                      <div className="col-md-8 text-end">
+                      <button className="extends12 p-1 my-2">
                         {" "}
                         <i class="fa-solid fa-plus"></i>Create Batch Year
                       </button>
+                      </div>
+                     
                     </div>
 
-                    <div className="d-flex flex-row">
+                    <div className="row">
                       <div className="col-12 col-md-6">
                         <select
                           name=""
                           id=""
-                          className="m-2 p-2 w-100"
+                          className=" form-control"
                           onChange={handleCheckboxChange}
                         >
                           <option value="Select Institutions">
@@ -973,8 +813,8 @@ const BatchYear = () => {
 
                       <div className="col-12 col-md-3">
                         <button
-                          className=" p-2 w-25 mx-3 mt-1 selectbtn112"
-                          style={{ backgroundColor: "#a5059d" }}
+                          className=" p-2  selectbtn112"
+                          style={{ backgroundColor: "#a5059d", border:"none" }}
                           onClick={filterJobs}
                         >
                           Go
@@ -1072,7 +912,7 @@ const BatchYear = () => {
             </div>
           </div>
         </div>
-      </div>
+     
     </div>
   );
 };
