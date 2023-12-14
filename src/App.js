@@ -16,7 +16,6 @@ import UpdateBatch from "./Batch-Update";
 import SearchOption from "./SearchUser";
 import Dashboard from "./Perfex_Dashboard";
 import Footer from "./FooterSkill";
-
 import Institute from "./Institute";
 import RecentAssessment from "./Recent-Assessment";
 import RecentCourses from "./RecentCourses";
@@ -59,7 +58,8 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route exact path="/" element={<UserLogin />} />
+        <Route exact path="/UserLogin" element={<UserLogin />} />
+        <Route exact path="/" element={<InstituteLogin />} />
         <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
         <Route exact path="/PerfexHome" element={<PerfexHome />} />
         <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
@@ -84,7 +84,6 @@ function App() {
         <Route exact path="/Practice" element={<Practice />} />
         <Route exact path="/Blogs" element={<Blogs />} />
         <Route exact path="/JavaProgramming" element={<JavaProgramming />} />
-        <Route exact path="/InstituteLogin" element={<InstituteLogin />} />
         <Route exact path="/LearnPath" element={<LearnPath />} />
         <Route exact path="/Learn" element={<Learn />} />
         <Route exact path="/Learning" element={<Learning />} />
