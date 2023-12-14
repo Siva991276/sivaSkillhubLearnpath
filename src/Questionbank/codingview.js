@@ -58,30 +58,31 @@ function Codingview() {
 
 	const handleDelete = async (subjectId, chapterId, codingBasicId) => {
 		try {
-			const response = await axios.delete(
-				`http://localhost:4010/deletebasic/${subjectId}/${chapterId}/${codingBasicId}`
-			);
-
-			if (response.data.status === "success") {
-				toast.success("Successfully delete !", {
-					position: "top-right",
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "colored",
-				});
-				fetchblogs();
-			} else {
-				toast.error(response.data.msg);
-			}
+		  const response = await axios.delete(
+			`http://localhost:4010/v4/deletebasic/${subjectId}/${chapterId}/${codingBasicId}`
+		  );
+	
+		  if (response.data.status === 'success') {
+			
+              toast.success("Successfully delete !", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+			fetchblogs();
+		  } else {
+			toast.error(response.data.msg);
+		  }
 		} catch (error) {
-			console.error("Error deleting coding basic:", error);
-			toast.error("Error deleting coding basic");
+		//   console.error('Error deleting coding basic:', error);
+		  toast.error('Error deleting coding basic');
 		}
-	};
+	  };
 
 	return (
 		<div>
@@ -200,18 +201,18 @@ function Codingview() {
 																							</span>
 																						</Link>
 																						<span
-																							className="material-symbols-outlined "
-                                                                                            style={{color:"red"}}
-																							onClick={() =>
-																								handleDelete(
-																									blog._id,
-																									chapters._id,
-																									coding._id
-																								)
-																							}
-																						>
-																							delete
-																						</span>
+	className="material-symbols-outlined "
+	style={{color:"red"}}
+	onClick={() =>
+		handleDelete(
+			blog._id,
+			chapters._id,
+			coding._id
+		)
+	}
+>
+	delete
+</span>
 																					</div>
 																				</td>
 																			

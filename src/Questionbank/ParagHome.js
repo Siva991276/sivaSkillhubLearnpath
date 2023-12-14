@@ -131,7 +131,7 @@ const ParagHome = () => {
       <div className="container ">
         <div className="row">
           {isOpen && (
-            <div className=" col-12 col-md-2 sectioncard121">
+            <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar />
               <ToastContainer
                 position="top-center"
@@ -148,8 +148,8 @@ const ParagHome = () => {
             </div>
           )}
           <div
-            className={`my-3 col-12 col-md-${isOpen ? 10 : 12} col-lg-${
-              isOpen ? 10 : 12
+            className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+              isOpen ? 9 : 12
             }`}
           >
             <div className="ml-5 d-lg-block d-none">

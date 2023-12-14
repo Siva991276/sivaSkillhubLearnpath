@@ -55,7 +55,7 @@ const Chapter = () => {
 					subject: subjecttag1,
 					ChapterTag: chaptertag,
 				};
-console.log(AddChapter)
+				console.log(AddChapter)
 				const response = await axios.post(
 					`http://localhost:4010/v1/addchapter/${subjectId}`,
 					AddChapter
@@ -64,7 +64,17 @@ console.log(AddChapter)
 				setData1(response.data);
 				console.log(response.data);
 				if (response.status === 200) {
-					window.alert("Success");
+					toast("Chapter Added Successfully", {
+						position: "top-center",
+						autoClose: 1000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						className: "custom-toast-custom",
+					});
 					fetchblogs1();
 				}
 			} catch (error) {
@@ -72,7 +82,17 @@ console.log(AddChapter)
 				console.log(error);
 			}
 		} else {
-			window.alert("Error: Please fill in all fields");
+			toast("please fill in all fields", {
+				position: "top-center",
+				autoClose: 1000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				className: "custom-toast-custom",
+			});
 		}
 	};
 
@@ -99,7 +119,6 @@ console.log(AddChapter)
 				fetchSubjects();
 				fetchblogs1();
 			} else {
-				alert("Error:" + response.data);
 				setError("An error occured while deleting subject.");
 			}
 		} catch (error) {
@@ -206,13 +225,16 @@ console.log(AddChapter)
 				"data-value"
 			)
 		);
-		setSelectedSubjectId(event.target.options[event.target.selectedIndex].getAttribute(
+		setSubjectId(event.target.options[event.target.selectedIndex].getAttribute(
+			"value"
+		  ))
+		  	setSelectedSubjectId(event.target.options[event.target.selectedIndex].getAttribute(
 			"value"
 		  ))
 		  handleEditInputChange(
 			event.target.options[event.target.selectedIndex].getAttribute(
 				"data-value"
-			),"subjectTag"
+			),"SubjectTag"
 		);
 	};
 	const handleChapterTagTypeSelection = (event) => {
@@ -580,7 +602,7 @@ if (allChapters && allChapters.length) {
 																class="btn btn-danger"
 																data-bs-dismiss="modal"
 															>
-																Submitt
+																Submit
 															</button>
 														</div>
 													</div>
@@ -660,7 +682,7 @@ if (allChapters && allChapters.length) {
 																type="text"
 																name="Description"
 																placeholder="...description..."
-																onChange={e=>handleEditInputChange(e.target.value,"description")}
+																onChange={e=>handleEditInputChange(e.target.value,"Description")}
 																value={chapterListUpdate?.Description || ''}
 															/>
 															
@@ -673,17 +695,14 @@ if (allChapters && allChapters.length) {
 																name="SubjectTag"
 																value={chapterListUpdate.Tag || ''}
 																className="form-control"
-																onChange={handleSubjectTagTypeSelection}
+																onChange={(e)=>handleSubjectTagTypeSelection(e)}
 															>
 																{allSubjects?.map((subject) => (
 																	<>
-																		{/* <option>
-																			{subject?.subjectTag}
-																		</option> */}
 																		<option className="name_item"
 																			key={subject._id} // Use a unique key for each option
 																			data-value={subject.subjectTag}
-																			value={subject?.subjectTag || ""}>{subject?.subjectTag}</option>
+																			value={subject?.subjectTag}>{subject?.subjectTag ||""}</option>
 																	</>
 																))}
 															</select>
@@ -699,7 +718,7 @@ if (allChapters && allChapters.length) {
 															<br></br>
 															<select
 																className="form-control"
-																name="ChapterTag"														value={chapterListUpdate?.ChapterTag ||""}
+																name="ChapterTag"														value={chapterListUpdate?.ChapterTag || ""}
 																onChange={handleChapterTagTypeSelection}
 															>
 																<option>--select subjects--</option>

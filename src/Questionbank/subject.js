@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { Audio } from 'react-loader-spinner';
+
 
 const QbSubject = () => {
 	useEffect(() => {
@@ -22,14 +24,20 @@ const QbSubject = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setBlogslist(response.data);
+			setWorksheetLoading(false);
+
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
+
 		}
 	};
 	const [name, setName] = useState("");
 	const [Description, setDescription] = useState("");
 	const [subjecttag, setSubjectTag] = useState("");
 	const [data1, setData1] = useState("");
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
+
 
 	const handleSubjectTagTypeSelection = (event) => {
 		setSubjectTag(
@@ -255,6 +263,16 @@ const QbSubject = () => {
 							isOpen ? 9 : 12
 						}`}
 					>
+					{worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
 						<div className=" ">
 							<div className=" d-lg-block">
 								<i
@@ -557,6 +575,7 @@ const QbSubject = () => {
 								<></>
 							</div>
 						</div>
+			  )}
 					</div>
 				</div>
 			</div>

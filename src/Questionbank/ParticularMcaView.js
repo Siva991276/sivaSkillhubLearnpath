@@ -5,14 +5,17 @@ import Sidebar from "../Sidebar";
 import { Pagination } from "antd";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation,useNavigate } from "react-router-dom";
 
 const ParticularMcaView = () => {
+    const navigate = useNavigate();
     const { state } = useLocation();
 	const { subjectId,chapterId,McqId} = state || {}; 
 	const [mcqListData, setMcqListData] = useState([]);
 
-	
+	const gotoMcqUpdate = ()=>{
+        navigate(()=>navigate("/Mcqupdate",{state :{subjectId:subjectId,chapterId:chapterId,McqId:McqId}}))
+    }
 
 	const fetchMcqListData = async () => {
 		const api = `http://localhost:4010/v1/getMCQById/${subjectId}/${chapterId}/${McqId}`
@@ -47,6 +50,7 @@ const ParticularMcaView = () => {
 			closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
 		}
 	};
+    
 	
 	return (
 		<div>
@@ -75,7 +79,9 @@ const ParticularMcaView = () => {
                                             <p>Chapter : {mcqListData?.Chapters}</p>
                                         </div>
                                         <div className="col-md-4 float-right mb-2" style={{float:"right"}}>
-                                            <button className="btn btn-dark"><i class="fa-solid fa-pencil pencile"									
+                                            <button className="btn btn-dark"
+                                            onClick={()=>navigate("/Mcqupdate",{state :{subjectId:subjectId,chapterId:chapterId,McqId:McqId}})}	><i class="fa-solid fa-pencil pencile"		
+                                            						
 											></i>Edit Question</button>
                                         </div>
                                     </div>

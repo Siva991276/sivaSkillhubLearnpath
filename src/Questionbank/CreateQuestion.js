@@ -104,8 +104,8 @@ const CreateQuestion = () => {
 				setallquestionData(response.data);
 				console.log(response.data);
 				if (response.status === 200) {
-					toast("Question Added", {
-						position: "top-right",
+					toast("Question Added Successfully", {
+						position: "top-center",
 						autoClose: 1000,
 						hideProgressBar: false,
 						closeOnClick: true,

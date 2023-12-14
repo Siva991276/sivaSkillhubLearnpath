@@ -4,7 +4,7 @@ import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 function AssignQB() {
 	const [isOpen, setIsOpen] = useState(true);
-	const columns: GridColDef[] = [
+	const columns = [
 		{ field: "id", headerName: "ID", width: 200 },
 		{ field: "ModuleName", headerName: "Module Name", width: 200 },
 		{ field: "Chapters", headerName: "Chapters", width: 200 },

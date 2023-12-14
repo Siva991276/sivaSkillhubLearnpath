@@ -229,10 +229,6 @@ const McqView = () => {
 			>
 				<i
 					className="fa-solid fa-trash-can "
-					// onClick={() => {
-					// 	setIsModalOpen(true);
-					// 	// Additional logic if needed
-					// }}
 					style={{ color: "red" }}
 				></i>
 			</button>

@@ -107,8 +107,8 @@ const Mcqupdate = () => {
 			setallquestionData(response.data);
 			console.log(response.data);
 			if (response.status === 200) {
-				toast.success("Question Updated", {
-					position: "top-right",
+				toast.success("Question Updated Successfully", {
+					position: "top-center",
 					autoClose: 1000,
 					hideProgressBar: false,
 					closeOnClick: true,
