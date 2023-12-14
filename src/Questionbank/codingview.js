@@ -10,7 +10,7 @@ function Codingview() {
 	const [blogslist, setblogslist] = useState([]);
 	const [filteredBlogs, setFilteredBlogs] = useState([]);
 	const [isOpen, setIsOpen] = useState(true);
-
+// sai
 	const toggleSidebar = () => {
 		setIsOpen(!isOpen);
 		menuBtnChange();
