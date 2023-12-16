@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { json, useNavigate } from "react-router-dom";
-
+import { Audio } from 'react-loader-spinner';
 
 
 const McqView = () => {
@@ -25,15 +25,17 @@ const McqView = () => {
 	const [allquestionData, setallquestionData] = useState("");
 	const [allsubjectsData, setAllsubjectsData] = useState([]);
 	const [allMcqsList, setallMCqsList] = useState([]);
-
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
 	const fetchsubjectsData = async () => {
 		const api = "http://localhost:4010/v2/subjects";
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setAllsubjectsData(response.data);
+			setWorksheetLoading(false);
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 
@@ -43,8 +45,10 @@ const McqView = () => {
 		try {
 			const response = await axios.get(api);
 			setallMCqsList(response.data);
+			setWorksheetLoading(false);
 		} catch (error) {
 			console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 	useEffect(() => {
@@ -141,7 +145,7 @@ const McqView = () => {
 		  console.log("selectedMcqList",selectedMcqList)
 		
 		  const handleClearFilterButtonClick = () => {
-			setSelectedMcqList('');
+			setAllsubjectsData('');
 		  };
 	
 	const GotohandleDeleteClick = (subjectId,chapterId,McqId) => {   
@@ -150,8 +154,8 @@ const McqView = () => {
 			try{
 				const response=axios.delete(api,)
 			//   console.log("Password updated successfully:", response.data);
-					toast('Deleted Institute successfully', {
-					position: "top-right",
+					toast('Deleted Question successfully', {
+					position: "top-center",
 					autoClose: 1000,
 					hideProgressBar: false,
 					closeOnClick: true,
@@ -223,8 +227,6 @@ const McqView = () => {
 			<button
 				type="button"
 				className="btn"
-				data-bs-toggle="modal"
-				data-bs-target="#myModal"
 				onClick={() => GotohandleDeleteClick(selectedSubjectId, selectedChapterId,McqId)}
 			>
 				<i
@@ -281,6 +283,16 @@ const McqView = () => {
 							isOpen ? 9 : 12
 						}`} style={{height:"100vh", overflowY:"scroll"}}
 					>
+						{worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
 						<div className=" ">
 							<i
 								className="fa-solid fa-bars bars d-lg-block d-none"
@@ -309,7 +321,7 @@ const McqView = () => {
 															data-value={subject.subjectTag}
 															value={subject._id}
 														>
-															{subject.subjectTag}
+															{subject.name}
 														</option>
 													</>
 												))}
@@ -331,10 +343,10 @@ const McqView = () => {
 															<option
 																className="name_item"
 																key={chapter._id} // Use a unique key for each option
-																data-value={chapter.ChapterTag}
+																data-value={chapter.Name}
 																value={chapter._id}
 															>
-																{chapter.ChapterTag }
+																{chapter.Name }
 															</option>
 															</>
 											))))}
@@ -407,33 +419,29 @@ const McqView = () => {
 										</div>
 										<div className="row">
 											<div className="col-5 d-lg-block d-none"></div>
-											<div className="col-lg-1 col-md-6 col-4 text-center">
+											<div className="col-lg-1 col-md-6 col-4 mx-2 text-center">
 												<button
-													className=" my-2"
+													className=" my-2 btn btn-light"
 													style={{
 														backgroundColor: "black",
 														color: "white",
-														border: "none",
-														padding: "6px",
-														borderRadius: "7px",
+														
 													}}
 													onClick={handleGoButtonClick}
 												>
-													Go
+													Search
 												</button>
 											</div>
-											<div className="col-lg-2 col-md-6 col-8 text-center">
+											<div className="col-lg-2 col-md-6 col-4 mx-2 text-center">
 												<button
-													className="my-2"
+													className="my-2 btn btn-light"
 													style={{
 														backgroundColor: "white",
 														color: "red",
-														border: "1px solid red",
-														padding: "6px",
-														borderRadius: "7px",
 													}}
+													onClick={handleClearFilterButtonClick}
 												>
-													Clear Fillter
+													Clear Filter
 												</button>
 											</div>
 										</div>
@@ -468,9 +476,8 @@ const McqView = () => {
 							</div>
 							Questiontype
 						</div>
-						{allMcqsList.map((blog, index) => (
-							<p key={index}>{blog.questiontype}</p>
-						))}
+			  )}
+						
 					</div>
 					
 				</div>

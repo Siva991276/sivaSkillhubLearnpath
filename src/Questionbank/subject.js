@@ -81,7 +81,17 @@ const QbSubject = () => {
 				console.log(error);
 			}
 		} else {
-			toast.warning("Please fill in all fields");
+			toast("Please fill in all fields", {
+				position: "top-center",
+				autoClose: 1000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				className: "custom-toast-custom",
+			});
 		}
 	};
 	console.log("data1");
@@ -308,18 +318,6 @@ const QbSubject = () => {
 															data-bs-dismiss="modal"
 														></button>
 													</div>
-													<ToastContainer
-														position="top-center"
-														autoClose={5000}
-														hideProgressBar={false}
-														newestOnTop={false}
-														closeOnClick
-														rtl={false}
-														pauseOnFocusLoss
-														draggable
-														pauseOnHover
-														theme="light"
-													/>
 													<div class="modal-body">
 														<form onSubmit={(e)=>onSubmitForm(e)}>
 															<div className="row">
@@ -354,7 +352,7 @@ const QbSubject = () => {
 																	</div>
 																</div>
 																<div className="col-lg-6">
-																	<label className="my-3 ">Subject *</label>
+																	<label className="my-3 ">SubjectTag *</label>
 																	<select
 																		value={subjecttag}
 																		className="form-control mb-2"
@@ -362,7 +360,7 @@ const QbSubject = () => {
 																		onChange={handleSubjectTagTypeSelection}
 																	>
 																		<option value="">
-																			--select subjects--
+																			--select subjects Tag--
 																		</option>
 																		<option data-value="C-programming">
 																			C-programming
@@ -522,7 +520,7 @@ const QbSubject = () => {
 														/>
 													</div>
 													<label className="mt-3 " style={{ float: "left" }}>
-														Subject *
+														SubjectTag*
 													</label>
 													<select
 														type="text"

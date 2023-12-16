@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import JoditEditor from "jodit-react";
+import { Audio } from 'react-loader-spinner';
 
 const Mcqupdate = () => {
 	let navigate = useNavigate();
@@ -16,7 +17,7 @@ const Mcqupdate = () => {
 	const { subjectId, chapterId, McqId } = state || {};
 	const [mcqListData, setMcqListData] = useState({});
 	const [mcqLisChangedData, setMcqListChangedData] = useState({});
-
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
 	// Function to handle input change during chapter edit
 	const handleEditInputChange = (value, name) => {
 		// console.log(e.target?.value);
@@ -42,8 +43,10 @@ const Mcqupdate = () => {
 			setMcqListData(response.data.mcq);
 			setMcqListChangedData(response.data.mcq);
 			console.log(response.data.mcq);
+			setWorksheetLoading(false);
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 
@@ -74,8 +77,10 @@ const Mcqupdate = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setAllsubjectsData(response.data);
+			setWorksheetLoading(false);
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 	useEffect(() => {
@@ -172,6 +177,16 @@ const Mcqupdate = () => {
 							isOpen ? 9 : 12
 						}`}
 					>
+						{worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
 						<form>
 							<div className=" ">
 								<i
@@ -190,6 +205,7 @@ const Mcqupdate = () => {
 										value={
 											selectQuestionType || mcqListData?.selectquestiontype
 										}
+										disabled
 									/>
 									<div className="row">
 										<div className="col-md-6">
@@ -202,6 +218,7 @@ const Mcqupdate = () => {
 												placeholder="...Select Subject"
 												className="form-control"
 												value={selectedSubject || mcqListData?.Subjects}
+												disabled
 											/>
 										</div>
 										<div className="col-md-6">
@@ -213,6 +230,7 @@ const Mcqupdate = () => {
 												placeholder="...Select Chapter"
 												className="form-control"
 												value={selectedChapter || mcqListData?.Chapters}
+												disabled
 											/>
 										</div>
 									</div>
@@ -313,7 +331,6 @@ const Mcqupdate = () => {
 											} // preferred to use only this option to update the content for performance reasons
 											// onChange={handleEditInputChange()}
 										/>
-
 										<label htmlFor="myfile">
 											<h6 className="my-3">Description Image</h6>
 										</label>
@@ -581,22 +598,26 @@ const Mcqupdate = () => {
 									<div className="text-center mb-3">
 										<button
 											type="button"
+											className="btn btn-light"
 											style={{
 												width: "fit-content",
 												backgroundColor: "#8c018a",
 												color: "white",
-												border: "none",
-												padding: "7px 20px",
-												borderRadius: "6px",
+												
 											}}
 											onClick={() => onSubmitUpdateForm(mcqListData?._id)}
 										>
 											Update
 										</button>
+										<button className="btn btn-light mx-1"
+                                            onClick={()=>navigate("/McqView",{state :{subjectId:subjectId,chapterId:chapterId,McqId:McqId}})}	><i
+                                            class="bx bx-log-out"
+                                        ></i>Back</button>
 									</div>
 								</div>
 							</div>
 						</form>
+			  )}
 					</div>
 				</div>
 			</div>

@@ -7,11 +7,14 @@ import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import axios from "axios";
 import JoditEditor from "jodit-react";
+import { Audio } from 'react-loader-spinner';
+
 
 const CreateQuestion = () => {
 	let navigate = useNavigate();
 	const editor = useRef(null);
 	const [content, setContent] = useState("");
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
 	const handleSelectQuestionType = (event) => {
 		setSelectQuestionType(
 			event.target.options[event.target.selectedIndex].getAttribute(
@@ -44,8 +47,10 @@ const CreateQuestion = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setAllsubjectsData(response.data);
+			setWorksheetLoading(false);
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 	useEffect(() => {
@@ -115,13 +120,35 @@ const CreateQuestion = () => {
 						theme: "colored",
 						className: "custom-toast-custom",
 					});
+					navigate("/McqView")
 				}
+				
 			} catch (error) {
 				console.log(error.response.data);
-				toast.error("Question already added");
+				toast("Question already added", {
+					position: "top-center",
+					autoClose: 1000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+					className: "custom-toast-custom",
+				});
 			}
 		} else {
-			toast.warning("Enter Required details");
+			toast("Enter Required details", {
+				position: "top-center",
+				autoClose: 1000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				className: "custom-toast-custom",
+			});
 		}
 	};
 	const [selectedSubjectId, setSelectedSubjectId] = useState([]);
@@ -173,6 +200,16 @@ const CreateQuestion = () => {
 							isOpen ? 9 : 12
 						}`}
 					>
+						{worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
 						<form>
 							<div className=" ">
 								<i
@@ -236,10 +273,10 @@ const CreateQuestion = () => {
 														<option
 															className="name_item"
 															key={subject._id} // Use a unique key for each option
-															data-value={subject.subjectTag}
+															data-value={subject.name}
 															value={subject._id}
 														>
-															{subject.subjectTag}
+															{subject.name}
 														</option>
 													</>
 												))}
@@ -262,10 +299,10 @@ const CreateQuestion = () => {
 															<option
 																className="name_item"
 																key={chapter._id} // Use a unique key for each option
-																data-value={chapter.ChapterTag}
+																data-value={chapter.Name}
 																value={chapter._id}
 															>
-																{chapter.ChapterTag}
+																{chapter.Name}
 															</option>
 														</>
 													))
@@ -619,6 +656,7 @@ const CreateQuestion = () => {
 								</div>
 							</div>
 						</form>
+			  )}
 					</div>
 				</div>
 			</div>

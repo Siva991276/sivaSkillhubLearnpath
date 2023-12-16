@@ -72,17 +72,21 @@ const ParticularMcaView = () => {
 							<div className=" row card p-3 m-2">
                                 <div className="col-md-12">
                                     <div className="row">
-                                        <div className="col-md-3">
-                                            <p>Module : {mcqListData?.Subjects}</p>
+                                        <div className="col-md-4">
+                                            <p>Subject : <b>{mcqListData?.Subjects}</b></p>
                                         </div>
                                         <div className="col-md-5">
-                                            <p>Chapter : {mcqListData?.Chapters}</p>
+                                            <p>Chapter : <b>{mcqListData?.Chapters}</b></p>
                                         </div>
-                                        <div className="col-md-4 float-right mb-2" style={{float:"right"}}>
-                                            <button className="btn btn-dark"
+                                        <div className="d-flex flex-row justify-content-center col-md-3 float-right mb-2" style={{float:"right"}}>
+                                            <button className="btn btn-light"
                                             onClick={()=>navigate("/Mcqupdate",{state :{subjectId:subjectId,chapterId:chapterId,McqId:McqId}})}	><i class="fa-solid fa-pencil pencile"		
                                             						
-											></i>Edit Question</button>
+											></i>Edit</button>
+                                            <button className="btn btn-light mx-1"
+                                            onClick={()=>navigate("/McqView",{state :{subjectId:subjectId,chapterId:chapterId,McqId:McqId}})}	><i
+                                            class="bx bx-log-out"
+                                        ></i>Back</button>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -92,7 +96,7 @@ const ParticularMcaView = () => {
                                         <div className="col-md-3">
                                             <p>Diffculty : {mcqListData?.Difficulty}</p>
                                         </div>
-                                        <div className="col-md-3">
+                                        <div className="col-md-4">
                                             <p>Reference: {mcqListData?.Reference}</p>
                                         </div>
                                     </div>
@@ -123,7 +127,7 @@ const ParticularMcaView = () => {
                                             </div>
                                             <div className="card p-3 my-2">
                                             <p>correctAnswer:</p>
-                                            <p>{mcqListData?.correctAnswer}</p>
+                                            <p><b>{mcqListData?.correctAnswer}</b></p>
                                             </div>                                             
                                         </div>
                                     </div>

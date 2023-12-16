@@ -6,7 +6,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { FaRegEye } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { Audio } from 'react-loader-spinner';
 
 const ParagView = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const ParagView = () => {
   const [allquestionData, setallquestionData] = useState("");
   const [allsubjectsData, setAllsubjectsData] = useState([]);
   const [allParagList, setallParagList] = useState([]);
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
 
   const fetchsubjectsData = async () => {
     const api = "http://localhost:4010/v2/subjects";
@@ -30,25 +32,30 @@ const ParagView = () => {
       const response = await axios.get(api, {});
       const data = response.data;
       setAllsubjectsData(response.data);
+			setWorksheetLoading(false);
     } catch (error) {
       console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
     }
   };
 
   const fetchMCQs = async () => {
     const api =
-      "http://localhost:4010/v2/getparamcq/subjectId/chapterId/paragMCQ";
+      `http://localhost:4010/v2/getparamcq/${selectedSubjectId}/${selectedChapterId}/paragMCQ`;
 
     try {
       const response = await axios.get(api);
       setallParagList(response.data);
+			setWorksheetLoading(false);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
     }
   };
+  console.log(allParagList)
   useEffect(() => {
     fetchsubjectsData();
-    fetchMCQs();
+    // fetchMCQs();
   }, []);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -113,14 +120,8 @@ const ParagView = () => {
     );
   };
   // const [selectedQuestionId, setSelectedQuestionId] = useState([]);
-  const handleQuestionTypeSelection = (event) => {
-    setQuestion(
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-value"
-      )
-    );
-  };
-  const [selectedMcqList, setSelectedMcqList] = useState({});
+ 
+  const [selectedMcqList, setSelectedMcqList] = useState([]);
 
   const handleGoButtonClick = () => {
     const filteredMCQs = allsubjectsData
@@ -130,42 +131,38 @@ const ParagView = () => {
           subject.chapter.find((chapter) => chapter?._id === selectedChapterId)
             ?.paragMCQ || []
       )
-      .find((mcq) => mcq?._id);
+      .find((mcq) => mcq?._id === selectedReferenceId);
 
     console.log(filteredMCQs);
-    setSelectedMcqList(filteredMCQs);
+    setSelectedMcqList([filteredMCQs] || []);
   };
   console.log("selectedMcqList", selectedMcqList);
 
   const handleClearFilterButtonClick = () => {
-    setSelectedMcqList("");
+    setSelectedMcqList([]);
   };
-  const gotoviewmcq = (McqId) => {
-    navigate("/ParticularMcaView", {
-      state: {
-        subjectId: selectedSubjectId,
-        chapterId: selectedChapterId,
-        McqId: McqId,
-      },
-    });
-  };
-  const gotoUpdatemcq = (McqId) => {
-    navigate("/Mcqupdate", {
-      state: {
-        subjectId: selectedSubjectId,
-        chapterId: selectedChapterId,
-        McqId: McqId,
-      },
-    });
-  };
-  const GotohandleDeleteClick = (McqId) => {
+  const handleGetAllfilter = async ()=>{
+     const api= `http://localhost:4010/v2/getparamcq/${selectedSubjectId}/${selectedChapterId}/paragMCQ`
+     try {
+      const response = await axios.get(api, {});
+      const data = response.data;
+      setSelectedMcqList(response?.data?.paragMCQs);
+			setWorksheetLoading(false);
+    } catch (error) {
+      console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
+    }
+  }
+  
+  
+  const GotohandleDeleteClick = (subjectId,chapterId,McqId) => {
     // const token = Cookies.get("token");
-    const api = `http://localhost:4010/v1/deleteMCQ/${selectedSubjectId}/${selectedChapterId}/${McqId}`;
+    const api =   `http://localhost:4010/v2/delete/${subjectId}/${chapterId}/${McqId}`;
     try {
       const response = axios.delete(api);
       //   console.log("Password updated successfully:", response.data);
-      toast("Deleted Institute successfully", {
-        position: "top-right",
+      toast("Deleted Parag successfully", {
+        position: "top-center",
         autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -176,17 +173,18 @@ const ParagView = () => {
         className: "custom-toast-custom",
       });
       fetchsubjectsData();
-      fetchMCQs();
+      // fetchMCQs();
+      handleGoButtonClick()
     } catch (error) {
-      console.error("Error Delete Institute:", error);
+      console.error("Error Delete Parag");
     }
     // toast.warning("Pending some fields Please check")
   };
 
   // const columns: GridColDef[] = [
   const columns = [
-    { field: "SNO", headerName: "SNO", width: 100 },
     { field: "ID", headerName: "ID", width: 100 },
+    { field: "SNO", headerName: "SNO", width: 100 },
     { field: "Modulue", headerName: "Modulue", width: 120 },
     { field: "Chapter", headerName: "Chapter", width: 120 },
     { field: "Question", headerName: "Question", width: 120 },
@@ -217,7 +215,7 @@ const ParagView = () => {
             state: {
               subjectId: selectedSubjectId,
               chapterId: selectedChapterId,
-              McqId: McqId.id,
+              McqId: McqId._id,
             },
           })
         }
@@ -230,115 +228,116 @@ const ParagView = () => {
       <button
         type="button"
         className="btn"
-        data-bs-toggle="modal"
-        data-bs-target="#myModal"
-        // onClick={() => handleDelete(allSubjects._id, allChapters._id)}
+        onClick={() => GotohandleDeleteClick(selectedSubjectId,selectedChapterId,McqId._id)}
       >
         <i
           className="fa-solid fa-trash-can "
-          // onClick={() => {
-          // 	setIsModalOpen(true);
-          // 	// Additional logic if needed
-          // }}
           style={{ color: "red" }}
         ></i>
       </button>
     </div>
   );
+  console.log("TEST",selectedMcqList);
+  var rows = [];
+var cnt = 0;
+  if (selectedMcqList?.length) {
+    rows = selectedMcqList.map(mcq => {
+      return {
+        id: ++cnt,
+        ID:cnt,
+        SNO: cnt,
+          Modulue: 1, // Assuming "Name" is the property name for the chapter name
+          Chapter: mcq?.Chapters, // Assuming "subjectTag" is the property name for the subject tag
+          Question: mcq?.Question, // Assuming "totalqustions" is the property name for the total questions
+          Diffculty: mcq?.Difficulty,
+          Reference: mcq?.Reference,
+          ACTION: renderActionButtons(mcq),
+          _id:mcq?._id
+      }
+    });
+  }
 
-  // const rows = selectedMcqList.map((blog, index) => ({
-
-  // 	SNO: index+1,
-  // 	id: blog._id,
-  // 	Modulue: `hyffgfg`, // Assuming "Name" is the property name for the chapter name
-  // 	Chapter: `jkjhjhghfgfv`, // Assuming "subjectTag" is the property name for the subject tag
-  // 	Question: blog.Question, // Assuming "totalqustions" is the property name for the total questions
-  // 	Diffculty: ``,
-  // 	Reference:``,
-  // 	ACTION: renderActionButtons(blog),
-  // }));
-  if (Object.keys(selectedMcqList)?.length) {
-    console.log("Data");
-    var rows = [
-      {
-        SNO: 1,
-        id: selectedMcqList?._id,
-        Modulue: `1`, // Assuming "Name" is the property name for the chapter name
-        Chapter: `Chapter2`, // Assuming "subjectTag" is the property name for the subject tag
-        Question: selectedMcqList?.Question, // Assuming "totalqustions" is the property name for the total questions
-        Diffculty: selectedMcqList?.Difficulty,
-        Reference: selectedMcqList?.Reference,
-        ACTION: renderActionButtons(selectedMcqList?._id),
-      },
-    ];
-  } else var rows = [];
   return (
     <div>
-      <div className="container">
+      <div className="container-fluid">
         <div className="row">
           {isOpen && (
             <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar />
+              <ToastContainer/>
             </div>
           )}
           <div
-            className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+						className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}
-          >
-            <div className="ml-5 d-lg-block d-none">
-              <i className="fa-solid fa-bars bars" onClick={toggleSidebar}></i>
-              <div class="mx-5 paragView">
+					>
+            	{worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
+            <div className="">
+              <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
+              <div class="card_item1 p-3"> 
                 <div className="row ">
-                  <b>Filter Graph Question</b>
-                  <div className="col-6">
+                  <b className="my-3">Filter Graph Question</b>
+                  <div className="col-4 my-3">
                     <select
                       style={{ padding: "5px" }}
                       className="form-control"
                       onChange={handleSubjectTagTypeSelection}
                     >
                       <option className="hidden" value="">
-                        Select Subject
+                        ...Select Subject...
                       </option>
                       {allsubjectsData?.map((subject) => (
                         <>
                           <option
                             className="name_item"
                             key={subject._id} // Use a unique key for each option
-                            data-value={subject.subjectTag}
+                            data-value={subject.name}
                             value={subject._id}
                           >
-                            {subject.subjectTag}
+                            {subject.name}
                           </option>
                         </>
                       ))}
                     </select>
-                    <p>Select Subject</p>
+                    {/* <p>Select Subject</p> */}
                   </div>
-                  <div className="col-6">
+                  <div className="col-4 my-3">
                     <select
                       type="text"
                       placeholder="...Select Chapter"
                       className="form-control"
                       onChange={handleChapterTagTypeSelection}
                     >
-                      <option>...select Chapter...</option>
+                      <option>...Select Chapter...</option>
                       {allsubjectsData?.map((subject, index) =>
                         subject?.chapter?.map((chapter) => (
                           <>
                             <option
                               className="name_item"
                               key={chapter._id} // Use a unique key for each option
-                              data-value={chapter.ChapterTag}
+                              data-value={chapter.Name}
                               value={chapter._id}
                             >
-                              {chapter.ChapterTag}
+                              {chapter.Name}
                             </option>
                           </>
                         ))
                       )}
                     </select>
-                    <p>Select Chapter</p>
+                  
+                  </div>
+                  <div className="col-3 my-3">
+                  <button className="paragbtn mx-3" onClick={handleGetAllfilter}>Get All Questions</button>
                   </div>
                   <div className="col-6">
                     <select
@@ -347,7 +346,7 @@ const ParagView = () => {
                       className="form-control"
                       onChange={handleReferenceTypeSelection}
                     >
-                      <option>...select Chapter...</option>
+                      <option>...Select Reference...</option>
                       {allsubjectsData?.map((subject, index) =>
                         subject?.chapter?.map((chapter) =>
                           chapter?.paragMCQ?.map((each) => (
@@ -365,11 +364,11 @@ const ParagView = () => {
                         )
                       )}
                     </select>
-                    <label>Reference</label>
+                    {/* <label>Reference</label> */}
                   </div>
-                  <div className="col-lg-1 col-md-6 col-4 text-center">
+                  <div className="col-6">
                     <button
-                      className=" my-2"
+                      className=""
                       style={{
                         backgroundColor: "black",
                         color: "white",
@@ -381,26 +380,26 @@ const ParagView = () => {
                     >
                       Go
                     </button>
-                  </div>
-                  <div className="col-2">
-                    <button className="paragbtn">Clear Filter</button>
+                    <button className="paragbtn mx-3" onClick={handleClearFilterButtonClick}>Clear Filter</button>
                   </div>
                 </div>
-                <div className="tableContainer">
-                  <h6 className="paragTableHeading">Paragraph Question:</h6>
+                
+
+                <div className="">
+                  <h5 className="">Paragraph Question:</h5>
                   <div className="paragShow">
                     <div className="paragHeading">
                       <label>Show</label>
-                      <select>
+                      <select className="form-control">
                         <option>10</option>
                       </select>
                     </div>
-                    <div className="paragSearch">
+                    <div className="paragSearch mx-3">
                       <label>Search:</label>
-                      <input></input>
+                      <input className="form-control "></input>
                     </div>
                   </div>
-                  <div style={{ height: "auto", width: "100%" }}>
+                  <div className="mt-3" style={{ height: "auto", width: "100%" }}>
                     <DataGrid
                       rows={rows}
                       columns={headerColumns}
@@ -418,6 +417,7 @@ const ParagView = () => {
                 ))}
               </div>
             </div>
+              )}
           </div>
         </div>
       </div>

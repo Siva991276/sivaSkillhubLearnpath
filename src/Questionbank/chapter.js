@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { Audio } from 'react-loader-spinner';
+
 
 const Chapter = () => {
 	useEffect(() => {
@@ -25,8 +27,10 @@ const Chapter = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setBlogslist(response.data);
+			setWorksheetLoading(false);
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 
@@ -37,6 +41,8 @@ const Chapter = () => {
 	const [data1, setData1] = useState("");
 	const [subjectId, setSubjectId] = useState([]);
 	const [chapterListUpdate, setChapterListUpdate] = useState({});
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
+	console.log(chapterListUpdate)
 	const handleEditInputChange = (value,name) => {
 		console.log(value,name);
 		setChapterListUpdate({
@@ -44,6 +50,7 @@ const Chapter = () => {
 		  [name]: value,
 		});
 	};
+	console.log("chapterListUpdate",chapterListUpdate)
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
 
@@ -153,9 +160,11 @@ const Chapter = () => {
 			const response = await axios.get(api, {});
 			const data = response.data;
 			setAllSubjects(response.data);
+			setWorksheetLoading(false);
 			// setBlogslist(response.data);
 		} catch (error) {
 			console.error("Error fetch blogs:", error);
+			setWorksheetLoading(false);
 		}
 	};
 	const onSubmitUpdatedForm = (subid,chapid,e) => {
@@ -189,13 +198,23 @@ const Chapter = () => {
 			})
 			.catch((error) => {
 				console.log(error);
-				toast.error("Institute already Updated");
+				toast("Chapter already Updated", {
+					position: "top-center",
+					autoClose: 1000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+					className: "custom-toast-custom",
+				});
 			});
 	};
 	const [searchTerm, setSearchTerm] = useState("");
 	const [chapters, setChapters] = useState([]);
 	const [allChapters, setAllChapters] = useState([]);
-	console.log(allChapters, "sai");
+	console.log(allChapters, "allchapters");
 
 	const filterChapters = (selectedSubjectId) => {
 		const filteredChapters = allSubjects?.filter(
@@ -234,7 +253,7 @@ const Chapter = () => {
 		  handleEditInputChange(
 			event.target.options[event.target.selectedIndex].getAttribute(
 				"data-value"
-			),"SubjectTag"
+			),"subject"
 		);
 	};
 	const handleChapterTagTypeSelection = (event) => {
@@ -255,7 +274,7 @@ const Chapter = () => {
 	const [selectedChapterData, setSelectedChapterData] = useState(null);
 
 	const GotohandleViewClick = (data) => {
-		let Updatedfields = {Name:data.CHAPTERNAME,Description:data.description,subject:data.SUBJECTNAME,ChapterTag:data.TAG,subjectid:data.subjectid,chapterid:data.chapterid}
+		let Updatedfields = {Name:data.CHAPTERNAME,Description:data.description,subject:data.SUBJECTNAME,ChapterTag:data.CHAPTERTAG,subjectid:data.subjectid,chapterid:data.chapterid}
 		setSelectedChapterData(data);
 		delete data['ACTION'];
 		setChapterListUpdate(Updatedfields)
@@ -266,9 +285,9 @@ console.log("selectedChapterData",selectedChapterData)
 
 	const columns = [
 		{ field: "SNO", headerName: "SNO", width: 170 },
-		{ field: "SUBJECTNAME", headerName: "SUBJECTNAME", width: 170 },
-		{ field: "TAG", headerName: "TAG", width: 170 },
-		{ field: "CHAPTERNAME", headerName: "CHAPTERNAME", width: 170 },
+		{ field: "SUBJECTNAME", headerName: "SUBJECT NAME", width: 170 },
+		{ field: "CHAPTERTAG", headerName: "CHAPTER TAG", width: 170 },
+		{ field: "CHAPTERNAME", headerName: "CHAPTER NAME", width: 170 },
 		{ field: "TOTALQUESTION", headerName: "TOTAL QUESTION", width: 250 },
 		{
 			field: "ACTION",
@@ -318,27 +337,41 @@ console.log("selectedChapterData",selectedChapterData)
 			</button>
 		</div>
 	);
-let rows = [];
-var cnt = 0;
-if (allChapters && allChapters.length) {
-  rows = allChapters.flatMap((blog) => (
-    (blog?.chapter || []).map((each,index) => ({
-      id: ++cnt,
-      SNO: cnt,
-      SUBJECTNAME: blog.name || '',
-      TAG: blog.subjectTag || '',
-      CHAPTERNAME: each.ChapterTag || '',
-      TOTALQUESTION:
-        (each.MCQ || []).length +
-        (each.codingbasic || []).length +
-        (each.paragMCQ || []).length,
-      ACTION: renderActionButtons(blog),
-	  subjectid:blog._id,
-	  chapterid:each._id,
-	  description:blog.Description,
-    }))
-  ));
-}
+	let rows = [];
+	var cnt = 0;
+	
+	if (allChapters && allChapters.length === 0) {
+	  rows = [
+		{
+			id: `1`,
+		  SNO: 'No Chapters Found',
+		  SUBJECTNAME: '',
+		  CHAPTERTAG: '',
+		  CHAPTERNAME: '',
+		  TOTALQUESTION: '',
+		  ACTION: '', // You may modify this based on your requirements
+		},
+	  ];
+	} else {
+	  rows = allChapters.flatMap((blog) => (
+		(blog?.chapter || []).map((each, index) => ({
+		  id: ++cnt,
+		  SNO: cnt,
+		  SUBJECTNAME: blog.name || '',
+		  CHAPTERTAG: each.ChapterTag || '',
+		  CHAPTERNAME: each.Name || '',
+		  TOTALQUESTION:
+			(each.MCQ || []).length +
+			(each.codingbasic || []).length +
+			(each.paragMCQ || []).length,
+		  ACTION: renderActionButtons(blog),
+		  subjectid: blog._id,
+		  chapterid: each._id,
+		  description: blog.Description,
+		}))
+	  ));
+	}
+	
 	return (
 		<div>
 			<div className="container-fluid ">
@@ -354,6 +387,16 @@ if (allChapters && allChapters.length) {
 							isOpen ? 9 : 12
 						}`}
 					>
+						{worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
 						<div className=" ">
 							<i
 								className="fa-solid fa-bars bars d-lg-block d-none"
@@ -461,24 +504,24 @@ if (allChapters && allChapters.length) {
 																	value={Description1}
 																/>
 																<br></br>
-																<label>Subjecttag *</label>
+																<label>SubjectNameTag*</label>
 																<select
 																	style={{ padding: "5px" }}
 																	className="w-100 select_item"
 																	onChange={handleSubjectTagTypeSelection}
 																>
 																	<option className="hidden" value="">
-																		Select subject tag
+																		Select subject Name
 																	</option>
 																	{allSubjects?.map((subject) => (
 																		<>
 																			<option
 																				className="name_item"
 																				key={subject._id} // Use a unique key for each option
-																				data-value={subject.subjectTag}
+																				data-value={subject.name}
 																				value={subject._id}
 																			>
-																				{subject.subjectTag}
+																				{subject.name}
 																			</option>
 																		</>
 																	))}
@@ -486,7 +529,7 @@ if (allChapters && allChapters.length) {
 
 																<br></br>
 
-																<label className="my-3">Chapter *</label>
+																<label className="my-3">ChapterTag*</label>
 																<br></br>
 																<select
 																	className="form-control"
@@ -494,29 +537,18 @@ if (allChapters && allChapters.length) {
 																	onChange={handleChapterTagTypeSelection}
 																>
 																	<option>--select subjects--</option>
-																	<option data-value="Chapter1">
-																		Chapter1
+																	<option data-value="C-Programmer">
+																		C-Programmer
 																	</option>
-																	{/* <option value="algorithms">algorithms</option> */}
-																	<option data-value="chapter2">
-																		chapter2
+																	<option data-value="C++">
+																		C++
 																	</option>
-																	<option data-value="chapter3">
-																		chapter3
+																	<option data-value="DataStructures">
+																		DataStructures
 																	</option>
-																	<option data-value="chapter4">
-																		chapter4
+																	<option data-value="Dbms">
+																		Dbms
 																	</option>
-																	<option data-value="chapter5">
-																		chapter5
-																	</option>
-																	<option data-value="chapter6">
-																		chapter6
-																	</option>
-																	<option data-value="chapter7">
-																		chapter7
-																	</option>
-																	<option data-value="Dbms">Dbms</option>
 																	<option data-value="Java-programming">
 																		Java-programming
 																	</option>
@@ -664,7 +696,7 @@ if (allChapters && allChapters.length) {
 													</div>
 													<div class="modal-body">
 														<form>
-															<label style={{ float: "left" }}>Name *</label>
+															{/* <label style={{ float: "left" }}>Name *</label>
 															<input
 																className="form-control"
 																type="text"
@@ -672,9 +704,68 @@ if (allChapters && allChapters.length) {
 																name="CHAPTERNAME"
 																onChange={handleEditInputChange}
 																value={name1 || chapterListUpdate?.Name}
-															/>
-
+															/> */}
+															
 															<label style={{ float: "left" }}>
+																SubjectNameTag *
+															</label>
+															<input
+																style={{ padding: "5px" }}
+																name="subject"
+																value={chapterListUpdate.subject}
+																className="form-control"
+																disabled
+															/>
+															<br/>
+															<label style={{ float: "left" }}>
+																ChapterName*
+															</label>
+															<input
+																className="form-control"
+																type="text"
+																name="Name"
+																placeholder="...ChapterName..."
+																onChange={e=>handleEditInputChange(e.target.value,"Name")}
+																value={chapterListUpdate?.Name || ''}
+															/>
+															<label
+																style={{ float: "left" }}
+															>
+																ChapterTag*
+															</label>
+															<br></br>
+															<select
+															type="text"
+																className="form-control"
+																name="ChapterTag"								
+																value={chaptertag || chapterListUpdate?.ChapterTag }
+																onChange={handleChapterTagTypeSelection}
+															>
+																<option>--select Chapter Tag--</option>
+																<option data-value="C-programming">
+																			C-programming
+																		</option>
+																		<option data-value="Communication">
+																			Communication
+																		</option>
+																		<option data-value="Data-structres">
+																			Data-structures
+																		</option>
+																		<option data-value="Dbms">Dbms</option>
+																		<option data-value="java-programming">
+																			java-programming
+																		</option>
+																		<option data-value="others">others</option>
+																		<option data-value="programming">
+																			programming
+																		</option>
+																		<option data-value="programming Skills">
+																			programming Skills
+																		</option>
+
+															</select>
+
+																<label style={{ float: "left" }}>
 																Description *
 															</label>
 															<input
@@ -684,71 +775,9 @@ if (allChapters && allChapters.length) {
 																placeholder="...description..."
 																onChange={e=>handleEditInputChange(e.target.value,"Description")}
 																value={chapterListUpdate?.Description || ''}
-															/>
+															/>											
+
 															
-															<br></br>
-															<label style={{ float: "left" }}>
-																Subjecttag *
-															</label>
-															<select
-																style={{ padding: "5px" }}
-																name="SubjectTag"
-																value={chapterListUpdate.Tag || ''}
-																className="form-control"
-																onChange={(e)=>handleSubjectTagTypeSelection(e)}
-															>
-																{allSubjects?.map((subject) => (
-																	<>
-																		<option className="name_item"
-																			key={subject._id} // Use a unique key for each option
-																			data-value={subject.subjectTag}
-																			value={subject?.subjectTag}>{subject?.subjectTag ||""}</option>
-																	</>
-																))}
-															</select>
-
-															<br></br>
-
-															<label
-																className="my-3 "
-																style={{ float: "left" }}
-															>
-																Chapter *
-															</label>
-															<br></br>
-															<select
-																className="form-control"
-																name="ChapterTag"														value={chapterListUpdate?.ChapterTag || ""}
-																onChange={handleChapterTagTypeSelection}
-															>
-																<option>--select subjects--</option>
-																<option data-value="Chapter1">Chapter1</option>
-																<option data-value="chapter2">chapter2</option>
-																<option data-value="chapter3">chapter3</option>
-																<option data-value="chapter4">chapter4</option>
-																<option data-value="chapter5">chapter5</option>
-																<option data-value="chapter6">chapter6</option>
-																<option data-value="chapter7">chapter7</option>
-																<option data-value="Dbms">Dbms</option>
-																<option data-value="Java-programming">
-																	Java-programming
-																</option>
-																<option data-value="Mathematics">
-																	Mathematics
-																</option>
-																<option data-value="Others">Others</option>
-																<option data-value="Physics">Physics</option>
-																<option data-value="Programming">
-																	Programming
-																</option>
-																<option data-value="Programming Skills">
-																	Programming Skills
-																</option>
-																<option data-value="Quntative apptitude">
-																	Quntative apptitude
-																</option>
-															</select>
-
 															<div className="modal-footer">
 																<button
 																	type="button"
@@ -802,6 +831,7 @@ if (allChapters && allChapters.length) {
 								</div>
 							</div>
 						</div>
+			  )}
 					</div>
 				</div>
 			</div>
