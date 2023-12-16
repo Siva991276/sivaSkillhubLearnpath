@@ -34,30 +34,27 @@ import Learning from "./LearnData/Learning";
 import Topic from "./LearnData/topic";
 import Content from "./LearnData/content";
 import TextContent from "./LearnData/textcontent";
-import QbSubject from '../src/Questionbank/subject';
-import Chapter from '../src/Questionbank/chapter';
-import CreateQuestion from '../src/Questionbank/CreateQuestion';
-import McqView from '../src/Questionbank/McqView';
-import ParagHome from '../src/Questionbank/ParagHome';
-import ParagView from '../src/Questionbank/paragview';
-import Coding from '../src/Questionbank/coding';
-import Codingview from '../src/Questionbank/codingview';
+import QbSubject from "../src/Questionbank/subject";
+import Chapter from "../src/Questionbank/chapter";
+import CreateQuestion from "../src/Questionbank/CreateQuestion";
+import McqView from "../src/Questionbank/McqView";
+import ParagHome from "../src/Questionbank/ParagHome";
+import ParagView from "../src/Questionbank/paragview";
+import Coding from "../src/Questionbank/coding";
+import Codingview from "../src/Questionbank/codingview";
 import Upload from "./Questionbank/upload";
 import ParagEdit from "./Questionbank/paragEdit";
-import Basic from './Questionbank/BasicCoding';
-import ParticularMcaView from './Questionbank/ParticularMcaView';
-import Mcqupdate from './Questionbank/Mcqupdate';
+import Basic from "./Questionbank/BasicCoding";
+import ParticularMcaView from "./Questionbank/ParticularMcaView";
+import Mcqupdate from "./Questionbank/Mcqupdate";
 import AssignQB from "./Questionbank/AssignQB";
 import Codingupdate from "./Questionbank/codingupdate";
-
-
-
-
 
 function App() {
   return (
     <div>
       <Routes>
+
         <Route exact path="/UserLogin" element={<UserLogin />} />
         <Route exact path="/" element={<InstituteLogin />} />
         <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
