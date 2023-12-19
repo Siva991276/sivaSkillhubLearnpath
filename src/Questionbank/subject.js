@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 
 const QbSubject = () => {
@@ -19,7 +21,7 @@ const QbSubject = () => {
 	console.log(blogslist);
 	let navigate = useNavigate("");
 	const fetchblogs1 = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`;
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
@@ -48,6 +50,8 @@ const QbSubject = () => {
 	};
 
 	const onSubmitForm = async (e) => {
+		const token = Cookies.get("token");
+		console.log(token,"token")
 		e.preventDefault();
 		if (name && Description && subjecttag !== "") {
 			try {
@@ -58,8 +62,13 @@ const QbSubject = () => {
 				};
 				console.log(AddSubject)
 				const response = await axios.post(
-					"http://localhost:4010/v2/subject",
-					AddSubject
+					`${apiList.subjects}`,
+					AddSubject,
+					{
+						headers: {
+							token: token,
+						},
+					}
 				);
 				setData1(response.data);
 				console.log(response.data);
@@ -104,7 +113,7 @@ const QbSubject = () => {
 			}
 			console.log("Deleting subject with ID", id);
 			const response = await axios.delete(
-				`http://localhost:4010/v2/subjet/${id}`
+				`${apiList.subjet}/${id}`
 			);
 			if (response.status === 200) {
 				toast("Subject Delete Successfully", {
@@ -131,6 +140,7 @@ const QbSubject = () => {
 		};
 	};
 	const onSubmitUpdatedForm = (_id, e) => {
+		const token = Cookies.get("token");
 		e.preventDefault();
 		const AddSubject = {
 			name: name,
@@ -141,7 +151,11 @@ const QbSubject = () => {
 			Object.entries(AddSubject).filter(([key, value]) => value !== "")
 		);
 		axios
-			.put(`http://localhost:4010/v2/subject/${_id}`, nonemptyuserData)
+			.put(`${apiList.subject}/${_id}`, nonemptyuserData,{
+				headers: {
+					token: token,
+				},
+			})
 			.then((response) => {
 				if (response.status === 200) {
 					toast("Subject Updated successfully", {

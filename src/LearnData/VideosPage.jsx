@@ -12,10 +12,12 @@ import siva from "../All Images/Siva Image.jpeg";
 import ReactPlayer from "react-player";
 import { useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const VideoPage = () => {
   const { VideofolderName } = useParams();
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [addblogslist1, setAddblogslist1] = useState([]);
@@ -26,7 +28,7 @@ const VideoPage = () => {
   const [error, setError] = useState(null);
   const [addInstitutelist, setInstitutelist] = useState([]);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
@@ -107,7 +109,7 @@ const VideoPage = () => {
     console.log(VideofolderName);
     try {
       const response = await axios.get(
-        `http://localhost:4010/foldersVideoData/${VideofolderName}`
+        `${apiList.foldersVideoData}/${VideofolderName}`
       ); // Replace with your API endpoint
       setAddblogslist(response.data);
     } catch (error) {
@@ -163,7 +165,7 @@ const VideoPage = () => {
       };
 
       axios
-        .post("http://localhost:4010/AddVideoFilesData", AddVideosDetails, {
+        .post(`${apiList.AddVideoFilesData}`, AddVideosDetails, {
           headers,
         })
         .then((response) => {
@@ -216,7 +218,7 @@ const VideoPage = () => {
       }
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        "http://localhost:4010/deleteInstitute/" + id
+        `${apiList.deleteInstitute}` + id
       );
       if (response.status === 200) {
         toast.success("Success: Institute deleted", {

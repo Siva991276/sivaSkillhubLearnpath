@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
+import apiList from "./liberary/apiList";
 
 const UpdateBatch = () => {
   let navigate = useNavigate();
@@ -32,7 +33,7 @@ const UpdateBatch = () => {
     };
 
     axios
-      .put("http://localhost:4010/UpdateInstitute/" + id, UserData)
+      .put(`${apiList.UpdateInstitute}` + id, UserData)
       .then((response) => {
         console.log(response.data);
         if (response.status === 200) {
@@ -63,7 +64,7 @@ const UpdateBatch = () => {
       console.log(id);
       try {
         const response = await axios.get(
-          "http://localhost:4010/individualInstitute/" + id
+          `${apiList.individualInstitute}` + id
         ); // Replace with your API endpoint
         setIndividualInstitute(response.data);
         setLoading(false);

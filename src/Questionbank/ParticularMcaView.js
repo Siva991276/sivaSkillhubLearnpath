@@ -6,6 +6,7 @@ import { Pagination } from "antd";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { Navigate, useLocation,useNavigate } from "react-router-dom";
+import apiList from "../liberary/apiList";
 
 const ParticularMcaView = () => {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const ParticularMcaView = () => {
     }
 
 	const fetchMcqListData = async () => {
-		const api = `http://localhost:4010/v1/getMCQById/${subjectId}/${chapterId}/${McqId}`
+		const api = `${apiList.getMCQById}/${subjectId}/${chapterId}/${McqId}`
         //http://localhost:4010/v1/getMCQs/6571ad89cf0acc567c548296/6571ae96cf0acc567c54829c";
 		try {
 			const response = await axios.get(api, {});

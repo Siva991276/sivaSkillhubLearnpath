@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 
 const Chapter = () => {
@@ -53,7 +55,7 @@ const Chapter = () => {
 	console.log("chapterListUpdate",chapterListUpdate)
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
-
+		let token = Cookies.get("token");
 		if (name1 && Description1 && subjecttag1 && chaptertag !== "") {
 			try {
 				const AddChapter = {
@@ -64,8 +66,13 @@ const Chapter = () => {
 				};
 				console.log(AddChapter)
 				const response = await axios.post(
-					`http://localhost:4010/v1/addchapter/${subjectId}`,
-					AddChapter
+					`${apiList.addchapter}/${subjectId}`,
+					AddChapter,
+					{
+						headers: {
+							token: token,
+						},
+					}
 				);
 
 				setData1(response.data);
@@ -109,7 +116,7 @@ const Chapter = () => {
 		try {
 			console.log("Deleting subject with ID", subjectid, chapterid);
 			const response = await axios.delete(
-				`http://localhost:4010/v1/deleteChapter/${subjectid}/${chapterid}`
+				`${apiList.deleteChapter}/${subjectid}/${chapterid}`
 			);
 			if (response.status === 200) {
 				toast("Chapter Delete Successfully", {
@@ -155,7 +162,7 @@ const Chapter = () => {
 	};
 	const [allSubjects, setAllSubjects] = useState([]);
 	const fetchSubjects = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`;
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
@@ -169,11 +176,17 @@ const Chapter = () => {
 	};
 	const onSubmitUpdatedForm = (subid,chapid,e) => {
 		e.preventDefault();
+		const token = Cookies.get("token");
 		console.log(chapterListUpdate)
 		axios
 			.put(
-				`http://localhost:4010/v1/updateChapter/${subid}/${chapid}`,
-				chapterListUpdate
+				`${apiList.updateChapter}/${subid}/${chapid}`,
+				chapterListUpdate,
+				{
+					headers: {
+						token: token,
+					},
+				}
 			)
 			.then((response) => {
 				if (response.status === 200) {

@@ -8,7 +8,8 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import JoditEditor from "jodit-react";
-
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const ParagEdit = () => {
 	const editor = useRef(null);
@@ -42,7 +43,7 @@ const ParagEdit = () => {
 		}
 	};
 	const fetchMcqListData = async () => {
-		const api = `http://localhost:4010/v2/getParagMCQById/${subjectId}/${chapterId}/${McqId}`;
+		const api = `${apiList.getParagMCQById}/${subjectId}/${chapterId}/${McqId}`;
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
@@ -59,16 +60,19 @@ const ParagEdit = () => {
 		fetchMcqListData();
 	}, []);
 	const onSubmitUpdateForm = async () => {
-		// const token = Cookies.get("token");
+		const token = Cookies.get("token");
 		console.log(mcqLisChangedData);
 		try {
 			const response = await axios.put(
-				`http://localhost:4010/v2/update/${subjectId}/${chapterId}/${McqId}`,
-				mcqLisChangedData
+				`${apiList.update}/${subjectId}/${chapterId}/${McqId}`,
+				mcqLisChangedData,
+				{
+					headers: {
+						token: token,
+					},
+				}
 			);
-			//   headers: {
-			// 	token: token,
-			//   },
+			// 
 			console.log(response.data);
 			if (response.status === 200) {
 				toast.success("Question Updated Successfully", {

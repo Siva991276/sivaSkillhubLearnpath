@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import axios from "axios";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import apiList from "../liberary/apiList";
+
 const Upload = () => {
 	const [isOpen, setIsOpen] = useState(true);
 	const [allsubjectsData, setAllsubjectsData] = useState([]);
@@ -16,7 +18,7 @@ const Upload = () => {
 	});
 
 	const fetchblogs = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`;
 		try {
 			const response = await axios.get(api);
 			setAllsubjectsData(response.data);

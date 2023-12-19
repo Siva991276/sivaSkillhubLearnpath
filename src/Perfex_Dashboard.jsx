@@ -11,15 +11,19 @@ import Footer from "./FooterSkill";
 import { useNavigate } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
+
+
 function Dashboard() {
-  const token = localStorage.getItem("token");
-  const id = localStorage.getItem("id");
+  const token = Cookies.get("token");
+  const id = Cookies.getItem("id");
   console.log(id);
   const navigate = useNavigate();
 
   const TokenRemove = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
+    Cookies.remove("token");
+    Cookies.remove("id");
     navigate("/");
   };
   useEffect(() => {
@@ -34,7 +38,7 @@ function Dashboard() {
       console.log(id);
       try {
         const response = await axios.get(
-          `http://localhost:4010/individualUser/${id}`
+          `${apiList.individualUser}/${id}`
         ); // Replace with your API endpoint
         setIndividualInstitute(response.data);
         setLoading(false);
