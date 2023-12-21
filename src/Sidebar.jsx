@@ -454,20 +454,20 @@ function Sidebar() {
 											{/* <span className="tooltip">Video Folders</span> */}
 										</li>
 										<li>
-											<a href="#">
+											<Link to="/Reports">
 												<i class="fa-solid fa-record-vinyl icons"></i>
 												<span className="link_name">Reports</span>
-											</a>
+											</Link>
 											{/* <span className="tooltip">Reports</span> */}
 										</li>
 									</div>
 								)}
 
 								<li>
-									<a href="#">
+									<Link to="/Access">
 										<i class="fa-brands fa-accessible-icon icons"></i>
 										<span className="link_name">Access</span>
-									</a>
+									</Link>
 									{/* <span className="tooltip">Access</span> */}
 								</li>
 							</div>
