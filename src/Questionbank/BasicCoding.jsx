@@ -6,7 +6,21 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useEffect } from "react";
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+
+
 const Basic = () => {
+	let navigate = useNavigate();
+
+  useEffect(() => {
+		let token = Cookies.get("token");
+		if (token === null) {
+			navigate("/");
+		}
+	}, []);
+
   const [editorData, setEditorData] = useState("");
   const [Subjects, setSubjects] = useState("");
   const [Chapters, setChapters] = useState("");
@@ -51,7 +65,7 @@ const Basic = () => {
   console.log(selectedChapterId);
   const [allsubjectsData, setAllsubjectsData] = useState([]);
   const fetchsubjectsData = async () => {
-    const api = "http://localhost:4010/v4/getbasic";
+    const api = `${apiList.getbasic}`;
     try {
       const response = await axios.get(api, {});
       const data = response.data;
@@ -65,7 +79,7 @@ const Basic = () => {
   }, []);
   const onSubmitForm3 = (e) => {
     e.preventDefault();
-
+		const token = Cookies.get("token");
     if (
       (Subjects,
       Chapters,
@@ -76,8 +90,13 @@ const Basic = () => {
     ) {
       axios
         .post(
-            `http://localhost:4010/v4/addbasic/${selectedSubjectId}/${selectedChapterId}`,
-          useData2
+            `${apiList.addbasic}/${selectedSubjectId}/${selectedChapterId}`,
+          useData2,
+          {
+						headers: {
+							token: token,
+						},
+					}
         )
         .then((response) => {
           if (response.status === 200) {

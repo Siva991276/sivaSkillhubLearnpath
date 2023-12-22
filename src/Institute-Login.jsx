@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
-
 import React from "react";
 import sideimage from "./All Images/Logo133.jpeg";
 import Login from "./All Images/Login-Page.jpg";
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import apiList from "./liberary/apiList";
+import Cookies from 'js-cookie';
 
 function InstituteLogin() {
   let navigate = useNavigate();
@@ -48,11 +48,11 @@ function InstituteLogin() {
       const userData = { UserEmail, UserPassword };
 
       axios
-        .post("http://localhost:4010/Userlogin", userData)
+        .post(`${apiList.Userlogin}`, userData)
         .then((response) => {
           if (response.status === 200) {
             let jwtToken = response.data.token;
-            localStorage.setItem("token", jwtToken);
+            Cookies.set("token", jwtToken);
 
             toast.success("Successfully logged in!", {
               position: "top-right",
@@ -150,7 +150,7 @@ function InstituteLogin() {
   //   }
   // }, []);
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
 
     if (token) {
       navigate("/PerfexHome");

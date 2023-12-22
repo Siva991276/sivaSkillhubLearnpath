@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
 import Sidebar from "./Sidebar";
+import apiList from "./liberary/apiList";
 
 const UpdatePage = () => {
 	let navigate = useNavigate();
@@ -106,7 +107,7 @@ const UpdatePage = () => {
 		};
 
 		axios
-			.put("http://localhost:4010/UpdateInstitute/" + id, UserData)
+			.put(`${apiList.UpdateInstitute}` + id, UserData)
 			.then((response) => {
 				console.log(response.data);
 				if (response.status === 200) {
@@ -137,7 +138,7 @@ const UpdatePage = () => {
 			console.log(id);
 			try {
 				const response = await axios.get(
-					"http://localhost:4010/individualInstitute/" + id
+					`${apiList.individualInstitute}` + id
 				); // Replace with your API endpoint
 				setIndividualInstitute(response.data);
 				setLoading(false);

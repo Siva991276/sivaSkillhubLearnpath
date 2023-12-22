@@ -8,6 +8,7 @@ import { FaRegEye } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { ToastContainer, toast } from "react-toastify";
 import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
 
 const ParagView = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const ParagView = () => {
 	const [worksheetLoading, setWorksheetLoading] = useState(true);
 
   const fetchsubjectsData = async () => {
-    const api = "http://localhost:4010/v2/subjects";
+    const api = `${apiList.subjects}`;
     try {
       const response = await axios.get(api, {});
       const data = response.data;
@@ -41,7 +42,7 @@ const ParagView = () => {
 
   const fetchMCQs = async () => {
     const api =
-      `http://localhost:4010/v2/getparamcq/${selectedSubjectId}/${selectedChapterId}/paragMCQ`;
+      `${apiList.getparamcq}/${selectedSubjectId}/${selectedChapterId}/paragMCQ`;
 
     try {
       const response = await axios.get(api);
@@ -142,7 +143,7 @@ const ParagView = () => {
     setSelectedMcqList([]);
   };
   const handleGetAllfilter = async ()=>{
-     const api= `http://localhost:4010/v2/getparamcq/${selectedSubjectId}/${selectedChapterId}/paragMCQ`
+     const api= `${apiList.getparamcq}/${selectedSubjectId}/${selectedChapterId}/paragMCQ`
      try {
       const response = await axios.get(api, {});
       const data = response.data;
@@ -157,7 +158,7 @@ const ParagView = () => {
   
   const GotohandleDeleteClick = (subjectId,chapterId,McqId) => {
     // const token = Cookies.get("token");
-    const api =   `http://localhost:4010/v2/delete/${subjectId}/${chapterId}/${McqId}`;
+    const api =   `${apiList.delete}/${subjectId}/${chapterId}/${McqId}`;
     try {
       const response = axios.delete(api);
       //   console.log("Password updated successfully:", response.data);

@@ -14,11 +14,13 @@ import { useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useLocation } from "react-router-dom";
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const VideoPage = () => {
 	const { state } = useLocation();
   const { VideofolderName } = useParams();
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [addblogslist1, setAddblogslist1] = useState([]);
@@ -38,7 +40,7 @@ const VideoPage = () => {
 		});
 	};
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
@@ -149,7 +151,7 @@ const VideoPage = () => {
       }
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        "http://localhost:4010/deleteInstitute/" + id
+        `${apiList.deleteInstitute}` + id
       );
       if (response.status === 200) {
         toast.success("Success: Institute deleted", {

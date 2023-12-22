@@ -8,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
 
 const PerfexHome = () => {
-	const token = localStorage.getItem("token");
+	const token = Cookies.get("token");
 	const navigate = useNavigate();
 
 	const [isNavVisible, setIsNavVisible] = useState(false);
@@ -27,12 +29,12 @@ const PerfexHome = () => {
 	}, []);
 
 	const handleLogout = () => {
-		localStorage.removeItem("token");
+		Cookies.remove("token");
 		navigate("/");
 	};
 
 	const fetchblogs1 = async () => {
-		const api = "http://localhost:4010/allUsersData";
+		const api = `${apiList.allUsersData}`;
 		const authToken =
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
 		try {
@@ -48,7 +50,7 @@ const PerfexHome = () => {
 	};
 
 	const fetchblogs = async () => {
-		const api = "http://localhost:4010/allAddInstitutes";
+		const api = `${apiList.allAddInstitutes}`;
 		const authToken =
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
 		try {

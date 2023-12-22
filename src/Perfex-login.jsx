@@ -9,6 +9,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import apiList from "./liberary/apiList";
 
 function UserLogin() {
   let navigate = useNavigate();
@@ -38,7 +39,7 @@ function UserLogin() {
       const userData = { userEmail, Password };
 
       axios
-        .post("http://localhost:4010/UserDetailslogin", userData)
+        .post(`${apiList.UserDetailslogin}`, userData)
         .then((response) => {
           if (response.status === 200) {
             const jwtToken = response.data.token;

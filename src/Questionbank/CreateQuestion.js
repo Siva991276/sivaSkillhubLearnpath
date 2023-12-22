@@ -2,13 +2,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "../Sidebar";
-import Cookies from "js-cookie";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import axios from "axios";
 import JoditEditor from "jodit-react";
 import { Audio } from 'react-loader-spinner';
-
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const CreateQuestion = () => {
 	let navigate = useNavigate();
@@ -42,7 +42,7 @@ const CreateQuestion = () => {
 	};
 	const [allsubjectsData, setAllsubjectsData] = useState([]);
 	const fetchsubjectsData = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`;
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
@@ -70,7 +70,7 @@ const CreateQuestion = () => {
 
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
-		// const token = Cookies.get("token");
+		const token = Cookies.get("token");
 		if (
 			selectQuestionType &&
 			selectedSubject &&
@@ -100,12 +100,15 @@ const CreateQuestion = () => {
 				};
 				console.log(QuestionData);
 				const response = await axios.post(
-					`http://localhost:4010/v1/addMCQ/${selectedSubjectId}/${selectedChapterId}`,
-					QuestionData
+					`${apiList.addMCQ}/${selectedSubjectId}/${selectedChapterId}`,
+					QuestionData,
+					{
+						headers: {
+							token: token,
+						},
+					}
 				);
-				//   headers: {
-				// 	token: token,
-				//   },
+				// 
 				setallquestionData(response.data);
 				console.log(response.data);
 				if (response.status === 200) {
@@ -120,7 +123,10 @@ const CreateQuestion = () => {
 						theme: "colored",
 						className: "custom-toast-custom",
 					});
-					navigate("/McqView")
+					setTimeout(function() {
+						navigate("/McqView")
+					}, 60000);
+					
 				}
 				
 			} catch (error) {

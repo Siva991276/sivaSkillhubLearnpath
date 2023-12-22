@@ -11,10 +11,11 @@ import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const LearnPath = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [addblogslist1, setAddblogslist1] = useState([]);
@@ -27,7 +28,7 @@ const LearnPath = () => {
   const [error, setError] = useState(null);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
@@ -43,7 +44,7 @@ const LearnPath = () => {
   }, []);
 
   const fetchblogs1 = async () => {
-    const api = "http://localhost:4010/DisplayAllVideos";
+    const api = `${apiList.DisplayAllVideos}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk"; // Replace with your actual authentication token
 
@@ -76,7 +77,7 @@ const LearnPath = () => {
   console.log(institutetypeCounts);
 
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allAddVideosData";
+    const api = `${apiList.allAddVideosData}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -115,6 +116,7 @@ const LearnPath = () => {
       console.log(AddVideosDetails)
       axios
         .post("http://localhost:4010/AddVideoPath", AddVideosDetails)
+       
         .then((response) => {
           setdata1(response.data);
           console.log(response.data);
@@ -199,6 +201,7 @@ const LearnPath = () => {
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
         `http://localhost:4010/deleteVideo/${id}`
+
       );
       if (response.status === 200) {
         toast("Deleted Folder Successfully", {

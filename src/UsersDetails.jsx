@@ -10,9 +10,12 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
 import Sidebar from "./Sidebar";
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
+
 
 const UsersDetails = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
 
   const [addblogslist, setAddblogslist] = useState([]);
@@ -39,7 +42,7 @@ const UsersDetails = () => {
 
   const [error, setError] = useState(null);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
@@ -55,7 +58,7 @@ const UsersDetails = () => {
   }, [selectedInstitutes]);
 
   const InstituteDetails = async () => {
-    const api = "http://localhost:4010/allAddInstitutes";
+    const api = `${apiList.allAddInstitutes}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -71,7 +74,7 @@ const UsersDetails = () => {
   };
 
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allUsersData";
+    const api = `${apiList.allUsersData}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -223,7 +226,7 @@ const UsersDetails = () => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk",
       };
       axios
-        .post("http://localhost:4010/AddUsers", AddInstitute, {
+        .post(`${apiList.AddUsers}`, AddInstitute, {
           headers,
         })
         .then((response) => {
@@ -279,14 +282,14 @@ const UsersDetails = () => {
       // Password &&
       // ExpiryDate !== ""
     ) {
-      console.log(`http://localhost:4010/ByBatchData/${InstituteType}`);
+      console.log(`${apiList.ByBatchData}/${InstituteType}`);
       const headers = {
         token:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk",
       };
       axios
         .put(
-          `http://localhost:4010/ByBatchData/${InstituteType}`,
+          `${apiList.ByBatchData}/${InstituteType}`,
           AddInstitute1,
           {
             headers,
@@ -353,7 +356,7 @@ const UsersDetails = () => {
       };
       axios
         .put(
-          `http://localhost:4010/ByListData/${InstituteType}`,
+          `${apiList.ByListData}/${InstituteType}`,
           AddInstitute2,
           {
             headers,
