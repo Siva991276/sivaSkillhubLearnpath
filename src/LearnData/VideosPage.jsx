@@ -12,10 +12,13 @@ import siva from "../All Images/Siva Image.jpeg";
 import ReactPlayer from "react-player";
 import { useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { useLocation } from "react-router-dom";
 import apiList from "../liberary/apiList";
 import Cookies from "js-cookie";
 
 const VideoPage = () => {
+	const { state } = useLocation();
   const { VideofolderName } = useParams();
   const token = Cookies.get("token");
   const navigate = useNavigate();
@@ -24,75 +27,22 @@ const VideoPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);
   const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
   const [institutetypeCounts, setInstitutetypeCounts] = useState({});
-  const [selectedVideo, setSelectedVideo] = useState("");
   const [error, setError] = useState(null);
   const [addInstitutelist, setInstitutelist] = useState([]);
+	const { videopathId } = state || {};
+	const [videofileListUpdate, setVideofileListUpdate] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const handleEditInputChange = (value,name) => {
+		console.log(value,name);
+		setVideofileListUpdate({
+		  ...videofileListUpdate,
+		  [name]: value,
+		});
+	};
   const handleLogout = () => {
     Cookies.remove("token");
     navigate("/");
   };
-
-  // const [formData, setFormData] = useState({
-  //   InstituteName: "",
-  //   PrimaryEmail: "",
-  //   HeadName: "",
-  //   PrimaryContactNumber: "",
-  //   SecondaryEmail: "",
-  //   SecondaryContactNumber: "",
-  //   Address: "",
-  //   City: "",
-  //   InstituteCode: "",
-  //   InstituteType: "",
-  //   AxiosPlans: "",
-  //   Password: "",
-
-  //   // Add other form fields here
-  // });
-
-  // const openEditForm = (item) => {
-  //   setEditingItem(item);
-  //   setFormData({
-  //     Sno: item.Sno,
-  //     InstituteName: item.InstituteName,
-  //     PrimaryEmail: item.PrimaryEmail,
-  //     HeadName: item.HeadName,
-  //     PrimaryContactNumber: item.PrimaryContactNumber,
-  //     SecondaryEmail: item.SecondaryEmail,
-  //     SecondaryContactNumber: item.SecondaryContactNumber,
-  //     Address: item.Address,
-  //     City: item.City,
-  //     InstituteCode: item.InstituteCode,
-  //     InstituteType: item.InstituteType,
-  //     AxiosPlans: item.AxiosPlans,
-  //     Password: item.Password,
-
-  //     // Populate other form fields as well
-  //   });
-  // };
-
-  // const updateItem = () => {
-  //   const updatedList = addblogslist.map((item) => {
-  //     if (item._id === editingItem._id) {
-  //       return {
-  //         ...item,
-  //         Sno: formData.Sno,
-  //         InstituteName: formData.InstituteName,
-  //         PrimaryEmail: formData.PrimaryEmail,
-  //         HeadName: formData.HeadName,
-  //         InstituteCode: formData.InstituteCode,
-  //         // Update other fields as well
-  //       };
-  //     }
-  //     return item;
-  //   });
-
-  //   setAddblogslist(updatedList);
-  //   setEditingItem(null);
-  // };
-  // const onUpdate = (e) => {
-  //   e.preventDefault();
-  //   updateItem();
-  // };
 
   const toggleNav = () => {
     setIsNavVisible(!isNavVisible);
@@ -109,35 +59,25 @@ const VideoPage = () => {
     console.log(VideofolderName);
     try {
       const response = await axios.get(
-        `${apiList.foldersVideoData}/${VideofolderName}`
+        `http://localhost:4010/DisplayAllVideos/${videopathId}`
       ); // Replace with your API endpoint
-      setAddblogslist(response.data);
+      setAddblogslist(response.data?.allVideos?.videoFile);
+      setVideoFoldername(response.data?.allVideos?.VideofolderName)
+      // console.log(response.data)
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
-  // const VideoFoldersDatas = async () => {
-  //   const api = "http://localhost:4010/allAddVideosData";
-  //   const authToken =
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
-  //   try {
-  //     const response = await axios.get(api, {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //       },
-  //     });
-  //     setInstitutelist(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching blogs:", error);
-  //   }
-  // };
-  //Add Institute
-
-  // const [VideofolderName1, setVideofolderName] = useState("");
+  const filteredVideos = addblogslist.filter((folder) => {
+    const videotitleNameMatches = folder.VideoTitleName.toLowerCase().includes(searchQuery.toLowerCase());
+    return videotitleNameMatches
+  });
+  const [videoFoldername, setVideoFoldername] = useState("");
   const [VideoTitleName, setVideoTitleName] = useState("");
   const [SourceName, setSourceName] = useState("");
   const [Video1, setVideo1] = useState("");
+  const [selectedVideo, setSelectedVideo] = useState("");
+  const [selectedVideofile, setSelectedVideofile] = useState({});
 
   const [data1, setdata1] = useState([]);
 
@@ -152,29 +92,20 @@ const VideoPage = () => {
   const onSubmitForm = (e) => {
     e.preventDefault();
     if (VideoTitleName && Video1 !== "") {
-      const headers = {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk", // Replace with your actual token
-      };
-
       const AddVideosDetails = {
         VideofolderName: VideofolderName,
         VideoTitleName: VideoTitleName,
-        SourceName: SourceName,
+        SourceName:SourceName ,
         Video1: Video1,
       };
-
       axios
-        .post(`${apiList.AddVideoFilesData}`, AddVideosDetails, {
-          headers,
-        })
+        .post(`http://localhost:4010/AddVideoFilesData/${videopathId}`, AddVideosDetails )
         .then((response) => {
           setdata1(response.data);
-
           console.log(response.data);
           if (response.status === 200) {
-            toast.success("Video Folder Created Successfully", {
-              position: "top-right",
+            toast("Video File Created Successfully", {
+              position: "top-center",
               autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -182,6 +113,7 @@ const VideoPage = () => {
               draggable: true,
               progress: undefined,
               theme: "colored",
+						  className: "custom-toast-custom",
             });
             setTimeout(function () {}, 3000);
             fetchData();
@@ -189,8 +121,8 @@ const VideoPage = () => {
         })
         .catch((error) => {
           if (error.response && error.response.status === 400) {
-            toast.warning("Video path with the same name already exists", {
-              position: "top-right",
+            toast("Video path with the same name already exists", {
+              position: "top-center",
               autoClose: 3000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -198,6 +130,7 @@ const VideoPage = () => {
               draggable: true,
               progress: undefined,
               theme: "colored",
+						  className: "custom-toast-custom",
             });
           } else {
             console.log(error.message);
@@ -276,6 +209,9 @@ const VideoPage = () => {
   const OpenSourceCode = () => {
     setSourceopen(!sourceopen);
   };
+  const handleCloseSourceModal =()=>{
+    setSourceopen(false)
+  }
   const [isInstitutionsOpen1, setIsInstitutionsOpen1] = useState(true);
 
   const toggleInstitutions1 = () => {
@@ -286,67 +222,207 @@ const VideoPage = () => {
   const toggleInstitutions2 = () => {
     setIsInstitutionsOpen2(!isInstitutionsOpen2);
   };
-  // Corporate Office
+  const GotohandleDeleteClick = async (id) => {
+    try {
+      console.log("Deleting institute with ID:", id);
+      const response = await axios.delete(
+        `http://localhost:4010/deleteVideofiles/${videopathId}/${id}`
+      );
+      if (response.status === 200) {
+        toast("Deleted Folder Successfully", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+						className: "custom-toast-custom",
+        });
+        setTimeout(function () {}, 3000);
+        fetchData()
+
+        const updatedListLength = addblogslist.length - 1;
+        console.log("Updated list length:", updatedListLength);
+      } else {
+        console.log(response.data);
+        alert("Error: " + response.data);
+        setError("An error occurred while deleting the institute.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while deleting the institute.");
+    }
+  };
+  const onSubmitUpdatedForm = (id,e) => {
+		e.preventDefault();
+  
+    console.log(videofileListUpdate)		
+		axios
+			.put(`http://localhost:4010/UpdateVideofileDetails/${videopathId}/${id}`, videofileListUpdate)
+			.then((response) => {
+				if (response.status === 200) {
+					toast("VideoFile Updated successfully", {
+						position: "top-center",
+						autoClose: 1000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						className: "custom-toast-custom",
+					});
+          setTimeout(function () {}, 3000);
+					fetchData()
+				}
+			})
+			.catch((error) => {
+				console.log(error.response.data);
+				toast.error("Institute already Updated");
+			});
+	};
+  const GotohandleEditClick = (data) => {
+    delete data['ACTION']
+    let Updatedfields = {VideoTitle:data.VideoTitle,videofile:data.videofile,videofileId: data._id}
+		setSelectedVideofile(Updatedfields);
+		setVideofileListUpdate(Updatedfields)
+	};
+  console.log(selectedVideofile,'selectedVideofile')
+
+  const GotohandleViewClick = (data) => {
+		setSelectedVideo(data.videofile);
+		
+	};
+  const columns = [
+		{ field: "SNO", headerName: "SNO", width: 120 },
+		{ field: "Videofoldername", headerName: "FOLDER NAME", width: 200 },
+    { field: "VideoTitle", headerName: "VIDEO TITLE", width: 200 },
+		{ field: "SOURCE", headerName: "SOURCE", width: 200},
+		{
+			field: "ACTION",
+			headerName: "ACTION",
+			width: 240,
+			renderCell: (params) => renderActionButtons(params.row),
+		},
+	];
+
+	const headerColumns = columns.map((col) => ({
+		field: col.field,
+		headerName: col.headerName,
+		width: col.width,
+		renderCell: col.renderCell,
+	}));
+
+	const renderActionButtons = (blog) => (
+		<div>
+      <button
+				type="button"
+				className="btn btn-dark mx-1"
+        data-bs-toggle="modal"
+        data-bs-target="#myModalView"
+				onClick={() =>GotohandleViewClick(blog)}
+  style={{backgroundColor:"rgb(12, 26, 46)"}}
+			>
+				<i className="fa-solid fa-video" style={{ color: "white", }}></i>
+			</button>
+			<button
+				type="button"
+				className="btn btn-danger mx-1"
+        data-bs-toggle="modal"
+        data-bs-target="#myModalEdit"
+				onClick={() => GotohandleEditClick(blog)}
+			>
+				<i
+					className="fas fa-pencil-alt"
+					style={{ color: "white" }}
+				></i>
+			</button>
+
+			<button
+				type="button"
+				className="btn btn-dark mx-1"
+				onClick={() => GotohandleDeleteClick(blog._id)}
+			>
+				<i className="fas fa-trash" style={{ color: "white" }}></i>
+			</button>
+		</div>
+	);
+console.log(addblogslist)
+	const rows = filteredVideos.map((blog, index) => ({
+		id: index + 1, // Add this line to include a unique id for each row
+		SNO: index + 1,
+		Videofoldername: videoFoldername,
+    VideoTitle:blog.VideoTitleName,
+		SOURCE: blog.SourceName,
+		ACTION: renderActionButtons(blog),
+    _id:blog._id,
+    videofile:blog.Video1,
+	}));
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    
+  };
   return (
     <div>
       <div className="container-fluid">
         <div className="row">
-          <div className=" ">
-            <div className="row">
             {isOpen && (
               <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar/>
+              <ToastContainer/>
               </div>
 					  )}
              <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}>
+                <div className=" d-lg-block">
                               <i className="fa-solid fa-bars bars  d-lg-block d-none" onClick={toggleSidebar}></i>
 
-<div className="col-12 col-md-12">
-                <div class="">
-                  <div className="card section-31 shadow">
-                    <div className="d-flex flex-row">
-                      <div>
-                        <h2 className="mt-2 mx-4 mt-3">Categories</h2>
+                  <div className="card-item p-4">
+                    <div className="row">
+                      <div className="col-md-8">
+                        <h4 className="">Categories</h4>
                       </div>
-                      <div className="col-12 col-md-7"></div>
+                      <div className="col-md-1">
 
-                      <div style={{ marginLeft: "auto" }} class="m-2">
-                        {/* <b class="resumeh7 ">+ Add Employment</b> */}
-                        <div>
-                          {/* <i class="fa-solid fa-pen-to-square iconedit"></i> */}
-                          <button
+                      </div>
+                      <div className="col-md-3 ml-5">                    
+                        <button
                             style={{ border: "none", backgroundColor: "white" }}
                             className=""
                           >
                             <div className="d-flex flex-row">
                               <p
-                                class="resumeh7 row mx-2 "
+                                className="row mx-2 btn btn-dark text-center"
                                 onClick={OpenSourceCode}
-                              >
-                                +Add Content{" "}
-                              </p>
-                              <i class="fa-solid fa-caret-down text-danger"></i>
-                            </div>
-                            {sourceopen && (
+                                style={{ backgroundColor: "#981a96", color: "white" }}
+                              ><b> +Add Content</b>
+                               
+                                <span> <i class="fa-solid fa-caret-down"></i></span>
+                                {sourceopen && (
                               <div>
                                 <span
-                                  className="mb-2"
+                                  className="p-0 my-1"
                                   type="button"
                                   data-bs-toggle="modal"
                                   data-bs-target="#myModal23"
                                   onClick={(e) => {
-                                    setSourceName(e.target.textContent); // Use textContent instead of value
+                                    setSourceName(e.target.textContent)
+                                    handleCloseSourceModal(e) // Use textContent instead of value
                                     console.log(e.target.textContent); // Print to console
                                   }}
+                                  style={{color: "#ff0000" }}
+
                                 >
                                   <i class="fa-brands fa-youtube"></i> Youtube
                                 </span>
                                 <br />
 
                                 <span
-                                  className="mb-2"
+                                  className="p-0 my-1"
                                   type="button"
                                   data-bs-toggle="modal"
                                   data-bs-target="#myModal23"
@@ -354,11 +430,16 @@ const VideoPage = () => {
                                     setSourceName(e.target.textContent); // Use textContent instead of value
                                     console.log(e.target.textContent); // Print to console
                                   }}
+                                  style={{color: "#1ab7ea" }}
                                 >
                                   <i class="fa-solid fa-video"></i> Vimeo
                                 </span>
                               </div>
                             )}
+                              </p>
+                             
+                            </div>
+                           
                           </button>
 
                           <div class="modal" id="myModal23">
@@ -371,44 +452,20 @@ const VideoPage = () => {
                                     type="button"
                                     class="btn-close"
                                     data-bs-dismiss="modal"
-                                    onClick={OpenSourceCode}
+                                    // onClick={OpenSourceCode}
+                                    onClick={handleCloseSourceModal}
                                   ></button>
                                 </div>
 
                                 {/* <!-- Modal body --> */}
                                 <div class="modal-body">
-                                  <form action="" onSubmit={onSubmitForm}>
-                                    <div className="">
-                                      {/* <select
-                                        name=""
-                                        id=""
-                                        className="p-2"
-                                        onChange={(e) =>
-                                          setVideofolderName(e.target.value)
-                                        }
-                                      >
-                                        <option value="SelectInstitutions">
-                                          ---Select Video Folder---
-                                        </option>
-                                        {addInstitutelist.map((institute) => (
-                                          <option
-                                            key={institute.id}
-                                            value={institute.VideofolderName}
-                                          >
-                                            {institute.VideofolderName}
-                                          </option>
-                                        ))}
-                                      </select> */}
-                                    </div>
-                                    <div className="col-12 col-md-6 m-2">
-                                      <label className="headingAdd">
+                                  <form action="" onSubmit={(e)=>onSubmitForm(e)}>
+                                    <div className="col-12 col-md-12">
+                                      <label className="headingAdd" style={{float:"left"}}>
                                         Video Title :
                                       </label>
-                                      <br />
                                       <input
-                                        type="text"
-                                        className="etotal"
-                                        style={{ border: "1px solid black" }}
+                                        type="text"          className="form-control"                          
                                         placeholder="Enter Folder Name"
                                         onChange={(e) =>
                                           setVideoTitleName(e.target.value)
@@ -416,15 +473,14 @@ const VideoPage = () => {
                                         value={VideoTitleName}
                                       />
                                     </div>
-                                    <div className="col-12 col-md-6 m-2">
-                                      <label className="headingAdd">
+                                    <div className="col-12 col-md-12">
+                                      <label className="headingAdd float-left"
+                                      style={{float:"left"}}>
                                         Video Link:
-                                      </label>
-                                      <br />
+                                      </label>                                     
                                       <input
                                         type="text"
-                                        className="etotal"
-                                        style={{ border: "1px solid black" }}
+                                        className="form-control"
                                         placeholder="Enter Video Link"
                                         onChange={(e) =>
                                           setVideo1(e.target.value)
@@ -442,6 +498,7 @@ const VideoPage = () => {
                                           color: "white",
                                         }}
                                         data-bs-dismiss="modal1"
+                                        onClick={handleCloseSourceModal}
                                       >
                                         Add Video
                                       </button>
@@ -453,70 +510,124 @@ const VideoPage = () => {
                               </div>
                             </div>
                           </div>
+                          <div class="modal" id="myModalEdit">
+                            <div class="modal-dialog ">
+                              <div class="modal-content">
+                                {/* <!-- Modal Header --> */}
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Update Video File</h4>
+                                  <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    onClick={OpenSourceCode}
+                                  ></button>
+                                </div>
+
+                                {/* <!-- Modal body --> */}
+                                <div class="modal-body">
+                                  <form action="" onSubmit={(e)=>onSubmitUpdatedForm(selectedVideofile?.videofileId,e)}>
+                                    <div className="col-12 col-md-12">
+                                      <label className="headingAdd" style={{float:"left"}}>
+                                        Video Title :
+                                      </label>
+                                      <input
+                                        type="text"         
+                                       className="form-control"                       
+                                       name="VideoTitle"   
+                                        placeholder="Enter Folder Name"
+                                        onChange={(e) =>
+                                          handleEditInputChange(e.target.value,"VideoTitle")
+                                        }
+                                        value={videofileListUpdate?.VideoTitle ||""}
+                                      />
+                                    </div>
+                                    <div className="col-12 col-md-12">
+                                      <label className="headingAdd float-left"
+                                      style={{float:"left"}}>
+                                        Video Link:
+                                      </label>                                     
+                                      <input
+                                        type="text"
+                                        name="videofile"
+                                        className="form-control"
+                                        placeholder="Enter Video Link"
+                                        onChange={(e) =>
+                                          handleEditInputChange(e.target.value,"videofile")
+                                        }
+                                        value={ videofileListUpdate?.videofile || ''}
+                                      />
+                                    </div>
+                                    <hr />
+                                    <div class=" mt-3">
+                                      <button
+                                        type="submit"
+                                        class="btn text-start"
+                                        style={{
+                                          backgroundColor: "#a5059d",
+                                          color: "white",
+                                        }}
+                                        data-bs-dismiss="modal1"
+                                      >
+                                        Update Video
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
+
+                                {/* <!-- Modal footer --> */}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      <div className="d-flex flex-row">
+                    <div className="mt-2">                     
+                    <div>
+												<label>Show</label>
+											</div>
+											<select className="form-control">
+												<option className="form-control">1</option>
+												<option className="form-control">2</option>
+												<option className="form-control">3</option>
+												<option className="form-control">4</option>
+												<option className="form-control">5</option>
+												<option className="form-control">6</option>
+												<option className="form-control">7</option>
+												<option className="form-control">8</option>
+												<option className="form-control">9</option>
+												<option className="form-control">10</option>
+											</select>
+										</div>
+										<div className="col-4 col-md-7"></div>
+										<div className="mt-2">
+											<label>Search: </label>
+											<input type="text"
+                      className="form-control"
+                      value={searchQuery}
+                      placeholder="Search by video title"
+                      onChange={(e) => setSearchQuery(e.target.value)}/>                      
+										</div>
+                    <div className="mt-2 mx-4">
+                      <button className="btn btn-dark mt-4" onClick={()=>navigate("/LearnPath")}>
+                        Back
+                      </button>
                     </div>
-                    <div className="">
-                      <ToastContainer
-                        position="top-right"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        theme="light"
-                      />
-                      <div className=" col-12 col-lg-12">
-                        <div className="table-responsive">
-                          <table className="table table-striped text-center">
-                            <thead>
-                              <tr className="table-dark">
-                                <th>S.NO</th>
-                                <th>FOLDER NAME</th>
-                                <th>VIDEOS TITLE</th>
-                                <th>SOURCE</th>
-                                <th>WATCH</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {addblogslist.map((blog) => (
-                                <tr key={blog.id}>
-                                  <td className="mt-2">{blog.Sno}</td>
-
-                                  <td>{blog.VideofolderName}</td>
-                                  <td>{blog.VideoTitleName}</td>
-                                  <td>{blog.SourceName}</td>
-
-                                  <td className="text-center">
-                                    <button
-                                      key={blog._id}
-                                      type="button"
-                                      className="btn btn-secondary btn-sm" // Add btn-primary and btn-sm classes
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#myModal"
-                                      style={{
-                                        borderRadius: "5px",
-                                      }}
-                                      onClick={() =>
-                                        setSelectedVideo(blog.Video1)
-                                      }
-                                    >
-                                      <div className="d-flex flex-row">
-                                        <a href="#" style={{ color: "white" }}>
-                                          <span className="material-symbols-outlined">
-                                            videocam
-                                          </span>
-                                        </a>
-                                        <h6 className="mt-1 mx-1">
-                                          {" "}
-                                          Watch Video
-                                        </h6>
-                                      </div>
-                                    </button>
-                                    <div class="modal" id="myModal">
+									</div>                  
+									<p className="mt-2">entires</p>
+									<div style={{ height: "auto", width: "100%" }}>
+										<DataGrid
+											rows={rows}
+											columns={headerColumns}
+											initialState={{
+												pagination: {
+													paginationModel: { page: 0, pageSize: 5 },
+												},
+											}}
+											pageSizeOptions={[5, 10]}
+										/>
+									</div>
+                  <div class="modal" id="myModalView">
                                       <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                           <div class="modal-header">
@@ -524,74 +635,28 @@ const VideoPage = () => {
                                               type="button"
                                               class="btn-close"
                                               data-bs-dismiss="modal"
+                                              onClick={handleCloseModal}
                                             ></button>
                                           </div>
-
                                           {selectedVideo && (
                                             <ReactPlayer
                                               url={selectedVideo}
-                                              playing
+                                              playing ={isModalOpen}
                                               controls
-                                              width="875px"
+                                              width="830px"
                                               height="600px"
                                             />
                                           )}
                                         </div>
                                       </div>
-                                    </div>
-
-                                    <button
-                                      style={{
-                                        border: "none",
-                                      }}
-                                      className="btn"
-                                    >
-                                      <Link>
-                                        <span
-                                          type="button"
-                                          className="material-symbols-outlined p-1 m-2 bg-secondary"
-                                          style={{
-                                            color: "white",
-
-                                            borderRadius: "5px",
-                                          }}
-                                        >
-                                          edit_square
-                                        </span>
-                                      </Link>
-                                    </button>
-
-                                    {/* <button
-                                      className="material-symbols-outlined mx-1 p-1"
-                                      type="submit"
-                                      style={{
-                                        backgroundColor: "red",
-                                        border: "none",
-                                        borderRadius: "5px",
-                                      }}
-                                      onClick={() => handleDelete(blog._id)}
-                                    >
-                                      delete
-                                    </button> */}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+                         </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-              
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      
   );
 };
 

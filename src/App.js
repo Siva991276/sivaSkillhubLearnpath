@@ -49,7 +49,9 @@ import ParticularMcaView from "./Questionbank/ParticularMcaView";
 import Mcqupdate from "./Questionbank/Mcqupdate";
 import AssignQB from "./Questionbank/AssignQB";
 import Codingupdate from "./Questionbank/codingupdate";
-
+import Reports from "./LearnData/Reports";
+import Learnaccess from "./LearnData/learnaccess";
+import Access from "./LearnData/Access";
 function App() {
   return (
     <div>
@@ -102,9 +104,13 @@ function App() {
         <Route exact path="/Mcqupdate" element={<Mcqupdate />} /> 
 				<Route exact path="/AssignQB" element={<AssignQB />} />
 				<Route exact path="/codingupdate" element={<Codingupdate />} />
+				<Route exact path="/Reports" element={<Reports />} />
+				<Route exact path="/Learnaccess" element={<Learnaccess />} />
+				<Route exact path="/Access" element={<Access />} />
+        
         <Route
           exact
-          path="/VideoPage/:VideofolderName"
+          path="/VideoPage"
           element={<VideoPage />}
         />
         <Route

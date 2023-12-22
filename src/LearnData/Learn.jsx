@@ -247,6 +247,7 @@ const Learn = () => {
             {isOpen && (
               <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
               <Sidebar/>
+              <ToastContainer/>
               </div>
 					  )}						
             <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
