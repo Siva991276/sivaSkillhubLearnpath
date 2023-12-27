@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
 
 const Access = () => {
   const token = localStorage.getItem("token");
@@ -23,6 +25,8 @@ const Access = () => {
 
   const [showSingleUserForm, setShowSingleUserForm] = useState(true);
   const [showMultipleUserForm, setShowMultipleUserForm] = useState(false);
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
+
 
   const handleSingleUserButtonClick = () => {
     setShowSingleUserForm(true);
@@ -68,7 +72,7 @@ const Access = () => {
   };
 
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allAddInstitutes";
+    const api = `${apiList.allAddInstitutes}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -78,15 +82,17 @@ const Access = () => {
         },
       });
       setAddblogslist(response.data);
+			setWorksheetLoading(false);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
     }
   };
 
   const filterJobs = () => {
     const filteredInstitutes = addblogslist.filter(
       (institute) =>
-        selectedInstitutes.includes(institute.InstituteType) &&
+        selectedInstitutes.includes(institute.InstituteName) &&
         selectedBatchYear.includes(institute.BatchYear) &&
         selectedBatch.includes(institute.SelectBatch)
     );
@@ -451,7 +457,7 @@ const renderActionButtons = (blog) => (
 const rows = addblogslist.map((blog, index) => ({
     id: index + 1, // Add this line to include a unique id for each row
     SNO: index + 1,
-    INSTITUTENAME: blog.InstituteType,
+    INSTITUTENAME: blog.InstituteName,
     BATCHYEAR: blog.BatchYear,
     BATCH:blog.SelectBatch,
     ACCESS: renderActionButtons(blog),
@@ -471,6 +477,16 @@ _id:blog._id,
               </div>
 					  )}						
             <div className={`my-3 col-12 col-md-${isOpen ? 12: 10} col-lg-${isOpen ? 9 : 12}`}>
+            {worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
                 <div className="d-lg-block">
                 <i className="fa-solid fa-bars bars  d-lg-block d-none" onClick={toggleSidebar}></i>
                   <div className="card-item p-4">
@@ -492,8 +508,10 @@ _id:blog._id,
                           id=""
                           className="form-control"
                           onChange={handleCheckboxChange}
+                          placeholder="---Select Institutions---"
+                          
                         >
-                          <option value="Select Institutions">
+                          <option value="Select Institutions"  >
                             ---Select Institutions---
                           </option>
                           {addInstitutelist.map((institute) => (
@@ -505,7 +523,7 @@ _id:blog._id,
                             </option>
                           ))}
                         </select>
-                        <h6 className="mx-2" style={{ fontWeight: "600" }}>
+                        <h6 className="mt-2" style={{ fontWeight: "600" }}>
                           Select Institutions
                         </h6>
                       </div>
@@ -529,7 +547,7 @@ _id:blog._id,
                             </option>
                           ))}
                         </select>
-                        <h6 className="mx-2" style={{ fontWeight: "600" }}>
+                        <h6 className="mt-2" style={{ fontWeight: "600" }}>
                           Select Batch Year
                         </h6>
                       </div>
@@ -554,14 +572,14 @@ _id:blog._id,
                             </option>
                           ))}
                         </select>
-                        <h6 className="mx-2" style={{ fontWeight: "600" }}>
+                        <h6 className="mt-2" style={{ fontWeight: "600" }}>
                           Select Batch
                         </h6>
                       </div>
 
                       <div className="p-2 col-md-3">
                         <button
-                          className="p-2 selectbtn112"
+                          className="btn btn-dark"
                           style={{ backgroundColor: "#a5059d", border:"none" }}
                           onClick={filterJobs}
                         >
@@ -613,6 +631,7 @@ _id:blog._id,
                   </div>
                 
               </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-export const server = "http://localhost:5555";
+export const server = "http://localhost:4010";
 // export const server = "https://skillhub-server-cme3.onrender.com"
 // api list 
 
@@ -37,12 +37,14 @@ ByListData:`${server}/ByListData`,
 DisplayAllVideos:`${server}/DisplayAllVideos`,
 allAddVideosData:`${server}/allAddVideosData`,
 AddVideoPath:`${server}/AddVideoPath`,
-deleteVideo:`${server}/deleteVideo/`,
+deleteVideo:`${server}/deleteVideo`,
 AddVideoPath:`${server}/AddVideoPath`,
 foldersVideoData:`${server}/foldersVideoData`,
 AddVideoFilesData:`${server}/AddVideoFilesData`,
-UpdateVideosDetails:`${server}/UpdateVideosDetails/`,
+UpdateVideosDetails:`${server}/UpdateVideosDetails`,
 DisplayIndividualVideo: `${server}/DisplayIndividualVideo`,
+deleteVideofiles:`${server}/deleteVideofiles`,
+UpdateVideofileDetails :`${server}/UpdateVideofileDetails`
 };
 
 export default apiList;

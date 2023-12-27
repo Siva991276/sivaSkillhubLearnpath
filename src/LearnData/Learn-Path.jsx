@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-// import logo from "../src/All Images/pab bottom-logo (1).jpg";
+import { Audio } from 'react-loader-spinner';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -23,6 +23,7 @@ const LearnPath = () => {
   const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
   const [institutetypeCounts, setInstitutetypeCounts] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
 
   console.log(addblogslist)
   const [error, setError] = useState(null);
@@ -57,7 +58,7 @@ const LearnPath = () => {
 
       const data = response.data;
       setAddblogslist1(data);
-
+			setWorksheetLoading(false);
       const institutetypeCounts = {};
       data.forEach((item) => {
         const VideofolderName = item.VideofolderName;
@@ -71,6 +72,7 @@ const LearnPath = () => {
       setInstitutetypeCounts(institutetypeCounts);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
     }
   };
 
@@ -78,17 +80,20 @@ const LearnPath = () => {
 
   const fetchblogs = async () => {
     const api = `${apiList.allAddVideosData}`;
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
+    const token = Cookies.get("token");
     try {
-      const response = await axios.get(api, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
+      const response = await axios.get(api, 
+        {
+          headers: {
+            token: token,
+          },
         },
-      });
+      );
       setAddblogslist(response.data);
+			setWorksheetLoading(false);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
     }
   };
   //Add Institute
@@ -109,13 +114,20 @@ const LearnPath = () => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
+    const token = Cookies.get("token");
     if (VideofolderName !== "") {
       const AddVideosDetails = {
         VideofolderName: VideofolderName,
       };
       console.log(AddVideosDetails)
       axios
-        .post("http://localhost:4010/AddVideoPath", AddVideosDetails)
+        .post(`${apiList.AddVideoPath}`, AddVideosDetails,
+        {
+          headers: {
+            token: token,
+          },
+        },
+        )
        
         .then((response) => {
           setdata1(response.data);
@@ -133,6 +145,7 @@ const LearnPath = () => {
 						  className: "custom-toast-custom",
 
             });
+            setVideofolderName('')
             setTimeout(function () {}, 3000);
             fetchblogs();
           }
@@ -162,6 +175,7 @@ const LearnPath = () => {
 
   const onSubmitUpdatedForm = (e) => {
 		e.preventDefault();
+    const token = Cookies.get("token");
     const AddVideosDetails = {
       VideofolderName: selectedVideopath,
     };
@@ -170,7 +184,11 @@ const LearnPath = () => {
 			Object.entries(AddVideosDetails).filter(([key, value]) => value !== "")
 		);
 		axios
-			.put(`http://localhost:4010/UpdateVideosDetails/${selectedvideopathId}`, nonemptyuserData)
+			.put(`${apiList.UpdateVideosDetails}/${selectedvideopathId}`, nonemptyuserData, {
+        headers: {
+          token: token,
+        },
+      },)
 			.then((response) => {
 				if (response.status === 200) {
 					toast("VideoFolder Updated successfully", {
@@ -197,11 +215,15 @@ const LearnPath = () => {
   console.log(data1);
 
   const GotohandleDeleteClick = async (id) => {
+    const token = Cookies.get("token");
     try {
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        `http://localhost:4010/deleteVideo/${id}`
-
+        `${apiList.deleteVideo}/${id}`, {
+          headers: {
+            token: token,
+          },
+        },
       );
       if (response.status === 200) {
         toast("Deleted Folder Successfully", {
@@ -350,7 +372,16 @@ const LearnPath = () => {
             <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}>
-              
+              {worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
                 <div className=" d-lg-block">
                 <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
                   <div className="card-item p-4">
@@ -515,6 +546,7 @@ const LearnPath = () => {
 									</div>
 </div>
                     </div>
+              )}
                   </div>
                 
               </div>

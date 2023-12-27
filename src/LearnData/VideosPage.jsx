@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-// import logo from "../src/All Images/pab bottom-logo (1).jpg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -16,6 +15,7 @@ import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useLocation } from "react-router-dom";
 import apiList from "../liberary/apiList";
 import Cookies from "js-cookie";
+import { Audio } from 'react-loader-spinner';
 
 const VideoPage = () => {
 	const { state } = useLocation();
@@ -32,6 +32,8 @@ const VideoPage = () => {
 	const { videopathId } = state || {};
 	const [videofileListUpdate, setVideofileListUpdate] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
+
   const handleEditInputChange = (value,name) => {
 		console.log(value,name);
 		setVideofileListUpdate({
@@ -56,16 +58,23 @@ const VideoPage = () => {
   }, []);
 
   const fetchData = async () => {
+  const token = Cookies.get("token");
     console.log(VideofolderName);
     try {
       const response = await axios.get(
-        `http://localhost:4010/DisplayAllVideos/${videopathId}`
+        `${apiList.DisplayAllVideos}/${videopathId}`,{
+          headers: {
+            token: token,
+          },
+        },
       ); // Replace with your API endpoint
       setAddblogslist(response.data?.allVideos?.videoFile);
       setVideoFoldername(response.data?.allVideos?.VideofolderName)
+			setWorksheetLoading(false);
       // console.log(response.data)
     } catch (error) {
       console.error("Error fetching data:", error);
+			setWorksheetLoading(false);
     }
   };
   const filteredVideos = addblogslist.filter((folder) => {
@@ -91,6 +100,7 @@ const VideoPage = () => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
+    const token = Cookies.get("token");
     if (VideoTitleName && Video1 !== "") {
       const AddVideosDetails = {
         VideofolderName: VideofolderName,
@@ -99,7 +109,11 @@ const VideoPage = () => {
         Video1: Video1,
       };
       axios
-        .post(`http://localhost:4010/AddVideoFilesData/${videopathId}`, AddVideosDetails )
+        .post(`${apiList.AddVideoFilesData}/${videopathId}`, AddVideosDetails , {
+          headers: {
+            token: token,
+          },
+        },)
         .then((response) => {
           setdata1(response.data);
           console.log(response.data);
@@ -115,6 +129,8 @@ const VideoPage = () => {
               theme: "colored",
 						  className: "custom-toast-custom",
             });
+            setVideoTitleName("")
+            setVideo1("")
             setTimeout(function () {}, 3000);
             fetchData();
           }
@@ -143,43 +159,6 @@ const VideoPage = () => {
 
   console.log(data1);
 
-  const handleDelete = async (id) => {
-    try {
-      if (!id) {
-        setError("Invalid ID provided for deletion.");
-        return;
-      }
-      console.log("Deleting institute with ID:", id);
-      const response = await axios.delete(
-        `${apiList.deleteInstitute}` + id
-      );
-      if (response.status === 200) {
-        toast.success("Success: Institute deleted", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-
-        // Update your state or fetch updated data as needed
-        // For example, if addblogslist is updated from the server, you can update it here.
-
-        const updatedListLength = addblogslist.length - 1;
-        console.log("Updated list length:", updatedListLength);
-      } else {
-        console.log(response.data);
-        alert("Error: " + response.data);
-        setError("An error occurred while deleting the institute.");
-      }
-    } catch (error) {
-      console.error(error);
-      setError("An error occurred while deleting the institute.");
-    }
-  };
 
   const [isOpen, setIsOpen] = useState(true);
 
@@ -223,10 +202,15 @@ const VideoPage = () => {
     setIsInstitutionsOpen2(!isInstitutionsOpen2);
   };
   const GotohandleDeleteClick = async (id) => {
+    const token = Cookies.get("token");
     try {
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        `http://localhost:4010/deleteVideofiles/${videopathId}/${id}`
+        `${apiList.deleteVideofiles}/${videopathId}/${id}`, {
+          headers: {
+            token: token,
+          },
+        },
       );
       if (response.status === 200) {
         toast("Deleted Folder Successfully", {
@@ -257,10 +241,14 @@ const VideoPage = () => {
   };
   const onSubmitUpdatedForm = (id,e) => {
 		e.preventDefault();
-  
+    const token = Cookies.get("token");
     console.log(videofileListUpdate)		
 		axios
-			.put(`http://localhost:4010/UpdateVideofileDetails/${videopathId}/${id}`, videofileListUpdate)
+			.put(`${apiList.UpdateVideofileDetails}/${videopathId}/${id}`, videofileListUpdate, {
+        headers: {
+          token: token,
+        },
+      },)
 			.then((response) => {
 				if (response.status === 200) {
 					toast("VideoFile Updated successfully", {
@@ -350,7 +338,21 @@ const VideoPage = () => {
 		</div>
 	);
 console.log(addblogslist)
-	const rows = filteredVideos.map((blog, index) => ({
+let rows = [];
+if (filteredVideos && filteredVideos.length === 0) {
+  rows = [
+		{
+			id: `1`,
+		  SNO: '',
+		  Videofoldername: 'No Videos Found',
+		  VideoTitle: '',
+		  SOURCE: '',
+      ACTION:''
+      // You may modify this based on your requirements
+		},
+	  ];
+	} else {
+     rows = filteredVideos.map((blog, index) => ({
 		id: index + 1, // Add this line to include a unique id for each row
 		SNO: index + 1,
 		Videofoldername: videoFoldername,
@@ -360,6 +362,7 @@ console.log(addblogslist)
     _id:blog._id,
     videofile:blog.Video1,
 	}));
+}
   const [isModalOpen, setIsModalOpen] = useState(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -378,6 +381,16 @@ console.log(addblogslist)
              <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}>
+              {worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
                 <div className=" d-lg-block">
                               <i className="fa-solid fa-bars bars  d-lg-block d-none" onClick={toggleSidebar}></i>
 
@@ -520,7 +533,6 @@ console.log(addblogslist)
                                     type="button"
                                     class="btn-close"
                                     data-bs-dismiss="modal"
-                                    onClick={OpenSourceCode}
                                   ></button>
                                 </div>
 
@@ -652,6 +664,7 @@ console.log(addblogslist)
                          </div>
                     </div>
                   </div>
+              )}
                 </div>
               </div>
             </div>

@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-// import logo from "../src/All Images/pab bottom-logo (1).jpg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -11,7 +10,9 @@ import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
 import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
+import { Audio } from 'react-loader-spinner';
 
 const Reports = () => {
   const token = localStorage.getItem("token");
@@ -22,6 +23,7 @@ const Reports = () => {
   const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
   const [institutetypeCounts, setInstitutetypeCounts] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+	const [worksheetLoading, setWorksheetLoading] = useState(true);
 
   console.log(addblogslist)
   const [error, setError] = useState(null);
@@ -43,7 +45,7 @@ const Reports = () => {
   }, []);
 
   const fetchblogs1 = async () => {
-    const api = "http://localhost:4010/DisplayAllVideos";
+    const api = `${apiList.DisplayAllVideos}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk"; // Replace with your actual authentication token
 
@@ -56,7 +58,7 @@ const Reports = () => {
 
       const data = response.data;
       setAddblogslist1(data);
-
+			setWorksheetLoading(false);
       const institutetypeCounts = {};
       data.forEach((item) => {
         const VideofolderName = item.VideofolderName;
@@ -70,24 +72,26 @@ const Reports = () => {
       setInstitutetypeCounts(institutetypeCounts);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
     }
   };
 
   console.log(institutetypeCounts);
 
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allAddVideosData";
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
+    const api = `${apiList.allAddVideosData}`;
+  const token = Cookies.get("token");
     try {
       const response = await axios.get(api, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          token: token,
         },
       });
       setAddblogslist(response.data);
+			setWorksheetLoading(false);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
     }
   };
   //Add Institute
@@ -114,7 +118,7 @@ const Reports = () => {
       };
       console.log(AddVideosDetails)
       axios
-        .post("http://localhost:4010/AddVideoPath", AddVideosDetails)
+        .post(`${apiList.AddVideoPath}`, AddVideosDetails)
         .then((response) => {
           setdata1(response.data);
           console.log(response.data);
@@ -297,7 +301,7 @@ const Reports = () => {
       <button
 				type="button"
 				className="btn btn-dark mx-1"
-				onClick={() => navigate("/VideoPage",{state :{videopathId:blog._id}})}
+				onClick={() => navigate("",{state :{videopathId:blog._id}})}
 			>
 				<i className="fa-solid fa-eye" style={{ color: "white" }}></i>
 			</button>
@@ -327,7 +331,16 @@ const Reports = () => {
             <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}>
-              
+               {worksheetLoading ? (
+                    <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
+                      <Audio
+                        type="Audio"
+                        color="#6a2a69"
+                        height={40}
+                        width={60}
+                      />
+                    </div>                  
+              ) : (
                 <div className=" d-lg-block">
                 <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
                   <div className="card-item p-4">
@@ -425,6 +438,7 @@ const Reports = () => {
 									</div>
 </div>
                     </div>
+              )}
                   </div>
                 
               </div>
