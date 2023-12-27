@@ -10,10 +10,12 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
 import Sidebar from "./Sidebar";
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
 
 
 const BatchYear = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.getItem("token");
   const navigate = useNavigate();
 
   const [addblogslist, setAddblogslist] = useState([]);
@@ -28,7 +30,7 @@ const BatchYear = () => {
 
   const [error, setError] = useState(null);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
@@ -44,7 +46,7 @@ const BatchYear = () => {
   }, []);
 
   const InstituteDetails = async () => {
-    const api = "http://localhost:4010/allAddInstitutes";
+    const api = `${apiList.allAddInstitutes}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -60,7 +62,7 @@ const BatchYear = () => {
   };
 
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allUsersData";
+    const api = `${apiList.allUsersData}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -87,7 +89,7 @@ const BatchYear = () => {
       const responses = await Promise.all(
         selectedInstitutes.map(async (InstituteName) => {
           const response = await axios.get(
-            `http://localhost:4010/individualInstituteNames/${InstituteName}`
+            `${apiList.individualInstituteNames}/${InstituteName}`
           );
           return response.data;
         })
@@ -165,7 +167,7 @@ const BatchYear = () => {
       }
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        "http://localhost:4010/deleteInstitute/" + id
+        `${apiList.deleteInstitute}` + id
       );
       if (response.status === 200) {
         toast.success("Success: Institute deleted", {

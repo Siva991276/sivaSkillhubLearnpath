@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { json, useNavigate } from "react-router-dom";
 import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
 
 
 const McqView = () => {
@@ -27,7 +28,7 @@ const McqView = () => {
 	const [allMcqsList, setallMCqsList] = useState([]);
 	const [worksheetLoading, setWorksheetLoading] = useState(true);
 	const fetchsubjectsData = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
@@ -150,7 +151,7 @@ const McqView = () => {
 	
 	const GotohandleDeleteClick = (subjectId,chapterId,McqId) => {   
 		// const token = Cookies.get("token");
-			const api = `http://localhost:4010/v1/deleteMCQ/${subjectId}/${chapterId}/${McqId}`;
+			const api = `${apiList.deleteMCQ}/${subjectId}/${chapterId}/${McqId}`;
 			try{
 				const response=axios.delete(api,)
 			//   console.log("Password updated successfully:", response.data);

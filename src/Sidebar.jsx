@@ -5,9 +5,11 @@ import axios from "axios";
 import sideimage from "./All Images/Logo133.jpeg";
 import { Link } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
+import Cookies from "js-cookie";
+import apiList from "./liberary/apiList";
 
 function Sidebar() {
-	const token = localStorage.getItem("token");
+	const token = Cookies.get("token");
 	const navigate = useNavigate();
 
 	const [isNavVisible, setIsNavVisible] = useState(false);
@@ -24,12 +26,12 @@ function Sidebar() {
 	}, []);
 
 	const handleLogout = () => {
-		localStorage.removeItem("token");
+		Cookies.remove("token");
 		navigate("/");
 	};
 
 	const fetchblogs1 = async () => {
-		const api = "http://localhost:4010/allUsersData";
+		const api = `${apiList.allUsersData}`;
 		const authToken =
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
 		try {
@@ -45,7 +47,7 @@ function Sidebar() {
 	};
 
 	const fetchblogs = async () => {
-		const api = "http://localhost:4010/allAddInstitutes";
+		const api = `${apiList.allAddInstitutes}`;
 		const authToken =
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
 		try {
@@ -454,20 +456,20 @@ function Sidebar() {
 											{/* <span className="tooltip">Video Folders</span> */}
 										</li>
 										<li>
-											<a href="#">
+											<Link to="/Reports">
 												<i class="fa-solid fa-record-vinyl icons"></i>
 												<span className="link_name">Reports</span>
-											</a>
+											</Link>
 											{/* <span className="tooltip">Reports</span> */}
 										</li>
 									</div>
 								)}
 
 								<li>
-									<a href="#">
+									<Link to="/Access">
 										<i class="fa-brands fa-accessible-icon icons"></i>
 										<span className="link_name">Access</span>
-									</a>
+									</Link>
 									{/* <span className="tooltip">Access</span> */}
 								</li>
 							</div>

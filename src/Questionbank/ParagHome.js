@@ -7,6 +7,8 @@ import axios from "axios";
 import JoditEditor from "jodit-react";
 import { ToastContainer, Zoom, toast } from "react-toastify";
 import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const ParagHome = () => {
 	const editor = useRef(null);
@@ -24,7 +26,7 @@ const ParagHome = () => {
 
 	const onSubmitForm = async (e) => {
 		e.preventDefault();
-		// const token = Cookies.get("token");
+		const token = Cookies.get("token");
 		if (
 			selectedSubject &&
 			selectedChapter &&
@@ -42,8 +44,13 @@ const ParagHome = () => {
 				};
 				console.log(QuestionData);
 				const response = await axios.post(
-					`http://localhost:4010/v2/addparaMcq/${selectedSubjectId}/${selectedChapterId}`,
-					QuestionData
+					`${apiList.addparaMcq}/${selectedSubjectId}/${selectedChapterId}`,
+					QuestionData,
+					{
+						headers: {
+							token: token,
+						},
+					}
 				);
 
 				setallquestionData(response.data);
@@ -123,7 +130,7 @@ const ParagHome = () => {
 	};
 	const [allsubjectsData, setAllsubjectsData] = useState([]);
 	const fetchsubjectsData = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`;
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;

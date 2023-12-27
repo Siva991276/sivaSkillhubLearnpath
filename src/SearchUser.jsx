@@ -10,9 +10,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
 import Sidebar from "./Sidebar";
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
 
 const SearchOption = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
 
   const [addblogslist, setAddblogslist] = useState([]);
@@ -25,7 +27,7 @@ const SearchOption = () => {
 
   const [error, setError] = useState(null);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
@@ -60,7 +62,7 @@ const SearchOption = () => {
   //   }
   // };
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allUsersData";
+    const api = `${apiList.allUsersData}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2vyIjoiNjRkZGFiYjYwYmUzZWI4NzI9MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
 

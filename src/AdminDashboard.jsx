@@ -10,10 +10,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../src/All Images/Siva Image.jpeg";
 import Sidebar from "./Sidebar";
-
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
 
 const AdminDashboard = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [addblogslist1, setAddblogslist1] = useState([]);
@@ -24,72 +25,11 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     navigate("/");
   };
 
-  // const [formData, setFormData] = useState({
-  //   InstituteName: "",
-  //   PrimaryEmail: "",
-  //   HeadName: "",
-  //   PrimaryContactNumber: "",
-  //   SecondaryEmail: "",
-  //   SecondaryContactNumber: "",
-  //   Address: "",
-  //   City: "",
-  //   InstituteCode: "",
-  //   InstituteType: "",
-  //   AxiosPlans: "",
-  //   Password: "",
-
-  //   // Add other form fields here
-  // });
-
-  // const openEditForm = (item) => {
-  //   setEditingItem(item);
-  //   setFormData({
-  //     Sno: item.Sno,
-  //     InstituteName: item.InstituteName,
-  //     PrimaryEmail: item.PrimaryEmail,
-  //     HeadName: item.HeadName,
-  //     PrimaryContactNumber: item.PrimaryContactNumber,
-  //     SecondaryEmail: item.SecondaryEmail,
-  //     SecondaryContactNumber: item.SecondaryContactNumber,
-  //     Address: item.Address,
-  //     City: item.City,
-  //     InstituteCode: item.InstituteCode,
-  //     InstituteType: item.InstituteType,
-  //     AxiosPlans: item.AxiosPlans,
-  //     Password: item.Password,
-
-  //     // Populate other form fields as well
-  //   });
-  // };
-
-  // const updateItem = () => {
-  //   const updatedList = addblogslist.map((item) => {
-  //     if (item._id === editingItem._id) {
-  //       return {
-  //         ...item,
-  //         Sno: formData.Sno,
-  //         InstituteName: formData.InstituteName,
-  //         PrimaryEmail: formData.PrimaryEmail,
-  //         HeadName: formData.HeadName,
-  //         InstituteCode: formData.InstituteCode,
-  //         // Update other fields as well
-  //       };
-  //     }
-  //     return item;
-  //   });
-
-  //   setAddblogslist(updatedList);
-  //   setEditingItem(null);
-  // };
-  // const onUpdate = (e) => {
-  //   e.preventDefault();
-  //   updateItem();
-  // };
-
+  
   const toggleNav = () => {
     setIsNavVisible(!isNavVisible);
   };
@@ -101,23 +41,9 @@ const AdminDashboard = () => {
     }
   }, []);
 
-  // const fetchblogs1 = async () => {
-  //   const api = "http://localhost:4010/allUsersData";
-  //   const authToken =
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
-  //   try {
-  //     const response = await axios.get(api, {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //       },
-  //     });
-  //     setAddblogslist1(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching blogs:", error);
-  //   }
-  // };
+  
   const fetchblogs1 = async () => {
-    const api = "http://localhost:4010/allUsersData";
+    const api =  `${apiList.allUsersData}`;
     const authToken = "YOUR_AUTH_TOKEN_HERE"; // Replace with your actual authentication token
 
     try {
@@ -147,7 +73,7 @@ const AdminDashboard = () => {
   };
   console.log(institutetypeCounts);
   const fetchblogs = async () => {
-    const api = "http://localhost:4010/allAddInstitutes";
+    const api = `${apiList.allAddInstitutes}`;
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -220,7 +146,7 @@ const AdminDashboard = () => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk",
       };
       axios
-        .post("http://localhost:4010/AddInstitute", AddInstitute, {
+        .post(`${apiList.AddInstitute}`, AddInstitute, {
           headers,
         })
         .then((response) => {
@@ -259,7 +185,7 @@ const AdminDashboard = () => {
       }
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        "http://localhost:4010/deleteInstitute/" + id
+        `${apiList.deleteInstitute}` + id
       );
       if (response.status === 200) {
         toast.success("Success: Institute deleted", {

@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-import { Audio } from 'react-loader-spinner';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -13,9 +12,10 @@ import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import apiList from "../liberary/apiList";
 import Cookies from "js-cookie";
+import { Audio } from 'react-loader-spinner';
 
-const LearnPath = () => {
-  const token = Cookies.get("token");
+const Reports = () => {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [addblogslist1, setAddblogslist1] = useState([]);
@@ -29,7 +29,7 @@ const LearnPath = () => {
   const [error, setError] = useState(null);
 
   const handleLogout = () => {
-    Cookies.remove("token");
+    localStorage.removeItem("token");
     navigate("/");
   };
 
@@ -80,15 +80,13 @@ const LearnPath = () => {
 
   const fetchblogs = async () => {
     const api = `${apiList.allAddVideosData}`;
-    const token = Cookies.get("token");
+  const token = Cookies.get("token");
     try {
-      const response = await axios.get(api, 
-        {
-          headers: {
-            token: token,
-          },
+      const response = await axios.get(api, {
+        headers: {
+          token: token,
         },
-      );
+      });
       setAddblogslist(response.data);
 			setWorksheetLoading(false);
     } catch (error) {
@@ -114,21 +112,13 @@ const LearnPath = () => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    const token = Cookies.get("token");
     if (VideofolderName !== "") {
       const AddVideosDetails = {
         VideofolderName: VideofolderName,
       };
       console.log(AddVideosDetails)
       axios
-        .post(`${apiList.AddVideoPath}`, AddVideosDetails,
-        {
-          headers: {
-            token: token,
-          },
-        },
-        )
-       
+        .post(`${apiList.AddVideoPath}`, AddVideosDetails)
         .then((response) => {
           setdata1(response.data);
           console.log(response.data);
@@ -145,7 +135,6 @@ const LearnPath = () => {
 						  className: "custom-toast-custom",
 
             });
-            setVideofolderName('')
             setTimeout(function () {}, 3000);
             fetchblogs();
           }
@@ -175,7 +164,6 @@ const LearnPath = () => {
 
   const onSubmitUpdatedForm = (e) => {
 		e.preventDefault();
-    const token = Cookies.get("token");
     const AddVideosDetails = {
       VideofolderName: selectedVideopath,
     };
@@ -184,11 +172,7 @@ const LearnPath = () => {
 			Object.entries(AddVideosDetails).filter(([key, value]) => value !== "")
 		);
 		axios
-			.put(`${apiList.UpdateVideosDetails}/${selectedvideopathId}`, nonemptyuserData, {
-        headers: {
-          token: token,
-        },
-      },)
+			.put(`http://localhost:4010/UpdateVideosDetails/${selectedvideopathId}`, nonemptyuserData)
 			.then((response) => {
 				if (response.status === 200) {
 					toast("VideoFolder Updated successfully", {
@@ -215,15 +199,10 @@ const LearnPath = () => {
   console.log(data1);
 
   const GotohandleDeleteClick = async (id) => {
-    const token = Cookies.get("token");
     try {
       console.log("Deleting institute with ID:", id);
       const response = await axios.delete(
-        `${apiList.deleteVideo}/${id}`, {
-          headers: {
-            token: token,
-          },
-        },
+        `http://localhost:4010/deleteVideo/${id}`
       );
       if (response.status === 200) {
         toast("Deleted Folder Successfully", {
@@ -299,9 +278,9 @@ const LearnPath = () => {
 
   const columns = [
 		{ field: "SNO", headerName: "SNO", width: 120 },
-    { field: "ID", headerName: "ID", width: 120 },
-		{ field: "Videofoldername", headerName: "FOLDER NAME", width: 200 },
-		{ field: "Videos", headerName: "VIDEOS", width: 200 },
+        { field: "ID", headerName: "ID", width: 120 },
+		{ field: "LEARNINGPATH", headerName: "LEARNING PATH", width: 200 },
+		{ field: "ATTEMPTS", headerName: "ATTEMPTS", width: 200 },
 		{
 			field: "ACTION",
 			headerName: "ACTION",
@@ -322,29 +301,9 @@ const LearnPath = () => {
       <button
 				type="button"
 				className="btn btn-dark mx-1"
-				onClick={() => navigate("/VideoPage",{state :{videopathId:blog._id}})}
+				onClick={() => navigate("",{state :{videopathId:blog._id}})}
 			>
-				<i className="fa-solid fa-video" style={{ color: "white" }}></i>
-			</button>
-			<button
-				type="button"
-				className="btn btn-danger mx-1"
-        data-bs-toggle="modal"
-				data-bs-target="#myModalEdit"
-				onClick={() => GotohandleEditClick(blog)}
-			>
-				<i
-					className="fas fa-pencil-alt"
-					style={{ color: "white" }}
-				></i>
-			</button>
-
-			<button
-				type="button"
-				className="btn btn-dark mx-1"
-				onClick={() => GotohandleDeleteClick(blog._id)}
-			>
-				<i className="fas fa-trash" style={{ color: "white" }}></i>
+				<i className="fa-solid fa-eye" style={{ color: "white" }}></i>
 			</button>
 		</div>
 	);
@@ -353,8 +312,8 @@ const LearnPath = () => {
 		id: index + 1, // Add this line to include a unique id for each row
 		SNO: index + 1,
     ID:index +1,
-		Videofoldername: blog.VideofolderName,
-		Videos: blog.videoFile?.length,
+    LEARNINGPATH: blog.VideofolderName,
+    ATTEMPTS: blog.videoFile?.length,
 		ACTION: renderActionButtons(blog),
     _id:blog._id,
 	}));
@@ -372,7 +331,7 @@ const LearnPath = () => {
             <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
 							isOpen ? 9 : 12
 						}`}>
-              {worksheetLoading ? (
+               {worksheetLoading ? (
                     <div colSpan="4" className="d-flex flex-row justify-content-center align-items-center" style={{ height: '100vh' }}>
                       <Audio
                         type="Audio"
@@ -387,75 +346,8 @@ const LearnPath = () => {
                   <div className="card-item p-4">
                     <div className="row">
                       <div className="col-md-9">
-                        <h4 className="">VideoDetails</h4>
+                        <h4 className="">Learning Path Reports</h4>
                       </div>
-                      <div className="col-md-3 text-end">
-											<button
-												type="button"
-												class="btn "
-												data-bs-toggle="modal"
-												data-bs-target="#myModal23"
-												className="float-right btn"
-												style={{ backgroundColor: "#981a96", color: "white" }}
-											>
-												+ Add Folder
-											</button>
-										</div>                     
-                          <div className="modal" id="myModal23">
-                            <div class="modal-dialog ">
-                              <div class="modal-content">
-                                {/* <!-- Modal Header --> */}
-                                <div class="modal-header">
-                                  <h4 class="modal-title">Add Vieo Folder</h4>
-                                  <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                  ></button>
-                                </div>
-
-                                {/* <!-- Modal body --> */}
-                                <div class="modal-body">
-                                  <form action="" onSubmit={(e)=>onSubmitForm(e)}>
-                                   <div className="row">
-                                   <div className="col-lg-12 col-md-12">
-																	<div className="mb-1">
-                                      <label className="headingAdd">
-                                        Folder Name :
-                                      </label>                                      
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Enter Head Name"
-                                        onChange={(e) =>
-                                          setVideofolderName(e.target.value)
-                                        }
-                                        value={VideofolderName}
-                                      />
-                                      </div>
-                                    </div>
-                                   </div>
-                                    <hr />
-                                    <div class=" mt-3">
-                                      <button
-                                        type="submit"
-                                        class="btn text-start"
-                                        style={{
-                                          backgroundColor: "#a5059d",
-                                          color: "white",
-                                        }}
-                                        data-bs-dismiss="modal1"
-                                      >
-                                        Create
-                                      </button>
-                                    </div>
-                                  </form>
-                                </div>
-
-                                {/* <!-- Modal footer --> */}
-                              </div>
-                            </div>
-                          </div>
                     </div>
                     <div className="d-flex flex-row">
                     <div className="mt-2">                     
@@ -482,7 +374,7 @@ const LearnPath = () => {
 											<input type="text"
                       className="form-control"
                       value={searchQuery}
-                      placeholder="Search by folder name"
+                      placeholder="Search by learningpath"
                       onChange={(e) => setSearchQuery(e.target.value)} 
                         />
 										</div>
@@ -557,4 +449,4 @@ const LearnPath = () => {
   );
 };
 
-export default LearnPath;
+export default Reports;

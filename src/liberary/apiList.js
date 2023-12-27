@@ -1,0 +1,50 @@
+export const server = "http://localhost:4010";
+// export const server = "https://skillhub-server-cme3.onrender.com"
+// api list 
+
+const apiList = {
+Userlogin: `${server}/Userlogin`,
+getbasic: `${server}/v4/getbasic`,
+addbasic:`${server}/v4/addbasic`,
+subjects:`${server}/v2/subjects`,
+addchapter:`${server}/v1/addchapter`,
+deleteChapter:`${server}/v1/deleteChapter`,
+updateChapter:`${server}/v1/updateChapter`,
+addMCQ:`${server}/v1/addMCQ`,
+getMCQById:`${server}/v1/getMCQById`,
+updateMCQ:`${server}/v1/updateMCQ`,
+deleteMCQ : `${server}/v1/deleteMCQ`,
+getParagMCQById: `${server}/v2/getParagMCQById`,
+update:`${server}/v2/update`,
+addparaMcq:`${server}/v2/addparaMcq`,
+getparamcq:`${server}/v2/getparamcq`,
+delete:`${server}/v2/delete`,
+subjet:`${server}/v2/subjet`,
+subject:`${server}/v2/subject`,
+allUsersData:`${server}/allUsersData`,
+allAddInstitutes:`${server}/allAddInstitutes`,
+AddInstitute:`${server}/AddInstitute`,
+deleteInstitute:`${server}/deleteInstitute/`,
+UpdateInstitute:`${server}/UpdateInstitute/`,
+individualInstitute:`${server}/individualInstitute/`,
+allAddInstitutes:`${server}/allAddInstitutes`,
+individualInstituteNames:`${server}/individualInstituteNames`,
+individualUser:`${server}/individualUser`,
+UserDetailslogin:`${server}/UserDetailslogin`,
+AddUsers:`${server}/AddUsers`,
+ByBatchData:`${server}/ByBatchData`,
+ByListData:`${server}/ByListData`,
+DisplayAllVideos:`${server}/DisplayAllVideos`,
+allAddVideosData:`${server}/allAddVideosData`,
+AddVideoPath:`${server}/AddVideoPath`,
+deleteVideo:`${server}/deleteVideo`,
+AddVideoPath:`${server}/AddVideoPath`,
+foldersVideoData:`${server}/foldersVideoData`,
+AddVideoFilesData:`${server}/AddVideoFilesData`,
+UpdateVideosDetails:`${server}/UpdateVideosDetails`,
+DisplayIndividualVideo: `${server}/DisplayIndividualVideo`,
+deleteVideofiles:`${server}/deleteVideofiles`,
+UpdateVideofileDetails :`${server}/UpdateVideofileDetails`
+};
+
+export default apiList;

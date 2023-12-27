@@ -2,13 +2,14 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "../Sidebar";
-import Cookies from "js-cookie";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import JoditEditor from "jodit-react";
 import { Audio } from 'react-loader-spinner';
+import apiList from "../liberary/apiList";
+import Cookies from "js-cookie";
 
 const Mcqupdate = () => {
 	let navigate = useNavigate();
@@ -35,7 +36,7 @@ const Mcqupdate = () => {
 			)
 		);
 	const fetchMcqListData = async () => {
-		const api = `http://localhost:4010/v1/getMCQById/${subjectId}/${chapterId}/${McqId}`;
+		const api = `${apiList.getMCQById}/${subjectId}/${chapterId}/${McqId}`;
 		//http://localhost:4010/v1/getMCQs/6571ad89cf0acc567c548296/6571ae96cf0acc567c54829c";
 		try {
 			const response = await axios.get(api, {});
@@ -72,7 +73,7 @@ const Mcqupdate = () => {
 	};
 	const [allsubjectsData, setAllsubjectsData] = useState([]);
 	const fetchsubjectsData = async () => {
-		const api = "http://localhost:4010/v2/subjects";
+		const api = `${apiList.subjects}`;
 		try {
 			const response = await axios.get(api, {});
 			const data = response.data;
@@ -99,16 +100,18 @@ const Mcqupdate = () => {
 	const [allquestionData, setallquestionData] = useState("");
 
 	const onSubmitUpdateForm = async () => {
-		// const token = Cookies.get("token");
+		let token = Cookies.get("token");
 		console.log(mcqLisChangedData);
 		try {
 			const response = await axios.put(
-				`http://localhost:4010/v1/updateMCQ/${subjectId}/${chapterId}/${McqId}`,
-				mcqLisChangedData
+				`${apiList.updateMCQ}/${subjectId}/${chapterId}/${McqId}`,
+				mcqLisChangedData,
+				{
+					headers: {
+						token: token,
+					},
+				}
 			);
-			//   headers: {
-			// 	token: token,
-			//   },
 			setallquestionData(response.data);
 			console.log(response.data);
 			if (response.status === 200) {

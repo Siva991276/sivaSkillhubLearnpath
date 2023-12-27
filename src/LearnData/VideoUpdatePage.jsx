@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import apiList from "../liberary/apiList";
 // import siva from "../src/All Images/Siva Image.jpeg";
 
 const VideoFolderUpdatePage = () => {
@@ -73,7 +74,7 @@ const VideoFolderUpdatePage = () => {
 		};
 
 		axios
-			.put("http://localhost:4010/UpdateVideosDetails/" + id, UserData)
+			.put(`${apiList.UpdateVideosDetails}` + id, UserData)
 			.then((response) => {
 				console.log(response.data);
 				if (response.status === 200) {
@@ -104,7 +105,7 @@ const VideoFolderUpdatePage = () => {
 			console.log(id);
 			try {
 				const response = await axios.get(
-					`http://localhost:4010/DisplayIndividualVideo/${id}`
+					`${apiList.DisplayIndividualVideo}/${id}`
 				); // Replace with your API endpoint
 				setIndividualInstitute(response.data);
 				setLoading(false);

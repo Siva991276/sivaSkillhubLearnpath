@@ -10,9 +10,11 @@ import siva from "../src/All Images/Siva Image.jpeg";
 import sideimage from "./All Images/Logo133.jpeg";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import apiList from "./liberary/apiList";
+import Cookies from "js-cookie";
 
 const ShowData = () => {
-	const token = localStorage.getItem("token");
+	const token = Cookies.get("token");
 	let navigate = useNavigate();
 	const { id } = useParams();
 	// const [individualInstitute, setIndividualInstitute] = useState([]);
@@ -21,7 +23,7 @@ const ShowData = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const handleLogout = () => {
-		localStorage.removeItem("token");
+		Cookies.remove("token");
 		navigate("/");
 	};
 
@@ -45,7 +47,7 @@ const ShowData = () => {
 		};
 
 		axios
-			.put("http://localhost:4010/UpdateInstitute/" + id, UserData)
+			.put(`${apiList.UpdateInstitute}` + id, UserData)
 			.then((response) => {
 				console.log(response.data);
 				if (response.status === 200) {
@@ -75,7 +77,7 @@ const ShowData = () => {
 			console.log(id);
 			try {
 				const response = await axios.get(
-					"http://localhost:4010/individualUser/" + id
+					`${apiList.individualUser}` + id
 				); // Replace with your API endpoint
 				setIndividualInstitute(response.data);
 				setLoading(false);
