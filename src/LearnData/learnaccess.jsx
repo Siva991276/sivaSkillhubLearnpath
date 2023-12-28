@@ -10,11 +10,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
 import Sidebar from "../Sidebar";
-import apiList from "../liberary/apiList";
-import Cookies from "js-cookie";
 
 const Learnaccess = () => {
-	const token = Cookies.get("token");
+	const token = localStorage.getItem("token");
 	const navigate = useNavigate();
 	const [addblogslist, setAddblogslist] = useState([]);
 	const [addblogslist1, setAddblogslist1] = useState([]);
@@ -25,7 +23,7 @@ const Learnaccess = () => {
 	const [error, setError] = useState(null);
 
 	const handleLogout = () => {
-		Cookies.remove("token");
+		localStorage.removeItem("token");
 		navigate("/");
 	};
 
@@ -41,7 +39,7 @@ const Learnaccess = () => {
 	}, []);
 
 	const fetchblogs1 = async () => {
-		const api = `${apiList.DisplayAllVideos}`;
+		const api = "http://localhost:4010/DisplayAllVideos";
 		const authToken =
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk"; // Replace with your actual authentication token
 
@@ -74,7 +72,7 @@ const Learnaccess = () => {
 	console.log(institutetypeCounts);
 
 	const fetchblogs = async () => {
-		const api = `${apiList.allAddVideosData}`;
+		const api = "http://localhost:4010/allAddVideosData";
 		const authToken =
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
 		try {
@@ -112,7 +110,7 @@ const Learnaccess = () => {
 			};
 
 			axios
-				.post(`${apiList.AddVideoPath}`, AddVideosDetails, {
+				.post("http://localhost:4010/AddVideoPath", AddVideosDetails, {
 					headers,
 				})
 				.then((response) => {
@@ -165,7 +163,7 @@ const Learnaccess = () => {
 			}
 			console.log("Deleting institute with ID:", id);
 			const response = await axios.delete(
-				`${apiList.deleteVideo}` + id
+				"http://localhost:4010/deleteVideo/" + id
 			);
 			if (response.status === 200) {
 				toast.success("Success: Institute deleted", {

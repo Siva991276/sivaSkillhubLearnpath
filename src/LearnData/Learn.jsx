@@ -1,80 +1,43 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-// import logo from "../src/All Images/pab bottom-logo (1).jpg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import sideimage from "../All Images/Logo133.jpeg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import siva from "../All Images/Siva Image.jpeg";
+
 import Sidebar from "../Sidebar";
-import apiList from "../liberary/apiList";
-import Cookies from "js-cookie";
 
 const Learn = () => {
-  const token = Cookies.get("token");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
-  const [addblogslist1, setAddblogslist1] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(false);
-  const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
-  const [institutetypeCounts, setInstitutetypeCounts] = useState({});
-
+  const [selectedOption, setSelectedOption] = useState("");
   const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState(addblogslist);
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/");
-  };
-
-  const toggleNav = () => {
-    setIsNavVisible(!isNavVisible);
-  };
   useEffect(() => {
-    fetchblogs();
-    fetchblogs1();
-    if (token == undefined) {
+    const fetchData = async () => {
+      await fetchblogs();
+    };
+
+    fetchData();
+
+    if (token === undefined) {
       navigate("/");
     }
-  }, []);
+  }, [token]);
 
-  const fetchblogs1 = async () => {
-    const api = `${apiList.DisplayAllVideos}`;
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk"; // Replace with your actual authentication token
-
-    try {
-      const response = await axios.get(api, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-
-      const data = response.data;
-      setAddblogslist1(data);
-
-      const institutetypeCounts = {};
-      data.forEach((item) => {
-        const VideofolderName = item.VideofolderName;
-        if (institutetypeCounts[VideofolderName]) {
-          institutetypeCounts[VideofolderName] += 1;
-        } else {
-          institutetypeCounts[VideofolderName] = 1;
-        }
-      });
-
-      setInstitutetypeCounts(institutetypeCounts);
-    } catch (error) {
-      console.error("Error fetching blogs:", error);
-    }
-  };
-
-  console.log(institutetypeCounts);
+  useEffect(() => {
+    handleSearch();
+  }, [selectedOption, addblogslist]);
 
   const fetchblogs = async () => {
-    const api = `${apiList.allAddVideosData}`;
+    const api = "http://localhost:4010/alllearningpathsDetails";
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -88,74 +51,6 @@ const Learn = () => {
       console.error("Error fetching blogs:", error);
     }
   };
-  //Add Institute
-
-  const [VideofolderName, setVideofolderName] = useState("");
-
-  const [data1, setdata1] = useState([]);
-
-  const AddVideosDetails = {
-    VideofolderName: VideofolderName,
-  };
-  console.log(AddVideosDetails);
-
-  const onSubmitForm = (e) => {
-    e.preventDefault();
-    if (VideofolderName !== "") {
-      const headers = {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk", // Replace with your actual token
-      };
-
-      const AddVideosDetails = {
-        VideofolderName: VideofolderName,
-      };
-
-      axios
-        .post(`${apiList.AddVideoPath}`, AddVideosDetails, {
-          headers,
-        })
-        .then((response) => {
-          setdata1(response.data);
-
-          console.log(response.data);
-          if (response.status === 200) {
-            toast.success("Video Folder Created Successfully", {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-            setTimeout(function () {}, 3000);
-            fetchblogs();
-          }
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 400) {
-            toast.warning("Video path with the same name already exists", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          } else {
-            console.log(error.message);
-          }
-        });
-    } else {
-      toast.warning("Enter the Required Details");
-    }
-  };
-
-  console.log(data1);
 
   const handleDelete = async (id) => {
     try {
@@ -163,13 +58,16 @@ const Learn = () => {
         setError("Invalid ID provided for deletion.");
         return;
       }
-      console.log("Deleting institute with ID:", id);
+
+      console.log("Deleting learning path with ID:", id);
+
       const response = await axios.delete(
-        `${apiList.deleteVideo}` + id
+        `http://localhost:4010/onselectedLearningPath/${id}`
       );
+
       if (response.status === 200) {
-        toast.success("Success: Institute deleted", {
-          position: "top-right",
+        toast("Learn Path deleted successfully", {
+          position: "top-center",
           autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -177,24 +75,20 @@ const Learn = () => {
           draggable: true,
           progress: undefined,
           theme: "colored",
+          className: "custom-toast-custom",
         });
 
         fetchblogs();
-
-        const updatedListLength = addblogslist.length - 1;
-        console.log("Updated list length:", updatedListLength);
       } else {
         console.log(response.data);
         alert("Error: " + response.data);
-        setError("An error occurred while deleting the institute.");
+        setError("An error occurred while deleting the learning path.");
       }
     } catch (error) {
       console.error(error);
-      setError("An error occurred while deleting the institute.");
+      setError("An error occurred while deleting the learning path.");
     }
   };
-
-  const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -203,158 +97,242 @@ const Learn = () => {
 
   const menuBtnChange = () => {
     const sidebar = document.querySelector(".sidebar");
-    const closeBtn = document.querySelector("#btn");
-    const searchBtn = document.querySelector(".bx-search");
 
-    if (sidebar?.classList.contains("open")) {
-      closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
+    if (sidebar) {
+      const closeBtn = document.querySelector("#btn");
+      const searchBtn = document.querySelector(".bx-search");
+
+      if (sidebar.classList.contains("open")) {
+        closeBtn?.classList.replace("bx-menu", "bx-menu-alt-right");
+      } else {
+        closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
+      }
     } else {
-      closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
+      console.error("Sidebar element not found");
     }
   };
-  const [isInstitutionsOpen, setIsInstitutionsOpen] = useState(false);
 
-  const toggleInstitutions = () => {
-    setIsInstitutionsOpen(!isInstitutionsOpen);
-  };
-  const [isInstitutionsOpen1, setIsInstitutionsOpen1] = useState(true);
+  const handleSearch = () => {
+    let filtered;
+    if (selectedOption && selectedOption !== "0") {
+      filtered = addblogslist.slice(0, parseInt(selectedOption, 10));
+    } else {
+      filtered = addblogslist;
+    }
 
-  const toggleInstitutions1 = () => {
-    setIsInstitutionsOpen1(!isInstitutionsOpen1);
-  };
-  const [isInstitutionsOpen2, setIsInstitutionsOpen2] = useState(true);
+    if (searchTerm) {
+      filtered = filtered.filter((blog) =>
+        blog.learningPathTitle.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
-  const toggleInstitutions2 = () => {
-    setIsInstitutionsOpen2(!isInstitutionsOpen2);
-  };
-  const gotoLerning = () => {
-    navigate("/Learning");
-  };
-  const gotoTopic = () => {
-    navigate("/topic");
-  };
-  const gotoLearnaccess = () => {
-    navigate("/learnaccess");
+    setFilteredData(filtered);
   };
 
-  // Corporate Office
+  const handleInputChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    let filtered;
+    if (selectedOption && selectedOption !== "0") {
+      filtered = addblogslist.slice(0, parseInt(selectedOption, 10));
+    } else {
+      filtered = addblogslist;
+    }
+
+    if (term) {
+      filtered = filtered.filter((blog) =>
+        blog.learningPathTitle.toLowerCase().includes(term.toLowerCase())
+      );
+    }
+
+    setFilteredData(filtered);
+  };
+
   return (
     <div>
       <div className="container-fluid">
         <div className="row">
           <div className=" ">
             <div className="row">
-            {isOpen && (
-              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
-              <Sidebar/>
-              <ToastContainer/>
-              </div>
-					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
-							isOpen ? 9 : 12
-						}`}>
-                <div className=" ">
-                <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
-                <div class="">
-                  <div className="batch_card p-3">
-                    <div className="batch_flex mb-4">
-                      <p style={{ fontSize: "20px" }}>Learning Path</p>
-                      <div>
-                        <button className="year" onClick={gotoLerning}>
-                          {" "}
-                          + Add Learning Path
-                        </button>
-                        <div className="mt-3">
-                          Search :
-                          <input
-                            type="text"
-                            className="form-control"
-                            style={{ border: "1px solid #dee2e6" }}
-                            placeholder="Search"
-                          />
+              {isOpen && (
+                <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+                  <Sidebar />
+                </div>
+              )}
+              <div
+                className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+                  isOpen ? 9 : 12
+                }`}
+              >
+                <div className="">
+                  <i
+                    className="fa-solid fa-bars bars  d-lg-block d-none"
+                    onClick={toggleSidebar}
+                  ></i>
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                  />
+                  <div className="">
+                    <div className="batch_card p-3">
+                      <div className="batch_flex mb-4">
+                        <p style={{ fontSize: "20px" }}>Learning Path</p>
+                        <div>
+                          <Link to="/learning">
+                            <button className="year">
+                              {" "}
+                              + Add Learning Path
+                            </button>
+                          </Link>
+                          <div className="mt-3">
+                            Search :
+                            <input
+                              type="text"
+                              className="form-control"
+                              style={{ border: "1px solid #dee2e6" }}
+                              placeholder="Search"
+                              value={searchTerm}
+                              onChange={handleInputChange}
+                            />
+                            {/* <button
+                              className="mt-1 searchcontent text-white w-50 p-2"
+                              style={{
+                                backgroundColor: "#a5059d",
+                                border: "none",
+                              }}
+                              onClick={handleSearch}
+                            >
+                              Search
+                            </button> */}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="mb-3 col-lg-2 col-md-2">
-                      <h6>Show:</h6>
-                      <select className="p-1 form-control">
-                        <option value="" hidden>
-                          0
-                        </option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                      </select>
-                    </div>
-                    <h6>Entries:</h6>
-                    <div className=" mb-4" style={{ overflowX: "scroll" }}>
-                      <table class="table table-bordered text-center">
-                        <thead
-                          style={{
-                            color: "#fff",
-                            backgroundColor: "#333333",
-                            fontWeight: "400",
-                          }}
+                      <div className="mb-3 col-lg-2 col-md-2">
+                        <h6>Show:</h6>
+                        <select
+                          className="p-1 form-control"
+                          value={selectedOption}
+                          onChange={(e) => setSelectedOption(e.target.value)}
                         >
-                          <tr>
-                            <th style={{ fontWeight: "500" }}>S NO</th>
-                            <th style={{ fontWeight: "500" }}>Name</th>
-                            <th style={{ fontWeight: "500" }}>Topics</th>
-                            <th style={{ fontWeight: "500" }}>Last Update</th>
-                            <th style={{ fontWeight: "500" }}>Publish</th>
-                            <th style={{ fontWeight: "500" }}>Subcription</th>
-                            <th style={{ fontWeight: "500" }}>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {/* {filteredData.map((item, index) => ( */}
-                          <tr>
-                            <td className="p-1">1</td>
-                            <td className="p-1">Node JS</td>
-                            <td className="p-1">2</td>
-                            <td className="p-1">21 Minutes ago</td>
-                            <td className="p-1">
-                              <i
-                                class="fa-solid fa-toggle-on"
-                                style={{ fontSize: "25px", color: "green" }}
-                              ></i>
-                            </td>
-                            <td className="p-1">Free</td>
-                            <td className="p-1">
-                              <button className="topic_btn" onClick={gotoTopic}>
-                                Topics
-                              </button>
-                              <i
-                                class="fa-solid fa-file file"
-                                onClick={gotoLearnaccess}
-                              ></i>
-                              <i
-                                class="fa-solid fa-pencil pencile"
-                                onClick={gotoLerning}
-                              ></i>
+                          <option value="0" hidden>
+                            0
+                          </option>
+                          {[...Array(addblogslist.length).keys()].map(
+                            (value) => (
+                              <option key={value + 1} value={value + 1}>
+                                {value + 1}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </div>
+                      <h6>Entries:</h6>
+                      <div className=" mb-4" style={{ overflowX: "scroll" }}>
+                        <table class="table table-bordered text-center">
+                          <thead
+                            style={{
+                              color: "#fff",
+                              backgroundColor: "#333333",
+                              fontWeight: "400",
+                            }}
+                          >
+                            <tr>
+                              <th style={{ fontWeight: "500" }}>S NO</th>
+                              <th style={{ fontWeight: "500" }}>Name</th>
+                              <th style={{ fontWeight: "500" }}>Topics</th>
+                              <th style={{ fontWeight: "500" }}>Last Update</th>
+                              <th style={{ fontWeight: "500" }}>Publish</th>
+                              <th style={{ fontWeight: "500" }}>Subcription</th>
+                              <th style={{ fontWeight: "500" }}>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredData.map((blog, index) => {
+                              const storedTime = new Date(blog.CurrentTime);
 
-                              <i class="fa-solid fa-trash delete"></i>
-                            </td>
-                          </tr>
-                          {/* ))} */}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>{" "}
+                              const currentTime = new Date();
+
+                              const timeDifference = currentTime - storedTime;
+
+                              const hours = Math.floor(
+                                timeDifference / (1000 * 60 * 60)
+                              );
+                              const minutes = Math.floor(
+                                (timeDifference % (1000 * 60 * 60)) /
+                                  (1000 * 60)
+                              );
+
+                              let timeDisplay;
+                              if (minutes < 1) {
+                                timeDisplay = "Just now";
+                              } else if (minutes < 60) {
+                                timeDisplay = `${minutes} ${
+                                  minutes === 1 ? "minute" : "minutes"
+                                } ago`;
+                              } else {
+                                timeDisplay = `${hours} ${
+                                  hours === 1 ? "hour" : "hours"
+                                } ago`;
+                              }
+
+                              return (
+                                <tr key={index}>
+                                  <td className="p-1">{index + 1}</td>
+                                  <td className="p-1">
+                                    {blog.learningPathTitle}
+                                  </td>
+                                  <td className="p-1">{blog.topics.length}</td>
+                                  <td className="p-1">{timeDisplay}</td>
+                                  <td className="p-1">
+                                    <i
+                                      className="fa-solid fa-toggle-on"
+                                      style={{
+                                        fontSize: "25px",
+                                        color: "green",
+                                      }}
+                                    ></i>
+                                  </td>
+                                  <td className="p-1">{blog.subscription}</td>
+                                  <td className="p-1">
+                                    <Link to={`/topic/${blog._id}`}>
+                                      <button className="topic_btn  m-2">
+                                        Topics
+                                      </button>
+                                    </Link>
+                                    <Link to="/AccessPage">
+                                      <i className="fa-regular fa-file file p-2 m-2"></i>
+                                    </Link>
+                                    <Link to={`/LearnUpdate/${blog._id}`}>
+                                      <i className="fa-solid fa-pencil pencile"></i>
+                                    </Link>
+                                    <i
+                                      className="fa-solid fa-trash delete"
+                                      onClick={() => handleDelete(blog._id)}
+                                    ></i>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>{" "}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

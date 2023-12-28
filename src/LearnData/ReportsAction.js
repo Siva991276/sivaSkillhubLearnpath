@@ -10,22 +10,28 @@ import Sidebar from "../Sidebar";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Audio } from 'react-loader-spinner';
 import apiList from "../liberary/apiList";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
-const Access = () => {
+const ReportsAction = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
+  const [allUsersList, setAllUserslist] = useState([]);
   const [addInstitutelist, setInstitutelist] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(false);
   const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
   const [selectedInstitutes, setSelectedInstitutes] = useState('');
   const [selectedBatchYear, setSelectedBatchYear] = useState('');
   const [selectedBatch, setSelectedBatch] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+
   const [isFiltered, setIsFiltered] = useState(false);
 
   const [showSingleUserForm, setShowSingleUserForm] = useState(true);
   const [showMultipleUserForm, setShowMultipleUserForm] = useState(false);
-	const [worksheetLoading, setWorksheetLoading] = useState(true);
+    const [worksheetLoading, setWorksheetLoading] = useState(true);
 
 
   const handleSingleUserButtonClick = () => {
@@ -49,6 +55,7 @@ const Access = () => {
   };
   useEffect(() => {
     fetchblogs();
+    fetchblogs2()
     InstituteDetails();
     if (token == undefined) {
       navigate("/");
@@ -56,7 +63,7 @@ const Access = () => {
   }, [selectedInstitutes]);
 
   const InstituteDetails = async () => {
-    const api = `${apiList.allAddInstitutes}`;
+    const api = "http://localhost:4010/allAddInstitutes";
     const authToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
     try {
@@ -89,21 +96,24 @@ const Access = () => {
     }
   };
 
-  const filterJobs = () => {
-    const filteredInstitutes = addblogslist.filter(
-      (institute) =>
-        selectedInstitutes.includes(institute.InstituteName) &&
-        selectedBatchYear.includes(institute.BatchYear) &&
-        selectedBatch.includes(institute.SelectBatch)
-    );
-    setIsFiltered(filteredInstitutes.length > 0);
-    setAddblogslist(filteredInstitutes);
-    console.log(filteredInstitutes)
-
-    // Print the count of filtered jobs to the console
-    console.log("Number of filtered jobs:", filteredInstitutes.length);
-    console.log(addInstitutelist,addblogslist)
+  const fetchblogs2 = async () => {
+    const api = `${apiList.allUsersData}`;
+    const authToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
+    try {
+      const response = await axios.get(api, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setAllUserslist(response.data);
+			setWorksheetLoading(false);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+			setWorksheetLoading(false);
+    }
   };
+  
 
   const handleCheckboxChange = (e) => {
     const value = e.target.value;
@@ -147,15 +157,12 @@ const Access = () => {
   const [ExpiryDate, setExpiryDate] = useState("");
 
   const [data1, setdata1] = useState([]);
-  console.log(FirstName);
-  
-  //By-Batch
- 
+  console.log(FirstName);  
+
   const [aboveData, setaboveData] = useState("");
   const [institutionpara, setinstitutionpara] = useState("");
   const [state1, setState1] = useState("");
   console.log(state1);
-  //By-LIst
   
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -218,29 +225,31 @@ const Access = () => {
       if (prevSelectedRows.includes(rowId)) {
         return prevSelectedRows.filter((id) => id !== rowId);
       } else {
-        console.log([...prevSelectedRows])
         return [...prevSelectedRows, rowId];
       }
     });
   };
+  const exportToExcel = () => {
+    const dataToExport = allUsersList;
+    const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, "praticipation_data" + fileExtension);
+};
   const columns = [
-    { field: "SNO", headerName: "SNO", width: 120 },
-    { field: "INSTITUTENAME", headerName: "INSTITUTE NAME", width: 220 },
-    { field: "BATCHYEAR", headerName: "BATCH YEAR", width: 190},
-    { field: "BATCH", headerName: "BATCH", width: 190 },
-    {
-        field: "ACCESS",
-        headerName: "ACCESS",
-        width: 170,
-        renderCell: (params) => (
-          <input
-            type="checkbox"
-            checked={selectedRows.includes(params.id)}
-            onChange={() => handleCheckboxChange2(params.id)}
-            style={{ transform: "scale(1.5)" }}
-          />
-        ),
-      },
+    { field: "SNO", headerName: "SNO", width: 70 },
+    { field: "STUDENTNAME", headerName: "STUDENT NAME", width: 160 },
+    { field: "EMAIL", headerName: "EMAIL", width: 160},
+    { field: "INSTITUTE", headerName: "INSTITUTE", width: 160 },
+    { field: "HALLTICKETNUMBER", headerName: "HALL TICKET NUMBER", width: 160 },
+    { field: "BATCHYEAR", headerName: "BATCH YEAR/NAME", width: 160 },
+    { field: "COMPLETED", headerName: "COMPLETED", width: 160 },
+    { field: "COMPLETEDANALYSIS", headerName: "COMPLETED ANALYSIS", width: 160 },
     // {
     //     field: "",
     //     headerName: "",
@@ -268,12 +277,16 @@ const renderActionButtons = (blog) => (
     </div>
 );
 
-const rows = addblogslist.map((blog, index) => ({
+const rows = allUsersList.map((blog, index) => ({
     id: index + 1, // Add this line to include a unique id for each row
     SNO: index + 1,
-    INSTITUTENAME: blog.InstituteName,
-    BATCHYEAR: blog.BatchYear,
-    BATCH:blog.SelectBatch,
+    STUDENTNAME: blog.FirstName+blog.LastName,
+    EMAIL: blog.userEmail,
+    INSTITUTE:blog.InstituteType,
+    HALLTICKETNUMBER:blog.hallti,
+    BATCHYEAR:blog.BatchYear,
+    COMPLETED:blog.ExpiryDate,
+    COMPLETEDANALYSIS:blog.ExpiryDate,
     ACCESS: renderActionButtons(blog),
 _id:blog._id,
 }));
@@ -306,7 +319,7 @@ _id:blog._id,
                   <div className="card-item p-4">
                     <div className="row">
                       <div className="col-md-9">
-                        <h4 className="">Learning Path Access</h4>
+                        <h4 className="">Download Reports</h4>
                       </div>
                         <div className="col-md-8 text-end">
                         <div style={{ marginLeft: "auto" }} class="m-2">
@@ -316,7 +329,7 @@ _id:blog._id,
             </div>
             </div>
                     <div className="row">
-                      <div className="p-2 col-md-3">
+                      <div className="p-2 col-md-2">
                         <select
                           name=""
                           id=""
@@ -326,7 +339,7 @@ _id:blog._id,
                           
                         >
                           <option value="Select Institutions"  >
-                            ---Select Institutions---
+                            Select Institutions
                           </option>
                           {addInstitutelist.map((institute) => (
                             <option
@@ -338,11 +351,11 @@ _id:blog._id,
                           ))}
                         </select>
                         <h6 className="mt-2" style={{ fontWeight: "600" }}>
-                          Select Institutions
+                          Institutions
                         </h6>
                       </div>
 
-                      <div className="p-2 col-md-3">
+                      <div className="p-2 col-md-2">
                         <select
                           name=""
                           id=""
@@ -350,7 +363,7 @@ _id:blog._id,
                           onChange={handleBatchYearChange}
                         >
                           <option value="Select Batch Year">
-                            ---Select Batch Year---
+                            Select BatchYear
                           </option>
                           {addInstitutelist.map((institute) => (
                             <option
@@ -362,12 +375,10 @@ _id:blog._id,
                           ))}
                         </select>
                         <h6 className="mt-2" style={{ fontWeight: "600" }}>
-                          Select Batch Year
+                          Batch Year
                         </h6>
                       </div>
-
-                      {/* Batch filter */}
-                      <div className="p-2 col-md-3">
+                      <div className="p-2 col-md-2">
                         <select
                           name=""
                           id=""
@@ -375,7 +386,7 @@ _id:blog._id,
                           onChange={handleBatchChange}
                         >
                           <option value="Select Batch">
-                            ---Select Batch---
+                            Select Batch
                           </option>
                           {addInstitutelist.map((institute) => (
                             <option
@@ -387,19 +398,42 @@ _id:blog._id,
                           ))}
                         </select>
                         <h6 className="mt-2" style={{ fontWeight: "600" }}>
-                          Select Batch
+                          Batch
+                        </h6>
+                      </div>
+                      <div className="p-2 col-md-2">
+                      <input
+                      type="date"
+                      className="form-control"
+                      value={fromDate}
+                      onChange={(e) => setFromDate(e.target.value)}
+                    />
+                        <h6 className="mt-2" style={{ fontWeight: "600" }}>
+                          FromDate
+                        </h6>
+                      </div>
+                      <div className="p-2 col-md-2">
+                      <input
+                      type="date"
+                      className="form-control"
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                    />
+                        <h6 className="mt-2" style={{ fontWeight: "600" }}>
+                          ToDate
                         </h6>
                       </div>
 
-                      <div className="p-2 col-md-3">
+                      <div className="p-2 col-md-2">
                         <button
                           className="btn btn-dark"
                           style={{ backgroundColor: "#a5059d", border:"none" }}
-                          onClick={filterJobs}
+                          onClick={exportToExcel}
                         >
-                          Search
+                          Download
                         </button>
                       </div>
+                      
                     </div>
                     <br />
 
@@ -455,4 +489,4 @@ _id:blog._id,
   );
 };
 
-export default Access;
+export default ReportsAction;
