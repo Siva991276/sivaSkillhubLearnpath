@@ -10,9 +10,10 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
 import Sidebar from "../Sidebar";
+import Cookies from "js-cookie";
 
 const Learning = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -230,7 +231,7 @@ const Learning = () => {
                     <div>
                       <div className="batch_card p-3">
                         <div>
-                          <p>Learning Path</p>
+                          <p className="learningpage">Learning Path</p>
                           <input
                             type="text"
                             className="form-control"
@@ -245,7 +246,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div>
-                          <p>Tags</p>
+                          <p className="learningpage">Tags</p>
                           <select
                             className="p-1 form-control"
                             onChange={(e) =>
@@ -280,7 +281,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div>
-                          <p>Cover Letter</p>
+                          <p className="learningpage">Cover Letter</p>
                           {/* <input type="text" className="form-control"/> */}
                           <textarea
                             className="form-control"
@@ -292,7 +293,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div>
-                          <p>Defficulty</p>
+                          <p className="learningpage">Defficulty</p>
                           <select
                             className="p-1 form-control"
                             onChange={(e) => setdifficultyLevel(e.target.value)}
@@ -307,7 +308,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div>
-                          <p>Subcription</p>
+                          <p className="learningpage">Subcription</p>
 
                           <select
                             className="p-1 form-control"
@@ -349,7 +350,7 @@ const Learning = () => {
                       )}
                       <div className="batch_card p-3">
                         <div>
-                          <p>About This Learning Path</p>
+                          <p className="learningpage">About This Learning Path</p>
                           <textarea
                             className="form-control"
                             rows={6}
@@ -360,7 +361,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div>
-                          <p>Author</p>
+                          <p className="learningpage">Author</p>
                           <input
                             type="text"
                             className="form-control"
@@ -375,7 +376,7 @@ const Learning = () => {
                         <div className="row">
                           <div className="col-lg-3">
                             <div>
-                              <p>Hours</p>
+                              <p className="learningpage">Hours</p>
                               <input
                                 type="number"
                                 className="form-control"
@@ -387,7 +388,7 @@ const Learning = () => {
                           </div>
                           <div className="col-lg-3">
                             <div>
-                              <p>Minutes</p>
+                              <p className="learningpage">Minutes</p>
                               <input
                                 type="number"
                                 className="form-control"
@@ -398,7 +399,7 @@ const Learning = () => {
                           </div>
                           <div className="col-lg-6">
                             <div>
-                              <p>Learning Page</p>
+                              <p className="learningpage">Learning Page</p>
                               <input
                                 type="file"
                                 className="form-control"
@@ -412,7 +413,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div className="batch_flex mb-4">
-                          <p>What You'll Learn</p>
+                          <p className="learningpage">What You'll Learn</p>
                           <div>
                             <button className="year"> + Add</button>
                           </div>
@@ -429,7 +430,7 @@ const Learning = () => {
                       </div>
                       <div className="batch_card p-3">
                         <div className="batch_flex mb-4">
-                          <p>Requirement</p>
+                          <p className="learningpage">Requirement</p>
                           <div>
                             <button className="year"> + Add</button>
                           </div>

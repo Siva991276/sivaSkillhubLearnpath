@@ -8,9 +8,10 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import Sidebar from "../Sidebar";
+import Cookies from "js-cookie";
 
 const Learn = () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(false);
@@ -189,7 +190,6 @@ const Learn = () => {
                         <div>
                           <Link to="/learning">
                             <button className="year">
-                              {" "}
                               + Add Learning Path
                             </button>
                           </Link>
@@ -246,13 +246,13 @@ const Learn = () => {
                             }}
                           >
                             <tr>
-                              <th style={{ fontWeight: "500" }}>S NO</th>
-                              <th style={{ fontWeight: "500" }}>Name</th>
-                              <th style={{ fontWeight: "500" }}>Topics</th>
-                              <th style={{ fontWeight: "500" }}>Last Update</th>
-                              <th style={{ fontWeight: "500" }}>Publish</th>
-                              <th style={{ fontWeight: "500" }}>Subcription</th>
-                              <th style={{ fontWeight: "500" }}>Actions</th>
+                              <th style={{ fontWeight: "800" }}>S NO</th>
+                              <th style={{ fontWeight: "800" }}>Name</th>
+                              <th style={{ fontWeight: "800" }}>Topics</th>
+                              <th style={{ fontWeight: "800" }}>Last Update</th>
+                              <th style={{ fontWeight: "800" }}>Publish</th>
+                              <th style={{ fontWeight: "800" }}>Subcription</th>
+                              <th style={{ fontWeight: "800" }}>Actions</th>
                             </tr>
                           </thead>
                           <tbody>

@@ -655,7 +655,7 @@ if (filteredVideos && filteredVideos.length === 0) {
                                               url={selectedVideo}
                                               playing ={isModalOpen}
                                               controls
-                                              width="830px"
+                                              width="1107px"
                                               height="600px"
                                             />
                                           )}

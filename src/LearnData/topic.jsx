@@ -11,10 +11,11 @@ import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
 import { useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import Cookies from "js-cookie";
 
 const Topic = () => {
   const { id } = useParams();
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const navigate = useNavigate();
   const [individualInstitute, setIndividualInstitute] = useState([]);
 
