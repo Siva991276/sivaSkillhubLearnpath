@@ -9,12 +9,12 @@ import sideimage from "../All Images/Logo133.jpeg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
+import { useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
-import apiList from "../liberary/apiList";
-import Cookies from "js-cookie";
 
 const Content = () => {
-  const token = Cookies.get("token");
+  const { id, topicId } = useParams();
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [addblogslist, setAddblogslist] = useState([]);
   const [addblogslist1, setAddblogslist1] = useState([]);
@@ -22,106 +22,138 @@ const Content = () => {
   const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
   const [institutetypeCounts, setInstitutetypeCounts] = useState({});
 
+  const [individualInstitute, setIndividualInstitute] = useState([]);
+  const [individualInstitute1, setIndividualInstitute1] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/");
-  };
-
-  const toggleNav = () => {
-    setIsNavVisible(!isNavVisible);
-  };
   useEffect(() => {
-    fetchblogs();
-    fetchblogs1();
+    fetchDatatopic();
+    fetchData1();
+    fetchData();
+    set_id(id);
+    setcontentTime(new Date().toLocaleString());
     if (token == undefined) {
       navigate("/");
     }
   }, []);
 
-  const fetchblogs1 = async () => {
-    const api = `${apiList.DisplayAllVideos}`;
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk"; // Replace with your actual authentication token
-
+  const fetchDatatopic = async () => {
+    console.log(id);
     try {
-      const response = await axios.get(api, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await axios.get(`http://localhost:4010/getTopic/${id}`);
+      setIndividualInstitute1(response.data);
 
-      const data = response.data;
-      setAddblogslist1(data);
-
-      const institutetypeCounts = {};
-      data.forEach((item) => {
-        const VideofolderName = item.VideofolderName;
-        if (institutetypeCounts[VideofolderName]) {
-          institutetypeCounts[VideofolderName] += 1;
-        } else {
-          institutetypeCounts[VideofolderName] = 1;
-        }
-      });
-
-      setInstitutetypeCounts(institutetypeCounts);
+      setLoading(false);
     } catch (error) {
-      console.error("Error fetching blogs:", error);
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
+  console.log(individualInstitute1);
+  const fetchData1 = async () => {
+    console.log(id);
+    try {
+      const response = await axios.get(
+        `http://localhost:4010/getTopic/${id}/${topicId}`
+      );
+      setIndividualInstitute1(response.data);
+      setTopicName(response.data.topicName);
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
     }
   };
 
-  console.log(institutetypeCounts);
-
-  const fetchblogs = async () => {
-    const api = `${apiList.allAddVideosData}`;
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
+  const fetchData = async () => {
     try {
-      const response = await axios.get(api, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      setAddblogslist(response.data);
+      const response = await axios.get(
+        `http://localhost:4010/getAllContents/${id}/${topicId}/${id}`
+      );
+      setIndividualInstitute(response.data.contents);
+
+      setLoading(false);
     } catch (error) {
-      console.error("Error fetching blogs:", error);
+      console.error("Error fetching data:", error);
+      setLoading(false);
     }
   };
+
+  // fetchData();
+
+  console.log(individualInstitute);
+  console.log(individualInstitute1);
+
   //Add Institute
-
-  const [VideofolderName, setVideofolderName] = useState("");
+  const [topicName, setTopicName] = useState("");
+  const [contentTitle, setcontentTitle] = useState("");
+  const [contentdes, setcontentdes] = useState("");
+  const [contentimg, setcontentimg] = useState("");
+  const [publish, setpublish] = useState("");
+  const [contentTime, setcontentTime] = useState("");
+  const [_id, set_id] = useState("");
+  console.log(topicName);
 
   const [data1, setdata1] = useState([]);
+  if (!contentTime) {
+    setcontentTime(new Date().toLocaleString());
+  }
 
-  const AddVideosDetails = {
-    VideofolderName: VideofolderName,
+  const AddTopicDetails = {
+    topicName: topicName,
+    contentTitle: contentTitle,
+    contentdes: contentdes,
+    contentimg: contentimg,
+    publish: publish,
+    contentTime: contentTime,
+    _id: _id,
   };
-  console.log(AddVideosDetails);
+  console.log(AddTopicDetails);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    if (VideofolderName !== "") {
+    if (
+      topicName &&
+      contentTitle &&
+      contentdes &&
+      contentimg &&
+      publish &&
+      contentTime &&
+      _id !== ""
+    ) {
       const headers = {
         token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk", // Replace with your actual token
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk",
       };
 
-      const AddVideosDetails = {
-        VideofolderName: VideofolderName,
+      const AddContentDetails = {
+        topicName: topicName,
+        contentTitle: contentTitle,
+        contentdes: contentdes,
+        contentimg: contentimg,
+        publish: publish,
+        contentTime: contentTime,
+        _id: _id,
       };
 
       axios
-        .post(`${apiList.AddVideoPath}`, AddVideosDetails, {
-          headers,
-        })
+        .post(
+          `http://localhost:4010/addContentOfTopicsinlearningpath/${id}`,
+          AddContentDetails,
+          {
+            headers,
+          }
+        )
         .then((response) => {
           setdata1(response.data);
 
           console.log(response.data);
           if (response.status === 200) {
-            toast.success("Video Folder Created Successfully", {
-              position: "top-right",
+            toast("Content Add Successfully", {
+              position: "top-center",
               autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -129,15 +161,19 @@ const Content = () => {
               draggable: true,
               progress: undefined,
               theme: "colored",
+              className: "custom-toast-custom",
             });
-            setTimeout(function () {}, 3000);
-            fetchblogs();
+
+            setTimeout(function () {
+              // navigate("/Content/${id}/${topicId}/${id}")
+            }, 3000);
           }
+          fetchData();
         })
         .catch((error) => {
           if (error.response && error.response.status === 400) {
-            toast.warning("Video path with the same name already exists", {
-              position: "top-right",
+            toast("Topic name already exists", {
+              position: "top-center",
               autoClose: 3000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -145,31 +181,42 @@ const Content = () => {
               draggable: true,
               progress: undefined,
               theme: "colored",
+              className: "custom-toast-custom",
             });
           } else {
             console.log(error.message);
           }
         });
     } else {
-      toast.warning("Enter the Required Details");
+      toast("Enter the Required Details", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        className: "custom-toast-custom",
+      });
     }
   };
 
   console.log(data1);
-
-  const handleDelete = async (id) => {
+  const handleDelete = async (contentTitle) => {
     try {
-      if (!id) {
-        setError("Invalid ID provided for deletion.");
+      if (!contentTitle) {
+        setError("Invalid content title provided for deletion.");
         return;
       }
-      console.log("Deleting institute with ID:", id);
+
       const response = await axios.delete(
-        `${apiList.deleteVideo}` + id
+        `http://localhost:4010/onselectedContentinTopicinLearningPath/${id}/${topicId}/${contentTitle}`
       );
+
       if (response.status === 200) {
-        toast.success("Success: Institute deleted", {
-          position: "top-right",
+        toast("Delete Successfully", {
+          position: "top-center",
           autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -177,23 +224,33 @@ const Content = () => {
           draggable: true,
           progress: undefined,
           theme: "colored",
+          className: "custom-toast-custom",
         });
 
-        fetchblogs();
-
-        const updatedListLength = addblogslist.length - 1;
-        console.log("Updated list length:", updatedListLength);
+        setTimeout(function () {}, 3000);
+        fetchData();
       } else {
         console.log(response.data);
-        alert("Error: " + response.data);
-        setError("An error occurred while deleting the institute.");
+        toast("Topic name already exists", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          className: "custom-toast-custom",
+        });
+        setError("An error occurred while deleting the content.");
       }
     } catch (error) {
       console.error(error);
-      setError("An error occurred while deleting the institute.");
+      setError("An error occurred while deleting the content.");
     }
   };
 
+  console.log(contentTitle);
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -212,24 +269,9 @@ const Content = () => {
       closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
     }
   };
-  const [isInstitutionsOpen, setIsInstitutionsOpen] = useState(false);
 
-  const toggleInstitutions = () => {
-    setIsInstitutionsOpen(!isInstitutionsOpen);
-  };
-  const [isInstitutionsOpen1, setIsInstitutionsOpen1] = useState(true);
+  console.log(contentTitle);
 
-  const toggleInstitutions1 = () => {
-    setIsInstitutionsOpen1(!isInstitutionsOpen1);
-  };
-  const [isInstitutionsOpen2, setIsInstitutionsOpen2] = useState(true);
-
-  const toggleInstitutions2 = () => {
-    setIsInstitutionsOpen2(!isInstitutionsOpen2);
-  };
-  const gototextContent = () => {
-    navigate("/textcontent");
-  };
   // Corporate Office
   return (
     <div>
@@ -237,28 +279,45 @@ const Content = () => {
         <div className="row">
           <div className=" ">
             <div className="row">
-            {isOpen && (
-              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
-              <Sidebar/>
-              </div>
-					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
-							isOpen ? 9 : 12
-						}`}>
+              {isOpen && (
+                <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+                  <Sidebar />
+                </div>
+              )}
+              <div
+                className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+                  isOpen ? 9 : 12
+                }`}
+              >
                 <div className=" ">
-                <i className="fa-solid fa-bars bars d-lg-block d-none" onClick={toggleSidebar}></i>
-                <div class="mx-5">
+                  <i
+                    className="fa-solid fa-bars bars d-lg-block d-none"
+                    onClick={toggleSidebar}
+                  ></i>
+                  <div class="mx-5">
                     <div className="batch_card p-3">
                       <div className="batch_flex mb-4">
-                        <p style={{ fontSize: "20px" }}>
-                          Content : React Intro
-                        </p>
+                        {individualInstitute1 ? (
+                          <p style={{ fontSize: "20px" }}>
+                            Topic: {individualInstitute1.AboutLearnPath}
+                          </p>
+                        ) : (
+                          <p>Data not found</p>
+                        )}
                         <div>
-                          <button className="year"> + Add Content</button>
+                          <button type="button" class="year">
+                            + Add Content
+                          </button>
                           <div className="content-options">
-                            <p className="m-0" onClick={gototextContent}>
+                            <p
+                              className="m-0"
+                              type="button"
+                              data-bs-toggle="modal"
+                              data-bs-target="#myModal"
+                            >
                               <i className="fa-solid fa-t"></i> Text Content
                             </p>
+
                             <p className="m-0">
                               <i className="fa-solid fa-video"></i> Video
                               Content
@@ -266,6 +325,122 @@ const Content = () => {
                             <p className="m-0">
                               <i className="fa-solid fa-file"></i> Assessment
                             </p>
+                          </div>
+                          <ToastContainer
+                            position="top-right"
+                            autoClose={5000}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="light"
+                          />
+                          <div class="modal mx-5" id="myModal">
+                            <div class="modal-dialog modal-md">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Add Content</h4>
+                                  <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                  ></button>
+                                </div>
+
+                                <form action="">
+                                  <div className="col-12 col-md-11 p-2">
+                                    <div class="">
+                                      <div>
+                                        <div className="batch_card p-3">
+                                          <div>
+                                            <p>Text Content Title</p>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              style={{
+                                                border: "1px solid #dee2e6",
+                                              }}
+                                              onChange={(e) =>
+                                                setcontentTitle(e.target.value)
+                                              }
+                                              value={contentTitle}
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="batch_card p-3">
+                                          <div>
+                                            <p>Content</p>
+                                            {/* <input type="text" className="form-control"/> */}
+                                            <textarea
+                                              className="form-control"
+                                              rows={4}
+                                              onChange={(e) =>
+                                                setcontentdes(e.target.value)
+                                              }
+                                              value={contentdes}
+                                            ></textarea>
+                                          </div>
+                                        </div>
+
+                                        <div className="mt-3">
+                                          <p className=" p-2">Insert Image</p>
+                                          <input
+                                            type="file"
+                                            style={{
+                                              border: "1px solid #dee2e6",
+                                            }}
+                                            className="p-2 w-100"
+                                            onChange={(e) =>
+                                              setcontentimg(e.target.value)
+                                            }
+                                            value={contentimg}
+                                          />
+                                        </div>
+                                        <div className="batch_card p-3">
+                                          <p>Publish</p>
+                                          <select
+                                            className="p-1 form-control"
+                                            onChange={(e) =>
+                                              setpublish(e.target.value)
+                                            }
+                                          >
+                                            <option value="" hidden>
+                                              --Select Publish --
+                                            </option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                          </select>
+                                        </div>
+
+                                        <div className=" mx-3 p-2">
+                                          <button
+                                            className="create_btn"
+                                            onClick={onSubmitForm}
+                                            data-bs-dismiss="modal"
+                                          >
+                                            Create
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-3">
+                            Search :
+                            <input
+                              type="text"
+                              className="form-control"
+                              style={{ border: "1px solid #dee2e6" }}
+                              placeholder="Search"
+                            />
                           </div>
                         </div>
                       </div>
@@ -291,33 +466,126 @@ const Content = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {/* {filteredData.map((item, index) => ( */}
-                            <tr>
-                              <td className="p-1">1</td>
-                              <td className="p-1">React Intro</td>
-                              <td className="p-1">Text</td>
-                              <td className="p-1">
-                                <i
-                                  class="fa-solid fa-toggle-on"
-                                  style={{ fontSize: "25px", color: "green" }}
-                                ></i>
-                              </td>
-                              <td className="p-1">Just Now</td>
+                            {/* {loading ? (
+                              <p>Loading...</p>
+                            ) : individualInstitute &&
+                              individualInstitute.length > 0 ? (
+                              individualInstitute.map((content, index) => (
+                                <tr key={content.id}>
+                                  <td className="p-1">{index + 1}</td>
+                                  <td className="p-1">
+                                    {content.contentTitle}
+                                  </td>
+                                  <td className="p-1">Text</td>
+                                  <td className="p-1">
+                                    <i
+                                      className="fa-solid fa-toggle-on"
+                                      style={{
+                                        fontSize: "25px",
+                                        color: "green",
+                                      }}
+                                    ></i>
+                                  </td>
+                               
+                                  <td className="p-1">{content.contentTime}</td>
+                                  <td className="p-1">
+                                    <Link
+                                      to={`/ContentUpdate/${id}/${topicId}/${content.contentTitle}`}
+                                    >
+                                      <i className="fa-solid fa-pencil pencile"></i>
+                                    </Link>
 
-                              <td className="p-1">
-                                <i
-                                  className="fa-solid fa-pencil pencile"
-                                  onClick={gototextContent}
-                                ></i>
+                                    <i
+                                      className="fa-solid fa-trash delete"
+                                      onClick={() =>
+                                        handleDelete(content.contentTitle)
+                                      }
+                                    ></i>
+                                  </td>
+                                </tr>
+                              ))
+                            ) : (
+                              <p>Data not found</p>
+                            )} */}
 
-                                <i class="fa-solid fa-trash delete"></i>
-                              </td>
-                            </tr>
-                            {/* ))} */}
+                            {loading ? (
+                              <p>Loading...</p>
+                            ) : individualInstitute &&
+                              individualInstitute.length > 0 ? (
+                              individualInstitute.map((content, index) => {
+                                // Calculate time difference
+                                const storedTime = new Date(
+                                  content.contentTime
+                                );
+                                console.log(storedTime);
+                                const currentTime = new Date();
+                                const timeDifferenceInSeconds = Math.floor(
+                                  (currentTime - storedTime) / 1000
+                                );
+
+                                // Display different messages based on the time difference
+                                let timeDisplay;
+                                if (timeDifferenceInSeconds < 60) {
+                                  timeDisplay = "Just now";
+                                } else {
+                                  const minutesDifference = Math.floor(
+                                    timeDifferenceInSeconds / 60
+                                  );
+                                  if (minutesDifference < 60) {
+                                    timeDisplay = `${minutesDifference} minute${
+                                      minutesDifference > 1 ? "s" : ""
+                                    } ago`;
+                                  } else {
+                                    const hoursDifference = Math.floor(
+                                      minutesDifference / 60
+                                    );
+                                    timeDisplay = `${hoursDifference} hour${
+                                      hoursDifference > 1 ? "s" : ""
+                                    } ago`;
+                                  }
+                                }
+
+                                return (
+                                  <tr key={content.id}>
+                                    <td className="p-1">{index + 1}</td>
+                                    <td className="p-1">
+                                      {content.contentTitle}
+                                    </td>
+                                    <td className="p-1">Text</td>
+                                    <td className="p-1">
+                                      <i
+                                        className="fa-solid fa-toggle-on"
+                                        style={{
+                                          fontSize: "25px",
+                                          color: "green",
+                                        }}
+                                      ></i>
+                                    </td>
+                                    <td className="p-1">{timeDisplay}</td>
+
+                                    <td className="p-1">
+                                      <Link
+                                        to={`/ContentUpdate/${id}/${topicId}/${content.contentTitle}`}
+                                      >
+                                        <i className="fa-solid fa-pencil pencile"></i>
+                                      </Link>
+                                      <i
+                                        className="fa-solid fa-trash delete"
+                                        onClick={() =>
+                                          handleDelete(content.contentTitle)
+                                        }
+                                      ></i>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : (
+                              <p>Data not found</p>
+                            )}
                           </tbody>
                         </table>
                       </div>
-                    </div>{" "}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -326,7 +594,6 @@ const Content = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 

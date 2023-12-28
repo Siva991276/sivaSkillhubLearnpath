@@ -4234,9 +4234,10 @@ background: linear-gradient(to right, #E9E4F0, #D3CCE3); /* W3C, IE 10+/ Edge, F
 .pencile {
   padding: 7px;
   border-radius: 8px;
-  background-color: #910a8f;
+  background-color: #823b80;
   color: #fff;
   margin-right: 10px;
+
 
 }
 .video{
@@ -4250,21 +4251,23 @@ background: linear-gradient(to right, #E9E4F0, #D3CCE3); /* W3C, IE 10+/ Edge, F
 .delete {
   padding: 7px;
   border-radius: 8px;
-  background-color: rgb(243, 44, 44);
+  background-color: rgb(169, 98, 98);
   color: #fff;
 }
 
 .topic_btn {
-  background-color: rgb(243, 44, 44);
+  background-color: rgba(1, 4, 31, 0.68)  ;
   color: #fff;
   border-radius: 7px;
   border: none;
   padding: 6px;
   margin-right: 7px;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+  padding: 8px 15px;
 }
 
 .file {
-  background-color: rgb(44, 130, 243);
+  background-color: rgb(87, 115, 151);
   color: #fff;
   border-radius: 7px;
   border: none;
@@ -4573,4 +4576,13 @@ a{
   height: fit-content;
   border-radius: 10px;
 
+}
+.create_btn1 {
+  background-color: #524d4d;
+  color: #f9f5f5;
+  padding: 8px;
+  border: none;
+  border-radius: 7px;
+  margin-top: 20px;
+  width: 100px;
 }

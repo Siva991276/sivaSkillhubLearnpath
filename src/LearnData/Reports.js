@@ -301,7 +301,7 @@ const Reports = () => {
       <button
 				type="button"
 				className="btn btn-dark mx-1"
-				onClick={() => navigate("",{state :{videopathId:blog._id}})}
+				onClick={() => navigate("/ReportsAction",{state :{videopathId:blog._id}})}
 			>
 				<i className="fa-solid fa-eye" style={{ color: "white" }}></i>
 			</button>

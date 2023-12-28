@@ -52,6 +52,12 @@ import Codingupdate from "./Questionbank/codingupdate";
 import Reports from "./LearnData/Reports";
 import Learnaccess from "./LearnData/learnaccess";
 import Access from "./LearnData/Access";
+import ReportsAction from "./LearnData/ReportsAction";
+import LearnUpdate from "./LearnData/LearnUpdate";
+import TopicUpdate from "./LearnData/TopicUpdate";
+import ContentUpdate from "./LearnData/ContentUpdate";
+import AccessPage from './LearnData/AccessPage';
+
 function App() {
   return (
     <div>
@@ -86,8 +92,8 @@ function App() {
         <Route exact path="/LearnPath" element={<LearnPath />} />
         <Route exact path="/Learn" element={<Learn />} />
         <Route exact path="/Learning" element={<Learning />} />
-        <Route exact path="/topic" element={<Topic />} />
-        <Route exact path="/content" element={<Content />} />
+        <Route exact path="/topic/:id" element={<Topic />} />
+        <Route exact path="/Content/:id/:topicId/:id" element={<Content />} />
         <Route exact path="/textcontent" element={<TextContent />} />
         <Route exact path="/QbSubject" element={<QbSubject />} />
         <Route exact path="/Chapter" element={<Chapter />} />
@@ -107,7 +113,21 @@ function App() {
 				<Route exact path="/Reports" element={<Reports />} />
 				<Route exact path="/Learnaccess" element={<Learnaccess />} />
 				<Route exact path="/Access" element={<Access />} />
+				<Route exact path="/AccessPage" element={<AccessPage />} />
+
         
+				<Route exact path="/ReportsAction" element={<ReportsAction />} />
+        <Route
+          exact
+          path="/ContentUpdate/:id/:topicId/:contentTitle"
+          element={<ContentUpdate />}
+        />
+         <Route
+          exact
+          path="/TopicUpdate/:id/:topicId"
+          element={<TopicUpdate />}
+        />
+        <Route exact path="/LearnUpdate/:id" element={<LearnUpdate />} />        
         <Route
           exact
           path="/VideoPage"

@@ -9,110 +9,84 @@ import sideimage from "../All Images/Logo133.jpeg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import siva from "../All Images/Siva Image.jpeg";
+import { useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
-import apiList from "../liberary/apiList";
-import Cookies from "js-cookie";
 
 const Topic = () => {
-  const token = Cookies.get("token");
+  const { id } = useParams();
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const [addblogslist, setAddblogslist] = useState([]);
-  const [addblogslist1, setAddblogslist1] = useState([]);
+  const [individualInstitute, setIndividualInstitute] = useState([]);
+
   const [isNavVisible, setIsNavVisible] = useState(false);
-  const [showInstitutionsOptions, setShowInstitutionsOptions] = useState(false);
-  const [institutetypeCounts, setInstitutetypeCounts] = useState({});
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/");
-  };
-
-  const toggleNav = () => {
-    setIsNavVisible(!isNavVisible);
-  };
   useEffect(() => {
-    fetchblogs();
-    fetchblogs1();
+    fetchData();
     if (token == undefined) {
       navigate("/");
     }
-  }, []);
+    set_id(id);
+    setTopicTime(new Date().toLocaleString());
+  }, [id]);
 
-  const fetchblogs1 = async () => {
-    const api = `${apiList.DisplayAllVideos}`;
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk"; // Replace with your actual authentication token
-
+  const fetchData = async () => {
+    console.log(id);
     try {
-      const response = await axios.get(api, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await axios.get(`http://localhost:4010/getTopic/${id}`);
+      setIndividualInstitute(response.data);
 
-      const data = response.data;
-      setAddblogslist1(data);
-
-      const institutetypeCounts = {};
-      data.forEach((item) => {
-        const VideofolderName = item.VideofolderName;
-        if (institutetypeCounts[VideofolderName]) {
-          institutetypeCounts[VideofolderName] += 1;
-        } else {
-          institutetypeCounts[VideofolderName] = 1;
-        }
-      });
-
-      setInstitutetypeCounts(institutetypeCounts);
+      setLoading(false);
     } catch (error) {
-      console.error("Error fetching blogs:", error);
+      console.error("Error fetching data:", error);
+      setLoading(false);
     }
   };
+  fetchData();
 
-  console.log(institutetypeCounts);
-
-  const fetchblogs = async () => {
-    const api = `${apiList.allAddVideosData}`;
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk";
-    try {
-      const response = await axios.get(api, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      setAddblogslist(response.data);
-    } catch (error) {
-      console.error("Error fetching blogs:", error);
-    }
-  };
+  console.log(individualInstitute);
   //Add Institute
 
-  const [VideofolderName, setVideofolderName] = useState("");
+  const [topicName, settopicName] = useState("");
+  const [description, setdescription] = useState("");
+  const [publish, setpublish] = useState("");
+  const [TopicTime, setTopicTime] = useState("");
+  const [_id, set_id] = useState("");
 
   const [data1, setdata1] = useState([]);
+  if (!TopicTime) {
+    setTopicTime(new Date().toLocaleString());
+  }
 
-  const AddVideosDetails = {
-    VideofolderName: VideofolderName,
+  const AddTopicDetails = {
+    topicName: topicName,
+    description: description,
+    publish: publish,
+    TopicTime: TopicTime,
+    _id: _id,
   };
-  console.log(AddVideosDetails);
+  console.log(AddTopicDetails);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    if (VideofolderName !== "") {
+    if (topicName && description && publish && TopicTime && _id !== "") {
       const headers = {
         token:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjRkZGFiYjYwYmUzZWI4NzI5MzM4OGM1IiwiaWF0IjoxNjkyMjQ5MDMyLCJleHAiOjIwNTIyNDkwMzJ9.ow8crNAYgumZNwjGdGxUciJwMXeULHHHKXHWMGmS8zk", // Replace with your actual token
       };
 
-      const AddVideosDetails = {
-        VideofolderName: VideofolderName,
+      const AddTopicsDetails = {
+        topicName: topicName,
+        description: description,
+        publish: publish,
+        TopicTime: TopicTime,
+        _id: _id,
       };
 
       axios
-        .post(`${apiList.AddVideoPath}`, AddVideosDetails, {
+        .post(`http://localhost:4010/addTopic/${id}`, AddTopicsDetails, {
           headers,
         })
         .then((response) => {
@@ -120,8 +94,8 @@ const Topic = () => {
 
           console.log(response.data);
           if (response.status === 200) {
-            toast.success("Video Folder Created Successfully", {
-              position: "top-right",
+            toast("Topic Add  Successfully", {
+              position: "top-center",
               autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -129,15 +103,17 @@ const Topic = () => {
               draggable: true,
               progress: undefined,
               theme: "colored",
+              className: "custom-toast-custom",
             });
+
             setTimeout(function () {}, 3000);
-            fetchblogs();
           }
         })
+
         .catch((error) => {
           if (error.response && error.response.status === 400) {
-            toast.warning("Video path with the same name already exists", {
-              position: "top-right",
+            toast("Topic name already exists", {
+              position: "top-center",
               autoClose: 3000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -145,31 +121,81 @@ const Topic = () => {
               draggable: true,
               progress: undefined,
               theme: "colored",
+              className: "custom-toast-custom",
             });
           } else {
             console.log(error.message);
           }
         });
     } else {
-      toast.warning("Enter the Required Details");
+      toast("Enter the Required Details", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        className: "custom-toast-custom",
+      });
     }
   };
 
   console.log(data1);
 
-  const handleDelete = async (id) => {
+  // const handleDelete = async (id) => {
+  //   try {
+  //     if (!id) {
+  //       setError("Invalid ID provided for deletion.");
+  //       return;
+  //     }
+
+  //     console.log("Deleting learning path with ID:", id);
+
+  //     const response = await axios.delete(
+  //       `http://localhost:4010/onselectedLearningPath/${id}/${topic._Id}`
+  //     );
+
+  //     if (response.status === 200) {
+  //       toast.success("Learn Path deleted successfully", {
+  //         position: "top-right",
+  //         autoClose: 1000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "colored",
+  //       });
+
+  //       fetchData();
+  //     } else {
+  //       console.log(response.data);
+  //       alert("Error: " + response.data);
+  //       setError("An error occurred while deleting the learning path.");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     setError("An error occurred while deleting the learning path.");
+  //   }
+  // };
+  const handleDelete = async (topicId) => {
     try {
-      if (!id) {
+      if (!topicId) {
         setError("Invalid ID provided for deletion.");
         return;
       }
-      console.log("Deleting institute with ID:", id);
+
+      console.log("Deleting topic with ID:", topicId);
+
       const response = await axios.delete(
-        `${apiList.deleteVideo}` + id
+        `http://localhost:4010/onselectedTopicinLearningPath/${id}/${topicId}`
       );
+
       if (response.status === 200) {
-        toast.success("Success: Institute deleted", {
-          position: "top-right",
+        toast("Topic deleted successfully", {
+          position: "top-center",
           autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -177,20 +203,29 @@ const Topic = () => {
           draggable: true,
           progress: undefined,
           theme: "colored",
+          className: "custom-toast-custom",
         });
 
-        fetchblogs();
-
-        const updatedListLength = addblogslist.length - 1;
-        console.log("Updated list length:", updatedListLength);
+        fetchData(); // Assuming fetchData() is a function to update your UI or fetch data again
       } else {
         console.log(response.data);
         alert("Error: " + response.data);
-        setError("An error occurred while deleting the institute.");
+        setError("An error occurred while deleting the topic.");
       }
     } catch (error) {
       console.error(error);
-      setError("An error occurred while deleting the institute.");
+      setError("An error occurred while deleting the topic.");
+      toast("An error occurred while deleting the topic.", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        className: "custom-toast-custom",
+      });
     }
   };
 
@@ -212,24 +247,7 @@ const Topic = () => {
       closeBtn?.classList.replace("bx-menu-alt-right", "bx-menu");
     }
   };
-  const [isInstitutionsOpen, setIsInstitutionsOpen] = useState(false);
 
-  const toggleInstitutions = () => {
-    setIsInstitutionsOpen(!isInstitutionsOpen);
-  };
-  const [isInstitutionsOpen1, setIsInstitutionsOpen1] = useState(true);
-
-  const toggleInstitutions1 = () => {
-    setIsInstitutionsOpen1(!isInstitutionsOpen1);
-  };
-  const [isInstitutionsOpen2, setIsInstitutionsOpen2] = useState(true);
-
-  const toggleInstitutions2 = () => {
-    setIsInstitutionsOpen2(!isInstitutionsOpen2);
-  };
-  const gotoContent = () => {
-    navigate("/content");
-  };
   // Corporate Office
   return (
     <div>
@@ -237,20 +255,34 @@ const Topic = () => {
         <div className="row">
           <div className=" ">
             <div className="row">
-            {isOpen && (
-              <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
-              <Sidebar/>
-              </div>
-					  )}						
-            <div className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
-							isOpen ? 9 : 12
-						}`}>
+              {isOpen && (
+                <div className=" col-12 col-lg-3 col-md-12 sectioncard121">
+                  <Sidebar />
+                </div>
+              )}
+              <div
+                className={`my-3 col-12 col-md-${isOpen ? 12 : 9} col-lg-${
+                  isOpen ? 9 : 12
+                }`}
+              >
                 <div className="">
-                <i className="fa-solid fa-bars bars  d-lg-block d-none" onClick={toggleSidebar}></i>
-                <div class="">
+                  <i
+                    className="fa-solid fa-bars bars  d-lg-block d-none"
+                    onClick={toggleSidebar}
+                  ></i>
+                  <div class="">
                     <div className="batch_card p-3">
                       <div className="batch_flex mb-4">
-                        <p style={{ fontSize: "20px" }}>Topic : Node JS</p>
+                        {loading ? (
+                          <p>Loading...</p>
+                        ) : individualInstitute ? (
+                          <p style={{ fontSize: "20px" }}>
+                            Topic :{individualInstitute.learningPathTitle}
+                          </p>
+                        ) : (
+                          <p>Data not found</p>
+                        )}
+
                         <div>
                           <button
                             type="button"
@@ -260,6 +292,18 @@ const Topic = () => {
                           >
                             + Add Top
                           </button>
+                          <ToastContainer
+                            position="top-right"
+                            autoClose={5000}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="light"
+                          />
                           <div class="modal" id="myModal">
                             <div class="modal-dialog modal-sm">
                               <div class="modal-content">
@@ -271,58 +315,83 @@ const Topic = () => {
                                     data-bs-dismiss="modal"
                                   ></button>
                                 </div>
-                                <div class="modal-body">
-                                  <div className="row">
-                                    <div
-                                      className="col-lg-12"
-                                      style={{ textAlign: "start" }}
-                                    >
-                                      <label className="my-2">Topic Name</label>
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                      />
-                                    </div>
-                                    <div
-                                      className="col-lg-12"
-                                      style={{ textAlign: "start" }}
-                                    >
-                                      <label className="my-2">
-                                        Description
-                                      </label>
 
-                                      <textarea
-                                        className="form-control"
-                                        rows={5}
-                                      ></textarea>
-                                    </div>
-                                    <div
-                                      className="col-lg-12"
-                                      style={{ textAlign: "start" }}
-                                    >
-                                      <div>
-                                        <p>Publish</p>
-                                        <select className="p-1 form-control">
-                                          <option value="" hidden>
-                                            --Select Publish --
-                                          </option>
-                                          <option value="Yes">Yes</option>
-                                          <option value="No">No</option>
-                                        </select>
+                                <form action="">
+                                  <div class="modal-body">
+                                    <div className="row">
+                                      <div
+                                        className="col-lg-12"
+                                        style={{ textAlign: "start" }}
+                                      >
+                                        <label className="my-2">
+                                          Topic Name
+                                        </label>
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          style={{
+                                            border: "1px solid #dee2e6",
+                                          }}
+                                          onChange={(e) =>
+                                            settopicName(e.target.value)
+                                          }
+                                          value={topicName}
+                                        />
+                                      </div>
+                                      <div
+                                        className="col-lg-12"
+                                        style={{ textAlign: "start" }}
+                                      >
+                                        <label className="my-2">
+                                          Description
+                                        </label>
+
+                                        <textarea
+                                          className="form-control"
+                                          rows={5}
+                                          onChange={(e) =>
+                                            setdescription(e.target.value)
+                                          }
+                                          value={description}
+                                        ></textarea>
+                                      </div>
+                                      <div
+                                        className="col-lg-12"
+                                        style={{ textAlign: "start" }}
+                                      >
+                                        <div>
+                                          <p>Publish</p>
+                                          <select
+                                            className="p-1 form-control"
+                                            onChange={(e) =>
+                                              setpublish(e.target.value)
+                                            }
+                                          >
+                                            <option value="" hidden>
+                                              --Select Publish --
+                                            </option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                          </select>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
 
-                                <div class="modal-footer">
-                                  <button
-                                    type="button"
-                                    class="btn btn-danger"
-                                    data-bs-dismiss="modal"
-                                  >
-                                    Add Topic
-                                  </button>
-                                </div>
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn text-white"
+                                      style={{
+                                        backgroundColor: "#a83ea1",
+                                      }}
+                                      onClick={onSubmitForm}
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Add Topics
+                                    </button>
+                                  </div>
+                                </form>
                               </div>
                             </div>
                           </div>
@@ -373,115 +442,86 @@ const Topic = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {/* {filteredData.map((item, index) => ( */}
-                            <tr>
-                              <td className="p-1">1</td>
-                              <td className="p-1">Node JS</td>
-                              <td className="p-1">21 Minutes ago</td>
-                              <td className="p-1">
-                                <i
-                                  class="fa-solid fa-toggle-on"
-                                  style={{ fontSize: "25px", color: "green" }}
-                                ></i>
-                              </td>
-                              <td className="p-1">
-                                <button
-                                  className="topic_btn"
-                                  onClick={gotoContent}
-                                >
-                                  content
-                                </button>
-                                <i
-                                  className="fa-solid fa-pencil pencile"
-                                  data-toggle="modal"
-                                  data-target="#myModal2"
-                                ></i>
-                                <div class="modal" id="myModal2">
-                                  <div class="modal-dialog">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title">Edit Topic</h5>
-                                        <button
-                                          type="button"
-                                          class="close"
-                                          data-dismiss="modal"
-                                        >
-                                          &times;
-                                        </button>
-                                      </div>
+                            {loading ? (
+                              <p>Loading...</p>
+                            ) : individualInstitute ? (
+                              individualInstitute.topics.map((topic, index) => {
+                                // Convert stored time string to Date object
+                                const storedTime = new Date(topic.TopicTime);
 
-                                      <div class="modal-body">
-                                        <div className="row">
-                                          <div
-                                            className="col-lg-12"
-                                            style={{ textAlign: "start" }}
-                                          >
-                                            <label className="my-2">
-                                              Topic Name
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                            />
-                                          </div>
-                                          <div
-                                            className="col-lg-12"
-                                            style={{ textAlign: "start" }}
-                                          >
-                                            <label className="my-2">
-                                              Description
-                                            </label>
-                                            {/* <input type="text" className="form-control" /> */}
-                                            <textarea
-                                              className="form-control"
-                                              rows={5}
-                                            ></textarea>
-                                          </div>
-                                          <div
-                                            className="col-lg-12"
-                                            style={{ textAlign: "start" }}
-                                          >
-                                            <div>
-                                              <p>Publish</p>
-                                              <select className="p-1 form-control">
-                                                <option value="" hidden>
-                                                  --Select Publish --
-                                                </option>
-                                                <option value="Yes">Yes</option>
-                                                <option value="No">No</option>
-                                              </select>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button
-                                          type="button"
-                                          class="btn btn-danger"
-                                          data-dismiss="modal"
-                                        >
-                                          Add Topic
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                // Calculate the time difference in milliseconds
+                                const timeDifference = new Date() - storedTime;
 
-                                <i class="fa-solid fa-trash delete"></i>
-                              </td>
-                            </tr>
-                            {/* ))} */}
+                                // Convert milliseconds to minutes and hours
+                                const minutes = Math.floor(
+                                  timeDifference / (1000 * 60)
+                                );
+                                const hours = Math.floor(minutes / 60);
+
+                                // Display different messages based on time difference
+                                let timeDisplay;
+                                if (minutes < 1) {
+                                  timeDisplay = "Just now";
+                                } else if (minutes < 60) {
+                                  timeDisplay = `${minutes} ${
+                                    minutes === 1 ? "minute" : "minutes"
+                                  } ago`;
+                                } else {
+                                  timeDisplay = `${hours} ${
+                                    hours === 1 ? "hour" : "hours"
+                                  } ago`;
+                                }
+
+                                return (
+                                  <tr key={topic._id}>
+                                    <td className="p-1">{index + 1}</td>
+                                    <td className="p-1">{topic.topicName}</td>
+                                    <td className="p-1">{timeDisplay}</td>
+                                    <td className="p-1">
+                                      <i
+                                        className="fa-solid fa-toggle-on"
+                                        style={{
+                                          fontSize: "25px",
+                                          color: "green",
+                                        }}
+                                      ></i>
+                                    </td>
+                                    <td className="p-1">
+                                      <Link
+                                        to={`/Content/${_id}/${topic._id}/${_id}`}
+                                      >
+                                        <button className="topic_btn p-1 m-2">
+                                          content
+                                        </button>
+                                      </Link>
+                                      <Link
+                                        to={`/TopicUpdate/${_id}/${topic._id}`}
+                                      >
+                                        <i className="fa-solid fa-pencil pencile"></i>
+                                      </Link>
+
+                                      <i
+                                        class="fa-solid fa-trash delete"
+                                        onClick={() => handleDelete(topic._id)}
+                                      ></i>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            ) : (
+                              <p>Data not found</p>
+                            )}
                           </tbody>
                         </table>
                       </div>
-                    </div>{" "}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
